@@ -3,7 +3,19 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-  <persistence-unit name="default">
+    <persistence-unit name="default">
+        <class>model.DishType</class>
+        <class>model.Dish</class>
+        <properties>
+            <!-- Các thuộc tính cấu hình kết nối cơ sở dữ liệu -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/restaurant_manager"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="1234567"/>
+            <property name="show_sql" value="true"/>
+            <!-- Cấu hình tạo bảng tự động -->
+<!--            <property name="javax.persistence.schema-generation.database.action" value="create"/>-->
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
 
-  </persistence-unit>
+        </properties>
+    </persistence-unit>
 </persistence>
