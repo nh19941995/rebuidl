@@ -7,11 +7,14 @@ package view;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import java.awt.*;
 
 /**
  *
  * @author Admin
  */
+
 public class Employee extends JFrame {
 
     /**
@@ -29,7 +32,6 @@ public class Employee extends JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
-
         jScrollPane1 = new JScrollPane();
         jTable1 = new JTable();
         jPanel4 = new JPanel();
@@ -54,9 +56,9 @@ public class Employee extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        jScrollPane1.setBackground(new java.awt.Color(204, 204, 204));
-
+        jScrollPane1.setBackground(new Color(204, 204, 204));
         jTable1.setModel(new DefaultTableModel(
+
                 new Object [][] {
 
                 },
@@ -79,24 +81,26 @@ public class Employee extends JFrame {
                 return canEdit [columnIndex];
             }
         });
+
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel4.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBackground(new Color(102, 102, 102));
+
+        jLabel7.setFont(new Font("Tahoma", 1, 24)); // NOI18N
+        jLabel7.setForeground(new Color(255, 255, 255));
         jLabel7.setText("Customer Infomation ");
 
-        btnAddcus.setBackground(new java.awt.Color(255, 255, 255));
+        btnAddcus.setBackground(new Color(255, 255, 255));
         btnAddcus.setText("Add ");
         btnAddcus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAddcusMouseClicked(evt);
             }
         });
-        btnAddcus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddcusActionPerformed(evt);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
 
@@ -106,12 +110,12 @@ public class Employee extends JFrame {
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel8.setForeground(new Color(255, 255, 255));
         jLabel8.setText("First name :");
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel9.setForeground(new Color(255, 255, 255));
         jLabel9.setText("Email :");
 
         inputLname.addActionListener(new java.awt.event.ActionListener() {
@@ -120,8 +124,8 @@ public class Employee extends JFrame {
             }
         });
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel10.setForeground(new Color(255, 255, 255));
         jLabel10.setText("Last name :");
 
         inputAddress.addActionListener(new java.awt.event.ActionListener() {
@@ -130,8 +134,8 @@ public class Employee extends JFrame {
             }
         });
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel11.setForeground(new Color(255, 255, 255));
         jLabel11.setText("Permission :");
 
         pickPermission.setModel(new DefaultComboBoxModel<>(new String[] { "Cashier", "Manage", "Staff", "Chef", "Security" }));
@@ -141,8 +145,8 @@ public class Employee extends JFrame {
             }
         });
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel12.setForeground(new Color(255, 255, 255));
         jLabel12.setText("Birth day :");
 
         inputEmail.addActionListener(new java.awt.event.ActionListener() {
@@ -151,8 +155,8 @@ public class Employee extends JFrame {
             }
         });
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel13.setForeground(new Color(255, 255, 255));
         jLabel13.setText("Address :");
 
         inputBirth.addActionListener(new java.awt.event.ActionListener() {
@@ -161,8 +165,8 @@ public class Employee extends JFrame {
             }
         });
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setFont(new Font("Tahoma", 0, 18)); // NOI18N
+        jLabel14.setForeground(new Color(255, 255, 255));
         jLabel14.setText("Phone number :");
 
         inputPhone.addActionListener(new java.awt.event.ActionListener() {
@@ -281,6 +285,7 @@ public class Employee extends JFrame {
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(jPanel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane1)
+
         );
 
         pack();
@@ -302,9 +307,24 @@ public class Employee extends JFrame {
             inputPhone.setText("");
         }
     }
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt){
+        int rowNumber = jTable1.getSelectedRow();
+        TableModel tblModel = jTable1.getModel();
 
-    private void btnAddcusActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        String fName = tblModel.getValueAt(rowNumber, 0 ).toString();
+        String lName = tblModel.getValueAt(rowNumber, 1 ).toString();
+        String email = tblModel.getValueAt(rowNumber, 2 ).toString();
+        String address = tblModel.getValueAt(rowNumber, 3).toString();
+        String birth = tblModel.getValueAt(rowNumber, 4).toString();
+        String permission = tblModel.getValueAt(rowNumber, 5).toString();
+        String phone = tblModel.getValueAt(rowNumber, 6).toString();
+
+        inputFname.setText(fName);
+        inputLname.setText(lName);
+        inputAddress.setText(address);
+        inputEmail.setText(email);
+        inputBirth.setText(birth);
+        inputPhone.setText(phone);
     }
 
     private void inputFnameActionPerformed(java.awt.event.ActionEvent evt) {
@@ -336,7 +356,26 @@ public class Employee extends JFrame {
     }
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
+        if(jTable1.getSelectedRowCount() == 1){
+            String fName = inputFname.getText();
+            String lName = inputLname.getText();
+            String email = inputEmail.getText();
+            String address = inputAddress.getText();
+            String birth = inputBirth.getText();
+            String phone = inputPhone.getText();
+            String permission = (String) pickPermission.getSelectedItem();
+
+            tblModel.setValueAt(fName, jTable1.getSelectedRow(), 0);
+            tblModel.setValueAt(lName, jTable1.getSelectedRow(), 1);
+            tblModel.setValueAt(email, jTable1.getSelectedRow(), 2);
+            tblModel.setValueAt(address, jTable1.getSelectedRow(), 3);
+            tblModel.setValueAt(birth, jTable1.getSelectedRow(), 4);
+            tblModel.setValueAt(permission, jTable1.getSelectedRow(),5);
+            tblModel.setValueAt(phone, jTable1.getSelectedRow(), 6);
+
+            JOptionPane.showMessageDialog(this,"Update succesfully !");
+        }
     }
 
     private void btnDeleteMouseClicked(java.awt.event.MouseEvent evt) {
@@ -346,11 +385,9 @@ public class Employee extends JFrame {
             // Xử lý lựa chọn của người dùng
             if (option == JOptionPane.YES_OPTION) {
                 tblModel.removeRow(jTable1.getSelectedRow());
-            } else if (option == JOptionPane.NO_OPTION) {
-                dispose();
             }
         }else {
-            if(jTable1.getRowCount() ==0){
+            if(jTable1.getRowCount() == 0){
                 JOptionPane.showMessageDialog(rootPane, "Table user is empty !");
             }else{
                 JOptionPane.showMessageDialog(rootPane, "Please select single row for delete!");
@@ -386,12 +423,13 @@ public class Employee extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Employee().setVisible(true);
             }
         });
     }
+
 
     // Variables declaration - do not modify
     private JButton btnAddcus;

@@ -31,7 +31,7 @@ public class Person {
     @Column(name = "password", nullable = false, length = 150)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "permission", nullable = false)
     private Permission permission;
 
@@ -143,4 +143,38 @@ public class Person {
         this.flag = flag;
     }
 
+    public Person() {
+    }
+
+    public Person(String name, LocalDate dateOfBirth, String address, String phone, String username, String password, Permission permission, String email, Instant dateCreat, Instant dateUpdate, Integer flag) {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.phone = phone;
+        this.username = username;
+        this.password = password;
+        this.permission = permission;
+        this.email = email;
+        this.dateCreat = dateCreat;
+        this.dateUpdate = dateUpdate;
+        this.flag = flag;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", permission=" + permission +
+                ", email='" + email + '\'' +
+                ", dateCreat=" + dateCreat +
+                ", dateUpdate=" + dateUpdate +
+                ", flag=" + flag +
+                '}';
+    }
 }

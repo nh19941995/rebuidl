@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "dish_type")
+@Table(name = "dish_type", uniqueConstraints = {@UniqueConstraint(columnNames = "type")})
 public class DishType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "type", nullable = false, length = 500)
+    @Column(name = "type", nullable = false, length = 500, unique = true)
     private String type;
 
     @Column(name = "flag", nullable = false)

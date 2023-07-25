@@ -2,9 +2,14 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import model.Dish;
 import model.DishType;
 import utils.PersistenceManager;
+
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class DishTypeDAO implements DAOInterface<DishType,Integer>{
     private EntityManagerFactory entityManagerFactory;
@@ -68,7 +73,7 @@ public class DishTypeDAO implements DAOInterface<DishType,Integer>{
             // Sử dụng JPQL (Java Persistence Query Language) để truy vấn danh sách DishType
             String queryStr = "SELECT d FROM DishType d";
             ArrayList<DishType> a  =  new ArrayList<>(entityManager.createQuery(queryStr, DishType.class).getResultList());
-            a.stream().forEach(s-> System.out.println(s.toString()) );
+//            a.stream().forEach(s-> System.out.println(s.toString()) );
             return a;
         } catch (Exception e) {
             e.printStackTrace();

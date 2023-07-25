@@ -14,7 +14,7 @@ public class BookingsInfo {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
@@ -111,4 +111,48 @@ public class BookingsInfo {
         this.bookings = bookings;
     }
 
+    public BookingsInfo() {
+    }
+
+    public BookingsInfo(Person person, String info, Instant dateCreat, Instant start, Instant end, Float deposit, Integer flag, Set<Booking> bookings) {
+        this.person = person;
+        this.info = info;
+        this.dateCreat = dateCreat;
+        this.start = start;
+        this.end = end;
+        this.deposit = deposit;
+        this.flag = flag;
+        this.bookings = bookings;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "BookingsInfo{" +
+                "id=" + id +
+                ", person=" + person +
+                ", info='" + info + '\'' +
+                ", dateCreat=" + dateCreat +
+                ", start=" + start +
+                ", end=" + end +
+                ", deposit=" + deposit +
+                ", flag=" + flag +
+                ", bookings=" + bookings +
+                '}';
+    }
+//    public void add(Dish dish){
+//        if (dishes == null){
+//            dishes = new LinkedHashSet<>();
+//        }
+//        dishes.add(dish);
+//        dish.setType(this);
+//    }
+    public void add(Booking booking){
+        if (bookings == null){
+            bookings = new LinkedHashSet<>();
+        }
+        bookings.add(booking);
+        booking.setInfo(this);
+    }
 }

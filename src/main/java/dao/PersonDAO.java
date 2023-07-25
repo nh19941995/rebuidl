@@ -3,31 +3,33 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import model.Dish;
-import model.DishType;
+import model.Person;
+import model.TableList;
 import utils.PersistenceManager;
 
 import java.util.ArrayList;
 
-public class DishDAO implements DAOInterface<Dish,Integer>{
+public class PersonDAO implements DAOInterface<Person,Integer>{
     private EntityManagerFactory entityManagerFactory;
 
 
-    public static DishDAO getInstance(){
-        return new DishDAO();
+    public static PersonDAO getInstance(){
+        return new PersonDAO();
     }
 
-    public DishDAO() {
+    public PersonDAO() {
         entityManagerFactory = PersistenceManager.getEntityManagerFactory();
     }
+
+
     @Override
-    public boolean insert(Dish dish) {
+    public boolean insert(Person person) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();
-            entityManager.persist(dish);
+            entityManager.persist(person);
             transaction.commit();
             return true;
         } catch (Exception e) {
@@ -42,13 +44,13 @@ public class DishDAO implements DAOInterface<Dish,Integer>{
     }
 
     @Override
-    public int update(Dish dish) {
+    public int update(Person person) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();
-            entityManager.merge(dish);
+            entityManager.merge(person);
             transaction.commit();
             return 1;
         } catch (Exception e) {
@@ -63,14 +65,14 @@ public class DishDAO implements DAOInterface<Dish,Integer>{
     }
 
     @Override
-    public ArrayList<Dish> getAll() {
+    public ArrayList<Person> getAll() {
         //        Với truy vấn đọc (SELECT), bạn không cần bắt EntityTransaction.
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             // Sử dụng JPQL (Java Persistence Query Language) để truy vấn danh sách DishType
-            String queryStr = "SELECT d FROM Dish d";
-            ArrayList<Dish> a  =  new ArrayList<>(entityManager.createQuery(queryStr, Dish.class).getResultList());
+            String queryStr = "SELECT d FROM Person d";
+            ArrayList<Person> a  =  new ArrayList<>(entityManager.createQuery(queryStr, Person.class).getResultList());
 //            a.stream().forEach(s-> System.out.println(s.toString()) );
             return a;
         } catch (Exception e) {
@@ -82,10 +84,10 @@ public class DishDAO implements DAOInterface<Dish,Integer>{
     }
 
     @Override
-    public Dish getById(int dishId) {
+    public Person getById(int personId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            return entityManager.find(Dish.class, dishId);
+            return entityManager.find(Person.class, personId);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

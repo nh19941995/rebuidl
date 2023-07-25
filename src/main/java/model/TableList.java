@@ -62,8 +62,29 @@ public class TableList {
         return bookings;
     }
 
+
     public void setBookings(Set<Booking> bookings) {
         this.bookings = bookings;
     }
 
+    public TableList() {
+    }
+
+    public TableList(Integer seatingCapacity, TableType type, Integer flag, Set<Booking> bookings) {
+        this.seatingCapacity = seatingCapacity;
+        this.type = type;
+        this.flag = flag;
+        this.bookings = bookings;
+    }
+
+    @Override
+    public String toString() {
+        return "TableList{" +
+                "id=" + id +
+                ", seatingCapacity=" + seatingCapacity +
+                ", type=" + type.toString() +
+                ", flag=" + flag +
+                ", bookings=" + bookings.toString() +
+                '}';
+    }
 }

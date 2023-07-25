@@ -5,18 +5,58 @@
  */
 package view;
 
+import controller.InstantDateTimeInfo;
+import dao.BookingDAO;
+import dao.TableListDAO;
+import dao.TableTypeDAO;
+import model.TableList;
+import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
+//import controller.MultiLineTableCellRenderer;
 /**
  *
  * @author Admin
  */
-public class TableList extends javax.swing.JFrame {
+public class TableListView extends javax.swing.JFrame {
 
     /**
      * Creates new form TableList
      */
-    public TableList() {
-        initComponents();
-        setLocationRelativeTo(null);
+    public TableListView() {
+        try {
+//            chuyển giao diện sang giống ios
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            initComponents();
+            setLocationRelativeTo(null);
+
+            // Khởi tạo mô hình dữ liệu cho bảng
+            tableModel = (DefaultTableModel) tableTable.getModel();
+
+            // Gọi phương thức để thêm dữ liệu vào bảng
+            addDataToTable();
+            // Tạo đối tượng MultiLineTableCellRenderer
+//            MultiLineTableCellRenderer multiLineRenderer = new MultiLineTableCellRenderer();
+
+            // Áp dụng renderer cho cột có nội dung đa dòng (ở đây giả sử cột index 3, 4 và 5 có nội dung đa dòng)
+//            int[] multiLineColumns = {3, 4, 5};
+//            for (int columnIndex : multiLineColumns) {
+//                tableTable.getColumnModel().getColumn(columnIndex).setCellRenderer(multiLineRenderer);
+//            }
+            // Thiết lập chiều cao của các hàng trong bảng
+//            tableTable.setRowHeight(60); // Đặt giá trị lớn hơn tùy thuộc vào nhu cầu của bạn
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        customizeTableAppearance();
+
+
     }
 
     /**
@@ -78,6 +118,12 @@ public class TableList extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+           tableTableMouseClicked(evt);
+
+            }
+        });
         jScrollPane1.setViewportView(tableTable);
         if (tableTable.getColumnModel().getColumnCount() > 0) {
             tableTable.getColumnModel().getColumn(0).setPreferredWidth(6);
@@ -85,6 +131,7 @@ public class TableList extends javax.swing.JFrame {
             tableTable.getColumnModel().getColumn(2).setPreferredWidth(10);
             tableTable.getColumnModel().getColumn(5).setPreferredWidth(10);
             tableTable.getColumnModel().getColumn(6).setPreferredWidth(10);
+
         }
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -144,7 +191,17 @@ public class TableList extends javax.swing.JFrame {
 
         jLabel4.setText("Filter by type :");
 
-        selecType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+//        thêm dữ liệu vào select list
+        String[] selectList = TableTypeDAO.getInstance().getAll().stream()
+                .map(s -> s.getName())
+                .toArray(String[]::new);
+        selecType.setModel(new javax.swing.DefaultComboBoxModel<>(selectList));
+
+
+
+
+
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -285,6 +342,7 @@ public class TableList extends javax.swing.JFrame {
 
     private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+
     }
 
     private void btnSelectTableMouseClicked(java.awt.event.MouseEvent evt) {
@@ -325,7 +383,7 @@ public class TableList extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TableList().setVisible(true);
+                new TableListView().setVisible(true);
             }
         });
     }
@@ -348,5 +406,100 @@ public class TableList extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> selecType;
     private javax.swing.JTable tableTable;
+    private DefaultTableModel tableModel;
+
+    private Object[][] data;
+
+
+
+//    căn giữa chữ cho bảng
+    private void customizeTableAppearance() {
+        // Tạo một đối tượng DefaultTableCellRenderer để tùy chỉnh cách hiển thị của các ô trong bảng
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        // Căn giữa chữ trong tất cả các cột của bảng
+        for (int i = 0; i < tableModel.getColumnCount(); i++) {
+            tableTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        // Điều chỉnh kích thước cột tuỳ theo nội dung trong ô
+        tableTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    }
+//    thêm dữ liệu vào bảng
+
+    private void tableTableMouseClicked(java.awt.event.MouseEvent evt){
+        int rowNumber = tableTable.getSelectedRow();
+        TableModel tblModel = tableTable.getModel();
+
+        Integer id = Integer.valueOf(tblModel.getValueAt(rowNumber, 0 ).toString());
+        JOptionPane.showMessageDialog(this,id);
+    }
+private void addDataToTable() {
+    List<model.TableList> tableLists = TableListDAO.getInstance().getAll();
+
+
+    // Dữ liệu từ cơ sở dữ liệu
+
+    this.data = tableLists.stream().map(
+            s -> new Object[]{
+                    s.getId(),
+                    s.getType().getName(),
+                    s.getSeatingCapacity(),
+                    s.getBookings().stream().map(
+                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 1))
+                            .collect(Collectors.joining(", ")),
+                    s.getBookings().stream().map(
+                            x -> InstantDateTimeInfo.getTime(x.getInfo().getEnd(), 1))
+                            .collect(Collectors.joining(", ")),
+                    s.getBookings().stream().map(
+                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 2))
+                            .collect(Collectors.joining(", ")),
+                    s.getFlag(),
+            }
+    ).toArray(Object[][]::new);
+//    List<model.Booking> bookingList = BookingDAO.getInstance().getAll();
+//
+//    this.data = bookingList.stream().map(
+//            s -> new Object[]{
+//                    s.getId(),
+//                    s.getType().getName(),
+//                    s.getSeatingCapacity(),
+//                    s.getBookings().stream().map(
+//                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 1))
+//                            .collect(Collectors.joining(", ")),
+//                    s.getBookings().stream().map(
+//                            x -> InstantDateTimeInfo.getTime(x.getInfo().getEnd(), 1))
+//                            .collect(Collectors.joining(", ")),
+//                    s.getBookings().stream().map(
+//                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 2))
+//                            .collect(Collectors.joining(", ")),
+//
+//                    s.getFlag(),
+//            }
+//    ).toArray(Object[][]::new);
+
+
+
+
+    Arrays.stream(data).map(s->new Object[]{
+
+    }).toArray(Object[][]::new);
+
+    // Thêm từng hàng dữ liệu vào bảng
+    for (Object[] row : data) {
+        tableModel.addRow(row);
+    }
+    // Cập nhật bảng để hiển thị dữ liệu mới
+    tableModel.fireTableDataChanged();
+
+}
+
+
+
+    public void seachTableList(){
+
+
+    }
     // End of variables declaration
 }

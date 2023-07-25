@@ -7,14 +7,14 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "dish")
+@Table(name = "dish", uniqueConstraints = {@UniqueConstraint(columnNames = "dish_name")})
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "dish_name", nullable = false, length = 500)
+    @Column(name = "dish_name", nullable = false, length = 500, unique = true)
     private String dishName;
 
     @Column(name = "price", nullable = false)
@@ -29,7 +29,7 @@ public class Dish {
     @Column(name = "flag", nullable = false)
     private Integer flag;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {
             CascadeType.DETACH,
             CascadeType.MERGE,
             CascadeType.PERSIST,
@@ -37,9 +37,6 @@ public class Dish {
     })
     @JoinColumn(name = "type_id", nullable = false)
     private DishType type;
-
-    @Column(name = "dish_index")
-    private Integer dishIndex;
 
     @OneToMany(mappedBy = "dish")
     private Set<Menu> menus = new LinkedHashSet<>();
@@ -100,13 +97,6 @@ public class Dish {
         this.type = type;
     }
 
-    public Integer getDishIndex() {
-        return dishIndex;
-    }
-
-    public void setDishIndex(Integer dishIndex) {
-        this.dishIndex = dishIndex;
-    }
 
     public Set<Menu> getMenus() {
         return menus;
@@ -119,14 +109,13 @@ public class Dish {
     public Dish() {
     }
 
-    public Dish(String dishName, Integer price, Instant dateCreat, Instant dateUpdate, Integer flag, DishType type, Integer dishIndex, Set<Menu> menus) {
+    public Dish(String dishName, Integer price, Instant dateCreat, Instant dateUpdate, Integer flag, DishType type, Set<Menu> menus) {
         this.dishName = dishName;
         this.price = price;
         this.dateCreat = dateCreat;
         this.dateUpdate = dateUpdate;
         this.flag = flag;
         this.type = type;
-        this.dishIndex = dishIndex;
         this.menus = menus;
     }
 
@@ -140,7 +129,6 @@ public class Dish {
                 ", dateUpdate=" + dateUpdate +
                 ", flag=" + flag +
                 ", type=" + type +
-                ", dishIndex=" + dishIndex +
                 ", menus=" + menus +
                 '}';
     }

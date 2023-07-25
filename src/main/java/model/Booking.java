@@ -65,6 +65,40 @@ public class Booking {
         this.flag = flag;
     }
 
+    public Booking() {
+    }
 
+    public Booking(BookingsInfo info, TableList table, MenuName menuName, Integer flag) {
+        this.info = info;
+        this.table = table;
+        this.menuName = menuName;
+        this.flag = flag;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", info=" + info +
+                ", table=" + table.getId() +
+                ", menuName=" + menuName.getName() +
+                ", flag=" + flag +
+                '}';
+    }
+
+//    public void add(DishType dishType){
+//        if (dishType.getType() == null){
+//            this.setType(dishType);
+//        }
+//        this.getType().add(this);
+//    }
+    public void add(BookingsInfo info){
+        if (this.getInfo() == null){
+            this.setInfo(info);
+        }
+        this.getInfo().add(this);
+    }
 
 }
