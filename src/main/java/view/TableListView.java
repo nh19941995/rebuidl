@@ -13,9 +13,9 @@ import model.TableList;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 //import controller.MultiLineTableCellRenderer;
@@ -350,7 +350,8 @@ public class TableListView extends javax.swing.JFrame {
     }
 
     private void btnFilterMouseClicked(java.awt.event.MouseEvent evt) {
-        // code evt cho button filter
+        searchTableList();
+        System.out.println("tìm kiếm");
     }
 
     /**
@@ -405,10 +406,15 @@ public class TableListView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> selecType;
+//    đối tượng bảng
     private javax.swing.JTable tableTable;
     private DefaultTableModel tableModel;
-
+//    dữ liệu truyền vào bảng
     private Object[][] data;
+//    dữ liệu lọc bảng
+    private String filterTypeInput = "vip1";
+    private String CapacityInput = "6";
+    private String dateInput = "";
 
 
 
@@ -426,80 +432,118 @@ public class TableListView extends javax.swing.JFrame {
         // Điều chỉnh kích thước cột tuỳ theo nội dung trong ô
         tableTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
     }
-//    thêm dữ liệu vào bảng
-
+//    hàm lấy dữ liệu dc chọn từ bảng
     private void tableTableMouseClicked(java.awt.event.MouseEvent evt){
         int rowNumber = tableTable.getSelectedRow();
         TableModel tblModel = tableTable.getModel();
 
         Integer id = Integer.valueOf(tblModel.getValueAt(rowNumber, 0 ).toString());
-        JOptionPane.showMessageDialog(this,id);
+        System.out.println(id);
     }
-private void addDataToTable() {
-    List<model.TableList> tableLists = TableListDAO.getInstance().getAll();
 
+//    hàm thêm dữ liệu vào bảng
+    private void addDataToTable() {
+        List<model.Booking> bookingList = BookingDAO.getInstance().getAll();
+        // Sử dụng HashSet để lưu trữ các phần tử không trùng lặp
+        Set<Integer> uniqueElements = new HashSet<>();
+        Object[][] dataOnBooking = bookingList.stream().map(
+                s -> new Object[]{
+                        s.getTable().getId(),  // id bàn
+                        s.getTable().getType().getName(),  // loại bàn
+                        s.getTable().getSeatingCapacity(),   // số ghế
+                        InstantDateTimeInfo.getTime(s.getInfo().getStart(),1),  // giờ bắt đầu
+                        InstantDateTimeInfo.getTime(s.getInfo().getEnd(),1),    // giờ kết thúc
+                        InstantDateTimeInfo.getTime(s.getInfo().getStart(),2),  // ngày
+                        s.getTable().getFlag(),  // trạng thái của bàn
+                        uniqueElements.add(s.getTable().getId())
+                }
 
-    // Dữ liệu từ cơ sở dữ liệu
+        ).toArray(Object[][]::new);
 
-    this.data = tableLists.stream().map(
-            s -> new Object[]{
-                    s.getId(),
-                    s.getType().getName(),
-                    s.getSeatingCapacity(),
-                    s.getBookings().stream().map(
-                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 1))
-                            .collect(Collectors.joining(", ")),
-                    s.getBookings().stream().map(
-                            x -> InstantDateTimeInfo.getTime(x.getInfo().getEnd(), 1))
-                            .collect(Collectors.joining(", ")),
-                    s.getBookings().stream().map(
-                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 2))
-                            .collect(Collectors.joining(", ")),
-                    s.getFlag(),
-            }
-    ).toArray(Object[][]::new);
-//    List<model.Booking> bookingList = BookingDAO.getInstance().getAll();
-//
-//    this.data = bookingList.stream().map(
-//            s -> new Object[]{
-//                    s.getId(),
-//                    s.getType().getName(),
-//                    s.getSeatingCapacity(),
-//                    s.getBookings().stream().map(
-//                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 1))
-//                            .collect(Collectors.joining(", ")),
-//                    s.getBookings().stream().map(
-//                            x -> InstantDateTimeInfo.getTime(x.getInfo().getEnd(), 1))
-//                            .collect(Collectors.joining(", ")),
-//                    s.getBookings().stream().map(
-//                            x -> InstantDateTimeInfo.getTime(x.getInfo().getStart(), 2))
-//                            .collect(Collectors.joining(", ")),
-//
-//                    s.getFlag(),
-//            }
-//    ).toArray(Object[][]::new);
+        List<model.TableList> tableLists = TableListDAO.getInstance().getAll();
 
+        Object[][] dataNoneBooking = tableLists.stream()
+                .map(s -> {
+                    int tableId = s.getId().intValue();
+                    if (!uniqueElements.contains(tableId)) { // Đảo ngược điều kiện từ contains thành không contains
+                        return new Object[]{
+                                s.getId(),    // id bàn
+                                s.getType().getName(),  // loại bàn
+                                s.getSeatingCapacity(),  // số ghế
+                                "",
+                                "",
+                                "",
+                                s.getFlag()
+                        };
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toArray(Object[][]::new);
 
+//        Arrays.stream(dataNoneBooking).forEach(s-> System.out.println(s.length));
 
+        Object[][] allBooking = concatenateArrays(dataNoneBooking,dataOnBooking);
+        Arrays.sort(allBooking, Comparator.comparingInt(arr -> (int) arr[0]));
 
-    Arrays.stream(data).map(s->new Object[]{
+        this.data = allBooking;
+        Arrays.stream(data).map(s->new Object[]{
 
-    }).toArray(Object[][]::new);
+        }).toArray(Object[][]::new);
 
-    // Thêm từng hàng dữ liệu vào bảng
-    for (Object[] row : data) {
-        tableModel.addRow(row);
+        // Thêm từng hàng dữ liệu vào bảng
+        for (Object[] row : data) {
+            tableModel.addRow(row);
+        }
+        // Cập nhật bảng để hiển thị dữ liệu mới
+        tableModel.fireTableDataChanged();
     }
-    // Cập nhật bảng để hiển thị dữ liệu mới
-    tableModel.fireTableDataChanged();
 
-}
+    public void searchTableList() {
+        String a = filterTypeInput;
+        String b = CapacityInput;
+        String c = dateInput;
 
+        // Tạo luồng dữ liệu từ mảng
+        Stream<Object[]> dataStream = Arrays.stream(data);
 
+//         Áp dụng các bộ lọc khi điều kiện thỏa mãn
+        if (!a.equals("")) {
+            dataStream = dataStream.filter(row -> row[1].equals(a));
+        }
+//        if (!b.equals("")) {
+//            dataStream = dataStream.filter(row -> row[1].equals(b));
+//        }
+//        if (!c.equals("")) {
+//            dataStream = dataStream.filter(row -> row[5].toString().contains(c));
+//        }
 
-    public void seachTableList(){
+        // Chuyển đổi luồng dữ liệu thành mảng 2D mới
+        Object[][] filteredData = dataStream.toArray(Object[][]::new);
 
+        // Xóa dữ liệu hiện có trong bảng
+        tableModel.setRowCount(0);
 
+        // Thêm từng hàng dữ liệu vào bảng
+        for (Object[] row : filteredData) {
+            tableModel.addRow(row);
+        }
+
+        // Cập nhật bảng để hiển thị dữ liệu mới
+        tableModel.fireTableDataChanged();
+    }
+
+    // hàm nối mảng
+    public static Object[][] concatenateArrays(Object[][] arr1, Object[][] arr2) {
+        int arr1Length = arr1.length;
+        int arr2Length = arr2.length;
+        Object[][] result = new Object[arr1Length + arr2Length][];
+
+        System.arraycopy(arr1, 0, result, 0, arr1Length);
+        System.arraycopy(arr2, 0, result, arr1Length, arr2Length);
+
+        return result;
     }
     // End of variables declaration
 }

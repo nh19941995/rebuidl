@@ -70,7 +70,8 @@ public class BookingDAO implements DAOInterface<Booking,Integer>{
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             // Sử dụng JPQL (Java Persistence Query Language) để truy vấn danh sách DishType
-            String queryStr = "SELECT d FROM Booking d";
+            String queryStr = "SELECT t FROM Booking t JOIN FETCH t.table b JOIN FETCH t.menuName";
+
             ArrayList<Booking> a  =  new ArrayList<>(entityManager.createQuery(queryStr, Booking.class).getResultList());
 //            a.stream().forEach(s-> System.out.println(s.toString()) );
             return a;
