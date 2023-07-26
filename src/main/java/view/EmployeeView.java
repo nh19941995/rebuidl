@@ -8,6 +8,8 @@ package view;
 
 
 import com.formdev.flatlaf.FlatLightLaf;
+import controller.CustomizeTableAppearance;
+import dao.PermissionDAO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -143,7 +145,18 @@ public class EmployeeView extends JFrame {
         jLabel11.setForeground(new Color(255, 255, 255));
         jLabel11.setText("Permission :");
 
-        pickPermission.setModel(new DefaultComboBoxModel<>(new String[] { "Cashier", "Manage", "Staff", "Chef", "Security" }));
+
+
+//        dữ liệu của select box
+//        pickPermission.setModel(new DefaultComboBoxModel<>(new String[] { "Cashier", "Manage", "Staff", "Chef", "Security" }));
+        pickPermission.setModel(new DefaultComboBoxModel<>(PermissionDAO.getInstance().getAll()
+                .stream()
+                .map(s -> s.getPermissionName())
+                .toArray(String[]::new)));
+//
+
+
+
         pickPermission.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pickPermissionActionPerformed(evt);
@@ -455,7 +468,8 @@ public class EmployeeView extends JFrame {
                     UIManager.setLookAndFeel(new FlatLightLaf());
                     EmployeeView employeeView = new EmployeeView();
                     employeeView.setVisible(true);
-                    employeeView.customizeTableAppearance();
+                    //                    căn giữa chữ trong bảng
+                    new CustomizeTableAppearance(employeeView.getjTable1());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -465,6 +479,9 @@ public class EmployeeView extends JFrame {
         });
     }
 
+    public JTable getjTable1() {
+        return jTable1;
+    }
 
     // Variables declaration - do not modify
     private JButton btnAddcus;
