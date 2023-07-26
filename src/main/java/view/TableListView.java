@@ -342,16 +342,18 @@ public class TableListView extends javax.swing.JFrame {
 
     private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        searchTableList();
+        System.out.println("tìm kiếm");
 
     }
 
     private void btnSelectTableMouseClicked(java.awt.event.MouseEvent evt) {
-        // code evt cho button select table
+//        this.filterTypeInput = selecType.getSelectedItem().toString();
+//        System.out.println("select value: " + this.filterTypeInput);
     }
 
     private void btnFilterMouseClicked(java.awt.event.MouseEvent evt) {
-        searchTableList();
-        System.out.println("tìm kiếm");
+
     }
 
     /**
@@ -412,10 +414,10 @@ public class TableListView extends javax.swing.JFrame {
 //    dữ liệu truyền vào bảng
     private Object[][] data;
 //    dữ liệu lọc bảng
-    private String filterTypeInput = "vip1";
-    private String CapacityInput = "6";
-    private String dateInput = "";
-
+    private String filterTypeInput ;
+    private String CapacityInput;
+    private String dateInput;
+    private Object lockObject = new Object();
 
 
 //    căn giữa chữ cho bảng
@@ -481,10 +483,8 @@ public class TableListView extends javax.swing.JFrame {
                 })
                 .filter(Objects::nonNull)
                 .toArray(Object[][]::new);
-
-//        Arrays.stream(dataNoneBooking).forEach(s-> System.out.println(s.length));
-
         Object[][] allBooking = concatenateArrays(dataNoneBooking,dataOnBooking);
+//        sắp xếp theo id
         Arrays.sort(allBooking, Comparator.comparingInt(arr -> (int) arr[0]));
 
         this.data = allBooking;
@@ -500,33 +500,55 @@ public class TableListView extends javax.swing.JFrame {
         tableModel.fireTableDataChanged();
     }
 
-    public void searchTableList() {
-        String a = filterTypeInput;
-        String b = CapacityInput;
-        String c = dateInput;
+    public synchronized  void searchTableList() {
 
-        // Tạo luồng dữ liệu từ mảng
-        Stream<Object[]> dataStream = Arrays.stream(data);
+        String a = "vip1";
+        final String b = "4";
+        String c = "2023-08-25";
 
-//         Áp dụng các bộ lọc khi điều kiện thỏa mãn
-        if (!a.equals("")) {
-            dataStream = dataStream.filter(row -> row[1].equals(a));
+        synchronized (lockObject) {
+            // Tạo luồng dữ liệu từ mảng
+            Stream<Object[]> dataStream1 = Arrays.stream(data);
+            if (!a.equals("")) {
+                data = dataStream1.filter(row -> row[1].equals(a)).toArray(Object[][]::new);;
+
+            }
+
+            Stream<Object[]> dataStream2 = Arrays.stream(data);
+            // In ra giá trị của dataStream2
+            if (true) {
+                //            ép về kiểu string trước khi so sánh
+                data = dataStream2.filter(row -> (row[2].toString()).equals(b)).toArray(Object[][]::new);;
+            }
+
+            Stream<Object[]> dataStream3 = Arrays.stream(data);
+            if (!c.equals("")) {
+                data = dataStream3.filter(row -> row[5].toString().contains(c)).toArray(Object[][]::new);;
+            }
         }
-//        if (!b.equals("")) {
-//            dataStream = dataStream.filter(row -> row[1].equals(b));
-//        }
-//        if (!c.equals("")) {
-//            dataStream = dataStream.filter(row -> row[5].toString().contains(c));
-//        }
 
-        // Chuyển đổi luồng dữ liệu thành mảng 2D mới
-        Object[][] filteredData = dataStream.toArray(Object[][]::new);
+
+
+
+
+
+
+
+//        Object[][] arrays1 = concatenateArrays(filteredData1,filteredData2);
+
 
         // Xóa dữ liệu hiện có trong bảng
         tableModel.setRowCount(0);
 
+
+
+
+        //        sắp xếp theo id trước khi thêm vào bảng
+//        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
+
+
         // Thêm từng hàng dữ liệu vào bảng
-        for (Object[] row : filteredData) {
+        for (Object[] row : this.data) {
             tableModel.addRow(row);
         }
 
