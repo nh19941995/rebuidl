@@ -33,4 +33,7 @@ public class Test_Booking {
 //        Booking booking =  BookingDAO.getInstance().getById(1);
 //        booking.toString();
     }
+
+    public static class Test_Person {
+    }
 }

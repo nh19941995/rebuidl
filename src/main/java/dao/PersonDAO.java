@@ -71,7 +71,7 @@ public class PersonDAO implements DAOInterface<Person,Integer>{
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             // Sử dụng JPQL (Java Persistence Query Language) để truy vấn danh sách DishType
-            String queryStr = "SELECT d FROM Person d";
+            String queryStr = "SELECT d FROM Person d WHERE d.flag > 0";
             ArrayList<Person> a  =  new ArrayList<>(entityManager.createQuery(queryStr, Person.class).getResultList());
 //            a.stream().forEach(s-> System.out.println(s.toString()) );
             return a;

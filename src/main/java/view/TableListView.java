@@ -472,8 +472,16 @@ public class TableListView extends javax.swing.JFrame {
                     }
                 })
                 .filter(Objects::nonNull)
+                .filter(n->(int)n[6]>0)
                 .toArray(Object[][]::new);
+
+
+
         Object[][] allBooking = concatenateArrays(dataNoneBooking,dataOnBooking);
+
+
+
+
 //        sắp xếp theo id
         Arrays.sort(allBooking, Comparator.comparingInt(arr -> (int) arr[0]));
 
@@ -514,9 +522,6 @@ public class TableListView extends javax.swing.JFrame {
                 data = dataStream3.filter(row -> row[5].toString().contains(c)).toArray(Object[][]::new);;
             }
         }
-
-//        Object[][] arrays1 = concatenateArrays(filteredData1,filteredData2);
-
         // Xóa dữ liệu hiện có trong bảng
         tableModel.setRowCount(0);
 

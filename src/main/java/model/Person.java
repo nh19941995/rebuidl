@@ -16,8 +16,11 @@ public class Person {
     @Column(name = "name", nullable = false, length = 150)
     private String name;
 
+    @Column(name = "last_name", nullable = false, length = 150)
+    private String lastName;
+
     @Column(name = "date_of_birth", nullable = false)
-    private LocalDate dateOfBirth;
+    private Instant dateOfBirth;
 
     @Column(name = "address", nullable = false, length = 300)
     private String address;
@@ -47,6 +50,14 @@ public class Person {
     @Column(name = "flag", nullable = false)
     private Integer flag;
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -63,11 +74,11 @@ public class Person {
         this.name = name;
     }
 
-    public LocalDate getDateOfBirth() {
+    public Instant getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(Instant dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -146,8 +157,9 @@ public class Person {
     public Person() {
     }
 
-    public Person(String name, LocalDate dateOfBirth, String address, String phone, String username, String password, Permission permission, String email, Instant dateCreat, Instant dateUpdate, Integer flag) {
+    public Person(String name, String lastName, Instant dateOfBirth, String address, String phone, String username, String password, Permission permission, String email, Instant dateCreat, Instant dateUpdate, Integer flag) {
         this.name = name;
+        this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.phone = phone;

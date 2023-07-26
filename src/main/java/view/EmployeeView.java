@@ -9,13 +9,25 @@ package view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import controller.CustomizeTableAppearance;
+import controller.InstantDateTimeInfo;
+import dao.BookingDAO;
 import dao.PermissionDAO;
-
+import dao.PersonDAO;
+import dao.TableListDAO;
+import model.Booking;
+import model.Permission;
+import model.Person;
+import model.TableList;
+import java.time.ZoneId;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.List;
 
 /**
  *
@@ -29,6 +41,7 @@ public class EmployeeView extends JFrame {
      */
     public EmployeeView() {
         initComponents();
+        addDataToTable();
     }
 
     /**
@@ -88,6 +101,9 @@ public class EmployeeView extends JFrame {
                 return canEdit [columnIndex];
             }
         });
+
+
+
 
         jScrollPane1.setViewportView(jTable1);
 
@@ -315,8 +331,43 @@ public class EmployeeView extends JFrame {
         }else{
             String selectedPer = (String) pickPermission.getSelectedItem();
             String data[] = {inputFname.getText(), inputLname.getText(), inputEmail.getText(), inputAddress.getText(), inputBirth.getText(), selectedPer,inputPhone.getText()};
+//            tạo đối tượng person với dữ liệu người dùng nhập vào
+            Person newPerson = new Person();
+            newPerson.setName(inputFname.getText());
+            newPerson.setLastName(inputLname.getText());
+
+//            chuyển string thành Instant
+            LocalDate localDate = LocalDate.parse(inputBirth.getText());
+            // Đặt giờ, phút, giây và millisecond thành 0 để có ngày giờ cụ thể (00:00:00)
+            Instant instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            newPerson.setDateOfBirth(instant);
+            newPerson.setEmail(inputEmail.getText());
+            newPerson.setFlag(1);
+            newPerson.setAddress(inputAddress.getText());
+            Instant now = Instant.now();
+            newPerson.setDateCreat(now);
+            newPerson.setDateUpdate(now);
+            newPerson.setPassword("");
+            newPerson.setPhone(inputPhone.getText());
+            newPerson.setUsername("");
+//            lấy id của permissions
+
+            int idOfJohn = PermissionDAO.getInstance().getAll().stream()
+                    .filter(permission -> permission.getPermissionName().equals(selectedPer))
+                    .map(Permission::getId)
+                    .findFirst()
+                    .orElse(-1); // Giá trị mặc định nếu không tìm thấy
+
+            newPerson.setPermission(PermissionDAO.getInstance().getById(idOfJohn));
+            PersonDAO.getInstance().insert(newPerson);
+
+
+//            đưa dư liệu vào bảng
             DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
             tblModel.addRow(data);
+            // Cập nhật bảng để hiển thị dữ liệu mới
+            tableModel.fireTableDataChanged();
+//            làm trống trở lại phần input
             inputFname.setText("");
             inputLname.setText("");
             inputAddress.setText("");
@@ -325,6 +376,80 @@ public class EmployeeView extends JFrame {
             inputPhone.setText("");
         }
     }
+
+
+
+    private void addDataToTable() {
+        // Khởi tạo mô hình dữ liệu cho bảng
+        this.tableModel = (DefaultTableModel) jTable1.getModel();
+        java.util.List<Person> personList = PersonDAO.getInstance().getAll();
+
+        // Sử dụng HashSet để lưu trữ các phần tử không trùng lặp
+//        Set<Integer> uniqueElements = new HashSet<>();
+
+
+        Object[][] personArr  = personList.stream().map(
+                s -> new Object[]{
+                        s.getName(),  // id bàn
+                        s.getLastName(),  // loại bàn
+                        s.getEmail(),   // số ghế
+                        s.getAddress(),
+                        InstantDateTimeInfo.getTime(s.getDateOfBirth(),2),  // ngày
+                        s.getPermission().getPermissionName(),
+                        s.getPhone(),
+                }
+
+        ).toArray(Object[][]::new);
+
+//        List<TableList> tableLists = TableListDAO.getInstance().getAll();
+//
+//        Object[][] dataNoneBooking = tableLists.stream()
+//                .map(s -> {
+//                    int tableId = s.getId().intValue();
+//                    if (!uniqueElements.contains(tableId)) { // Đảo ngược điều kiện từ contains thành không contains
+//                        return new Object[]{
+//                                s.getId(),    // id bàn
+//                                s.getType().getName(),  // loại bàn
+//                                s.getSeatingCapacity(),  // số ghế
+//                                "",
+//                                "",
+//                                "",
+//                                s.getFlag()
+//                        };
+//                    } else {
+//                        return null;
+//                    }
+//                })
+//                .filter(Objects::nonNull)
+//                .toArray(Object[][]::new);
+//        Object[][] allBooking = concatenateArrays(dataNoneBooking,dataOnBooking);
+////        sắp xếp theo id
+//        Arrays.sort(allBooking, Comparator.comparingInt(arr -> (int) arr[0]));
+
+        this.dataTable = personArr;
+//        Arrays.stream(data).map(s->new Object[]{
+//
+//        }).toArray(Object[][]::new);
+//
+
+
+        // Thêm từng hàng dữ liệu vào bảng
+        for (Object[] row : dataTable) {
+            tableModel.addRow(row);
+        }
+        // Cập nhật bảng để hiển thị dữ liệu mới
+        tableModel.fireTableDataChanged();
+    }
+
+
+
+
+
+
+
+
+
+
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt){
         int rowNumber = jTable1.getSelectedRow();
         TableModel tblModel = jTable1.getModel();
@@ -436,6 +561,7 @@ public class EmployeeView extends JFrame {
 
 
     public static void main(String args[]) {
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -470,6 +596,7 @@ public class EmployeeView extends JFrame {
                     employeeView.setVisible(true);
                     //                    căn giữa chữ trong bảng
                     new CustomizeTableAppearance(employeeView.getjTable1());
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -506,7 +633,7 @@ public class EmployeeView extends JFrame {
     private JTable jTable1;
     private JComboBox<String> pickPermission;
     // End of variables declaration
-
-
+    private DefaultTableModel tableModel;
+    private Object[][] dataTable;
 }
 
