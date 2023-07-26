@@ -1,11 +1,16 @@
+package view;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+
+
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -15,12 +20,12 @@ import java.awt.*;
  * @author Admin
  */
 
-public class Employee extends JFrame {
+public class EmployeeView extends JFrame {
 
     /**
      * Creates new form Employee
      */
-    public Employee() {
+    public EmployeeView() {
         initComponents();
     }
 
@@ -327,6 +332,21 @@ public class Employee extends JFrame {
         inputPhone.setText(phone);
     }
 
+
+    private void customizeTableAppearance() {
+        // Tạo một đối tượng DefaultTableCellRenderer để tùy chỉnh cách hiển thị của các ô trong bảng
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        // Căn giữa chữ trong tất cả các cột của bảng
+        for (int i = 0; i < jTable1.getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        // Điều chỉnh kích thước cột tuỳ theo nội dung trong ô
+        jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    }
+
     private void inputFnameActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
@@ -398,6 +418,10 @@ public class Employee extends JFrame {
     /**
      * @param args the command line arguments
      */
+
+
+
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -412,20 +436,31 @@ public class Employee extends JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Employee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmployeeView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Employee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmployeeView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Employee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmployeeView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Employee.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmployeeView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Employee().setVisible(true);
+
+                try {
+                    //            chuyển giao diện sang giống ios
+                    UIManager.setLookAndFeel(new FlatLightLaf());
+                    EmployeeView employeeView = new EmployeeView();
+                    employeeView.setVisible(true);
+                    employeeView.customizeTableAppearance();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
             }
         });
     }
@@ -454,4 +489,7 @@ public class Employee extends JFrame {
     private JTable jTable1;
     private JComboBox<String> pickPermission;
     // End of variables declaration
+
+
 }
+

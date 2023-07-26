@@ -40,16 +40,6 @@ public class TableListView extends javax.swing.JFrame {
 
             // Gọi phương thức để thêm dữ liệu vào bảng
             addDataToTable();
-            // Tạo đối tượng MultiLineTableCellRenderer
-//            MultiLineTableCellRenderer multiLineRenderer = new MultiLineTableCellRenderer();
-
-            // Áp dụng renderer cho cột có nội dung đa dòng (ở đây giả sử cột index 3, 4 và 5 có nội dung đa dòng)
-//            int[] multiLineColumns = {3, 4, 5};
-//            for (int columnIndex : multiLineColumns) {
-//                tableTable.getColumnModel().getColumn(columnIndex).setCellRenderer(multiLineRenderer);
-//            }
-            // Thiết lập chiều cao của các hàng trong bảng
-//            tableTable.setRowHeight(60); // Đặt giá trị lớn hơn tùy thuộc vào nhu cầu của bạn
 
         }catch (Exception e){
             e.printStackTrace();
@@ -511,9 +501,7 @@ public class TableListView extends javax.swing.JFrame {
             Stream<Object[]> dataStream1 = Arrays.stream(data);
             if (!a.equals("")) {
                 data = dataStream1.filter(row -> row[1].equals(a)).toArray(Object[][]::new);;
-
             }
-
             Stream<Object[]> dataStream2 = Arrays.stream(data);
             // In ra giá trị của dataStream2
             if (true) {
@@ -527,25 +515,13 @@ public class TableListView extends javax.swing.JFrame {
             }
         }
 
-
-
-
-
-
-
-
 //        Object[][] arrays1 = concatenateArrays(filteredData1,filteredData2);
-
 
         // Xóa dữ liệu hiện có trong bảng
         tableModel.setRowCount(0);
 
-
-
-
         //        sắp xếp theo id trước khi thêm vào bảng
 //        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
-
 
         // Thêm từng hàng dữ liệu vào bảng
         for (Object[] row : this.data) {
