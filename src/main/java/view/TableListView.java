@@ -332,14 +332,17 @@ public class TableListView extends javax.swing.JFrame {
 
     private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        this.dateInput = inputDateFillter.getText();
+        this.CapacityInput = inputCapacityFilter.getText();
+        this.filterTypeInput = (String) selecType.getSelectedItem();
         searchTableList();
         System.out.println("tìm kiếm");
-
+        System.out.println(this.dateInput + this.CapacityInput + this.filterTypeInput);
+//        addDataToTable();
     }
 
     private void btnSelectTableMouseClicked(java.awt.event.MouseEvent evt) {
-//        this.filterTypeInput = selecType.getSelectedItem().toString();
-//        System.out.println("select value: " + this.filterTypeInput);
+
     }
 
     private void btnFilterMouseClicked(java.awt.event.MouseEvent evt) {
@@ -475,12 +478,7 @@ public class TableListView extends javax.swing.JFrame {
                 .filter(n->(int)n[6]>0)
                 .toArray(Object[][]::new);
 
-
-
         Object[][] allBooking = concatenateArrays(dataNoneBooking,dataOnBooking);
-
-
-
 
 //        sắp xếp theo id
         Arrays.sort(allBooking, Comparator.comparingInt(arr -> (int) arr[0]));
@@ -499,27 +497,27 @@ public class TableListView extends javax.swing.JFrame {
     }
 
     public synchronized  void searchTableList() {
-
-        String a = "vip1";
-        final String b = "4";
-        String c = "2023-08-25";
-
+        System.out.println(this.dateInput + this.CapacityInput + this.filterTypeInput);
+        String a = this.filterTypeInput;
+        final String b = this.CapacityInput;
+        String c = this.dateInput;
+        Object[][] arr = data;
         synchronized (lockObject) {
             // Tạo luồng dữ liệu từ mảng
             Stream<Object[]> dataStream1 = Arrays.stream(data);
             if (!a.equals("")) {
-                data = dataStream1.filter(row -> row[1].equals(a)).toArray(Object[][]::new);;
+                arr = dataStream1.filter(row -> row[1].equals(a)).toArray(Object[][]::new);;
             }
-            Stream<Object[]> dataStream2 = Arrays.stream(data);
+            Stream<Object[]> dataStream2 = Arrays.stream(arr);
             // In ra giá trị của dataStream2
-            if (true) {
+            if (!b.equals("")) {
                 //            ép về kiểu string trước khi so sánh
-                data = dataStream2.filter(row -> (row[2].toString()).equals(b)).toArray(Object[][]::new);;
+                arr = dataStream2.filter(row -> (row[2].toString()).equals(b)).toArray(Object[][]::new);;
             }
 
-            Stream<Object[]> dataStream3 = Arrays.stream(data);
+            Stream<Object[]> dataStream3 = Arrays.stream(arr);
             if (!c.equals("")) {
-                data = dataStream3.filter(row -> row[5].toString().contains(c)).toArray(Object[][]::new);;
+                arr = dataStream3.filter(row -> row[5].toString().contains(c)).toArray(Object[][]::new);;
             }
         }
         // Xóa dữ liệu hiện có trong bảng
@@ -529,7 +527,7 @@ public class TableListView extends javax.swing.JFrame {
 //        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
 
         // Thêm từng hàng dữ liệu vào bảng
-        for (Object[] row : this.data) {
+        for (Object[] row : arr) {
             tableModel.addRow(row);
         }
 

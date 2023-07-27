@@ -5,18 +5,51 @@
  */
 package view;
 
+import com.formdev.flatlaf.FlatLightLaf;
+import controller.CustomizeTableAppearance;
+import controller.InstantDateTimeInfo;
+import dao.PermissionDAO;
+import dao.TransactionDAO;
+import dao.TransactionsTypeDAO;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
 /**
  *
  * @author Admin
  */
-public class Transaction extends javax.swing.JFrame {
+public class TransactionView extends javax.swing.JFrame {
 
     /**
      * Creates new form Transaction
      */
-    public Transaction() {
-        initComponents();
-        setLocationRelativeTo(null);
+    public TransactionView() {
+        try {
+//            chuyển giao diện sang giống ios
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            initComponents();
+            setLocationRelativeTo(null);
+            // Khởi tạo mô hình dữ liệu cho bảng
+            this.tableModel = (DefaultTableModel) tableTran.getModel();
+
+
+            // Gọi phương thức để thêm dữ liệu vào bảng
+            addDataToTable();
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //                    căn giữa chữ trong bảng
+        new CustomizeTableAppearance(this.getTableTran());
+    }
+
+    public JTable getTableTran() {
+        return tableTran;
     }
 
     /**
@@ -140,7 +173,12 @@ public class Transaction extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Type of transaction");
 
-        selecTranType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        selecTranType.setModel(new javax.swing.DefaultComboBoxModel<>(
+                TransactionsTypeDAO.getInstance().getAll()
+                        .stream()
+                        .map(s -> s.getType())
+                        .toArray(String[]::new)
+        ));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -296,7 +334,7 @@ public class Transaction extends javax.swing.JFrame {
                 }
         ) {
             Class[] types = new Class [] {
-                    Integer.class, String.class, String.class, String.class, Float.class, String.class, Long.class
+                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.Long.class
             };
             boolean[] canEdit = new boolean [] {
                     false, false, false, false, false, false, false
@@ -319,7 +357,12 @@ public class Transaction extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setText("Filter by type");
 
-        selecTypeFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        selecTypeFilter.setModel(new javax.swing.DefaultComboBoxModel<>(
+                TransactionsTypeDAO.getInstance().getAll()
+                        .stream()
+                        .map(s -> s.getType())
+                        .toArray(String[]::new)
+        ));
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -499,20 +542,20 @@ public class Transaction extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Transaction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TransactionView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Transaction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TransactionView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Transaction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TransactionView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Transaction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TransactionView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Transaction().setVisible(true);
+                new TransactionView().setVisible(true);
             }
         });
     }
@@ -571,5 +614,78 @@ public class Transaction extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> selecTranType;
     private javax.swing.JComboBox<String> selecTypeFilter;
     private javax.swing.JTable tableTran;
+    private Object[][] dataTrans;
+    private DefaultTableModel tableModel;
+    private Object lockObject = new Object();
     // End of variables declaration
+
+    private void addDataToTable() {
+
+        List<model.Transaction> transactionList = TransactionDAO.getInstance().getAll();
+        Object[][] transArr  = transactionList.stream().map(
+                s -> new Object[]{
+                        s.getId(),
+                        s.getPerson().getName() +" "+ s.getPerson().getLastName(),
+                        s.getPerson().getPhone(),
+                        s.getType().getType(),
+                        s.getQuantity(),
+                        InstantDateTimeInfo.getTime(s.getDateCreat(),2),
+                        s.getComment(),
+                }
+
+        ).toArray(Object[][]::new);
+
+        this.dataTrans = transArr;
+
+        // Thêm từng hàng dữ liệu vào bảng
+        for (Object[] row : dataTrans) {
+            tableModel.addRow(row);
+        }
+//         Cập nhật bảng để hiển thị dữ liệu mới
+        tableModel.fireTableDataChanged();
+        searchTableList();
+    }
+
+
+    public synchronized  void searchTableList() {
+
+//        String inputType = "Chi - Trả lương";
+        String inputType = "";
+//        final String inputPhone = "0918234567";
+        final String inputPhone = "";
+        String inputDate = "2023-07-27";
+//        String inputDate = "";
+
+        synchronized (lockObject) {
+            // Tạo luồng dữ liệu từ mảng
+            Stream<Object[]> dataStream1 = Arrays.stream(dataTrans);
+            if (!inputType.equals("")) {
+                dataTrans = dataStream1.filter(row -> row[3].equals(inputType)).toArray(Object[][]::new);;
+            }
+            Stream<Object[]> dataStream2 = Arrays.stream(dataTrans);
+            // In ra giá trị của dataStream2
+            if (!inputPhone.equals("")) {
+                //            ép về kiểu string trước khi so sánh
+                dataTrans = dataStream2.filter(row -> (row[2].toString()).equals(inputPhone)).toArray(Object[][]::new);;
+            }
+
+            Stream<Object[]> dataStream3 = Arrays.stream(dataTrans);
+            if (!inputDate.equals("")) {
+                dataTrans = dataStream3.filter(row -> row[5].toString().contains(inputDate)).toArray(Object[][]::new);;
+            }
+        }
+        // Xóa dữ liệu hiện có trong bảng
+        tableModel.setRowCount(0);
+
+        //        sắp xếp theo id trước khi thêm vào bảng
+//        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
+
+        // Thêm từng hàng dữ liệu vào bảng
+        for (Object[] row : this.dataTrans) {
+            tableModel.addRow(row);
+        }
+
+        // Cập nhật bảng để hiển thị dữ liệu mới
+        tableModel.fireTableDataChanged();
+    }
 }
