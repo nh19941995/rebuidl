@@ -352,13 +352,13 @@ public class EmployeeView extends JFrame {
             newPerson.setUsername("");
 //            lấy id của permissions
 
-            int idOfJohn = PermissionDAO.getInstance().getAll().stream()
+            int idNewPerson = PermissionDAO.getInstance().getAll().stream()
                     .filter(permission -> permission.getPermissionName().equals(selectedPer))
                     .map(Permission::getId)
                     .findFirst()
                     .orElse(-1); // Giá trị mặc định nếu không tìm thấy
 
-            newPerson.setPermission(PermissionDAO.getInstance().getById(idOfJohn));
+            newPerson.setPermission(PermissionDAO.getInstance().getById(idNewPerson));
             PersonDAO.getInstance().insert(newPerson);
 
 
@@ -383,54 +383,23 @@ public class EmployeeView extends JFrame {
         // Khởi tạo mô hình dữ liệu cho bảng
         this.tableModel = (DefaultTableModel) jTable1.getModel();
         java.util.List<Person> personList = PersonDAO.getInstance().getAll();
-
-        // Sử dụng HashSet để lưu trữ các phần tử không trùng lặp
-//        Set<Integer> uniqueElements = new HashSet<>();
-
-
         Object[][] personArr  = personList.stream().map(
                 s -> new Object[]{
-                        s.getName(),  // id bàn
-                        s.getLastName(),  // loại bàn
-                        s.getEmail(),   // số ghế
+                        s.getName(),
+                        s.getLastName(),
+                        s.getEmail(),
                         s.getAddress(),
-                        InstantDateTimeInfo.getTime(s.getDateOfBirth(),2),  // ngày
+                        InstantDateTimeInfo.getTime(s.getDateOfBirth(),2),
                         s.getPermission().getPermissionName(),
                         s.getPhone(),
                 }
 
         ).toArray(Object[][]::new);
 
-//        List<TableList> tableLists = TableListDAO.getInstance().getAll();
-//
-//        Object[][] dataNoneBooking = tableLists.stream()
-//                .map(s -> {
-//                    int tableId = s.getId().intValue();
-//                    if (!uniqueElements.contains(tableId)) { // Đảo ngược điều kiện từ contains thành không contains
-//                        return new Object[]{
-//                                s.getId(),    // id bàn
-//                                s.getType().getName(),  // loại bàn
-//                                s.getSeatingCapacity(),  // số ghế
-//                                "",
-//                                "",
-//                                "",
-//                                s.getFlag()
-//                        };
-//                    } else {
-//                        return null;
-//                    }
-//                })
-//                .filter(Objects::nonNull)
-//                .toArray(Object[][]::new);
-//        Object[][] allBooking = concatenateArrays(dataNoneBooking,dataOnBooking);
-////        sắp xếp theo id
-//        Arrays.sort(allBooking, Comparator.comparingInt(arr -> (int) arr[0]));
+
 
         this.dataTable = personArr;
-//        Arrays.stream(data).map(s->new Object[]{
-//
-//        }).toArray(Object[][]::new);
-//
+
 
 
         // Thêm từng hàng dữ liệu vào bảng
@@ -522,35 +491,72 @@ public class EmployeeView extends JFrame {
             String address = inputAddress.getText();
             String birth = inputBirth.getText();
             String phone = inputPhone.getText();
-            String permission = (String) pickPermission.getSelectedItem();
+            String permissionUpdate = (String) pickPermission.getSelectedItem();
 
             tblModel.setValueAt(fName, jTable1.getSelectedRow(), 0);
             tblModel.setValueAt(lName, jTable1.getSelectedRow(), 1);
             tblModel.setValueAt(email, jTable1.getSelectedRow(), 2);
             tblModel.setValueAt(address, jTable1.getSelectedRow(), 3);
             tblModel.setValueAt(birth, jTable1.getSelectedRow(), 4);
-            tblModel.setValueAt(permission, jTable1.getSelectedRow(),5);
+            tblModel.setValueAt(permissionUpdate, jTable1.getSelectedRow(),5);
             tblModel.setValueAt(phone, jTable1.getSelectedRow(), 6);
 
             JOptionPane.showMessageDialog(this,"Update succesfully !");
+            Person personUpdate = new Person();
+            personUpdate.setId(this.selectTableID);
+            personUpdate.setAddress(address);
+            personUpdate.setDateCreat(PersonDAO.getInstance().getById(this.selectTableID).getDateCreat());
+            //            chuyển string thành Instant
+            LocalDate localDateUpdate = LocalDate.parse(birth);
+            // Đặt giờ, phút, giây và millisecond thành 0 để có ngày giờ cụ thể (00:00:00)
+            Instant instant = localDateUpdate.atStartOfDay(ZoneId.systemDefault()).toInstant();
+            personUpdate.setDateOfBirth(instant);
+            Instant now = Instant.now();
+            personUpdate.setDateUpdate(now);
+            personUpdate.setEmail(email);
+            personUpdate.setFlag(1);
+            personUpdate.setName(fName);
+            personUpdate.setLastName(lName);
+            personUpdate.setPassword("");
+            personUpdate.setPhone(phone);
+            personUpdate.setUsername("");
+
+            //            lấy id của permissions
+            int idNewPerson = PermissionDAO.getInstance().getAll().stream()
+                    .filter(p -> p.getPermissionName().equals(permissionUpdate))
+                    .map(Permission::getId)
+                    .findFirst()
+                    .orElse(-1); // Giá trị mặc định nếu không tìm thấy
+            personUpdate.setPermission(PermissionDAO.getInstance().getById(idNewPerson));
+            PersonDAO.getInstance().update(personUpdate);
+
+            // Xóa dữ liệu hiện có trong bảng
+            tableModel.setRowCount(0);
+            addDataToTable();
         }
     }
 
     private void btnDeleteMouseClicked(java.awt.event.MouseEvent evt) {
-        DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
-        if(jTable1.getSelectedRowCount() != 0){
-            int option = JOptionPane.showOptionDialog(rootPane, "Do you want delete "+ jTable1.getSelectedRowCount() + " user ?", "Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, "Yes");
-            // Xử lý lựa chọn của người dùng
-            if (option == JOptionPane.YES_OPTION) {
-                tblModel.removeRow(jTable1.getSelectedRow());
-            }
-        }else {
-            if(jTable1.getRowCount() == 0){
-                JOptionPane.showMessageDialog(rootPane, "Table user is empty !");
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "Please select single row for delete!");
-            }
-        }
+//        DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
+//        if(jTable1.getSelectedRowCount() != 0){
+//            int option = JOptionPane.showOptionDialog(rootPane, "Do you want delete "+ jTable1.getSelectedRowCount() + " user ?", "Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, "Yes");
+//            // Xử lý lựa chọn của người dùng
+//            if (option == JOptionPane.YES_OPTION) {
+//                tblModel.removeRow(jTable1.getSelectedRow());
+//            }
+//        }else {
+//            if(jTable1.getRowCount() == 0){
+//                JOptionPane.showMessageDialog(rootPane, "Table user is empty !");
+//            }else{
+//                JOptionPane.showMessageDialog(rootPane, "Please select single row for delete!");
+//            }
+//        }
+        Person personDelete = PersonDAO.getInstance().getById(this.selectTableID);
+        personDelete.setFlag(0);
+        PersonDAO.getInstance().update(personDelete);
+        // Xóa dữ liệu hiện có trong bảng
+        tableModel.setRowCount(0);
+        addDataToTable();
     }
 
     /**
@@ -635,5 +641,8 @@ public class EmployeeView extends JFrame {
     // End of variables declaration
     private DefaultTableModel tableModel;
     private Object[][] dataTable;
+
+//    id của người muốn update
+    private int selectTableID = 4;
 }
 
