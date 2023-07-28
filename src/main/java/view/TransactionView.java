@@ -535,49 +535,53 @@ public class TransactionView extends javax.swing.JFrame {
 
     private void btnCreateTranActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        this.inputCommentValue = inputComment.getText();
-        this.inputDateValue = inputDate.getText();
+//        this.inputCommentValue = inputComment.getText();
+//        this.inputDateValue = inputDate.getText();
+//        this.inputTransValue = inputTranValue.getText();
+        //        lấy dữ liệu từ combobox
+//        this.selecPersonValue = (String)selecPerson.getSelectedItem();
+//        this.selecTranTypeValue = (String)selecTranType.getSelectedItem();
+//        phần lọc
+        this.selecTypeFilterValue = (String)selecTypeFilter.getSelectedItem();
         this.inputDateFilterValue = inputDateFilter.getText();
         this.inputPersonPhoneFilterValue = inputPersonFilter.getText();
-        this.inputTransValue = inputTranValue.getText();
-        //        lấy dữ liệu từ combobox
-        this.selecPersonValue = (String)selecPerson.getSelectedItem();
-        this.selecTranTypeValue = (String)selecTranType.getSelectedItem();
-        this.selecTypeFilterValue = (String)selecTypeFilter.getSelectedItem();
         //        in thử
-        System.out.println(inputCommentValue);
-        System.out.println(inputDateValue);
-        System.out.println(inputDateFilterValue);
-        System.out.println(inputPersonPhoneFilterValue);
-        System.out.println(inputTransValue);
-        System.out.println(selecPersonValue);
-        System.out.println(selecTranTypeValue);
-        System.out.println(selecTypeFilterValue);
+//        System.out.println(inputCommentValue);
+//        System.out.println(inputDateValue);
+//        System.out.println(inputDateFilterValue);
+//        System.out.println(inputPersonPhoneFilterValue);
+//        System.out.println(inputTransValue);
+//        System.out.println(selecPersonValue);
+//        System.out.println(selecTranTypeValue);
+//        System.out.println(selecTypeFilterValue);
         //        kiểm tra không null
-        if (this.inputCommentValue != null &&
-                this.inputDateValue != null &&
-                !inputTransValue.isEmpty() &&
-                this.selecPersonValue != null &&
-                this.selecTranTypeValue != null ) {
-            Transaction newTransaction = new Transaction();
-            newTransaction.setPerson(PersonDAO.getInstance().getByPhone(selecPersonValue));
-            newTransaction.setQuantity(Float.parseFloat(inputTransValue));
-            newTransaction.setType(TransactionsTypeDAO.getInstance().getByName(selecTranTypeValue));
-            newTransaction.setComment(inputCommentValue);
-            newTransaction.setDateCreat(InstantDateTimeInfo.getByStringDate(inputDateValue));
-            newTransaction.setDateUpdate(InstantDateTimeInfo.getByStringDate(inputDateValue));
-            newTransaction.setFlag(1);
-            TransactionDAO.getInstance().insert(newTransaction);
-            // xóa dữ liệu bảng cũ
-            while (tableModel.getRowCount() > 0) {
-                tableModel.removeRow(0);
-            }
-            // gọi ra bảng mới
-            addDataToTable();
-        } else {
-            System.out.println("douma nhập vào cái gì đi");
-        }
+//        if (this.inputCommentValue != null &&
+//                this.inputDateValue != null &&
+//                !inputTransValue.isEmpty() &&
+//                this.selecPersonValue != null &&
+//                this.selecTranTypeValue != null ) {
+//            Transaction newTransaction = new Transaction();
+//            newTransaction.setPerson(PersonDAO.getInstance().getByPhone(selecPersonValue));
+//            newTransaction.setQuantity(Float.parseFloat(inputTransValue));
+//            newTransaction.setType(TransactionsTypeDAO.getInstance().getByName(selecTranTypeValue));
+//            newTransaction.setComment(inputCommentValue);
+//            newTransaction.setDateCreat(InstantDateTimeInfo.getByStringDate(inputDateValue));
+//            newTransaction.setDateUpdate(InstantDateTimeInfo.getByStringDate(inputDateValue));
+//            newTransaction.setFlag(1);
+//            TransactionDAO.getInstance().insert(newTransaction);
+//            // xóa dữ liệu bảng cũ
+//            while (tableModel.getRowCount() > 0) {
+//                tableModel.removeRow(0);
+//            }
+//            // gọi ra bảng mới
+//            addDataToTable();
+//        } else {
+//            System.out.println("douma nhập vào cái gì đi");
+//        }
 
+//        thêm vào test vì chưa lấy dc nút
+        searchTableList();
+//        addDataToTable();
 
     }
 
@@ -704,7 +708,7 @@ public class TransactionView extends javax.swing.JFrame {
 
         ).toArray(Object[][]::new);
 
-        // In các giá trị trong mảng 2D transArr
+//         In các giá trị trong mảng 2D transArr
 //        for (Object[] row : transArr) {
 //            for (Object cell : row) {
 //                System.out.print(cell + "\t");
@@ -720,11 +724,19 @@ public class TransactionView extends javax.swing.JFrame {
         }
 //         Cập nhật bảng để hiển thị dữ liệu mới
         tableModel.fireTableDataChanged();
+
     }
 
 
     public synchronized  void searchTableList() {
         Object[][] arr = dataTrans;
+        //        In các giá trị trong mảng 2D transArr
+        for (Object[] row : arr) {
+            for (Object cell : row) {
+                System.out.print(cell + "\t");
+            }
+            System.out.println();
+        }
         synchronized (lockObject) {
             Stream<Object[]> dataStream1 = Arrays.stream(dataTrans);
             if (!selecTypeFilterValue.equals("")) {  // loại giao dịch
@@ -746,7 +758,7 @@ public class TransactionView extends javax.swing.JFrame {
         tableModel.setRowCount(0);
 
         // Thêm từng hàng dữ liệu vào bảng
-        for (Object[] row : this.dataTrans) {
+        for (Object[] row : arr) {
             tableModel.addRow(row);
         }
 
