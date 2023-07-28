@@ -9,8 +9,10 @@ import com.formdev.flatlaf.FlatLightLaf;
 import controller.CustomizeTableAppearance;
 import controller.InstantDateTimeInfo;
 import dao.PermissionDAO;
+import dao.PersonDAO;
 import dao.TransactionDAO;
 import dao.TransactionsTypeDAO;
+import model.Transaction;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -146,7 +148,12 @@ public class TransactionView extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Select person ");
 
-        selecPerson.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        selecPerson.setModel(new javax.swing.DefaultComboBoxModel<>(
+                        PersonDAO.getInstance().getAll()
+                        .stream()
+                        .map(s -> s.getPhone())
+                        .toArray(String[]::new)
+        ));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -521,8 +528,57 @@ public class TransactionView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
+    // Thêm ActionListener vào nút
+    private void btnFilterTranActionPerformed(java.awt.event.ActionEvent evt ){
+        System.out.println("meo meo meo");
+    };
+
     private void btnCreateTranActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        this.inputCommentValue = inputComment.getText();
+        this.inputDateValue = inputDate.getText();
+        this.inputDateFilterValue = inputDateFilter.getText();
+        this.inputPersonPhoneFilterValue = inputPersonFilter.getText();
+        this.inputTransValue = inputTranValue.getText();
+        //        lấy dữ liệu từ combobox
+        this.selecPersonValue = (String)selecPerson.getSelectedItem();
+        this.selecTranTypeValue = (String)selecTranType.getSelectedItem();
+        this.selecTypeFilterValue = (String)selecTypeFilter.getSelectedItem();
+        //        in thử
+        System.out.println(inputCommentValue);
+        System.out.println(inputDateValue);
+        System.out.println(inputDateFilterValue);
+        System.out.println(inputPersonPhoneFilterValue);
+        System.out.println(inputTransValue);
+        System.out.println(selecPersonValue);
+        System.out.println(selecTranTypeValue);
+        System.out.println(selecTypeFilterValue);
+        //        kiểm tra không null
+        if (this.inputCommentValue != null &&
+                this.inputDateValue != null &&
+                !inputTransValue.isEmpty() &&
+                this.selecPersonValue != null &&
+                this.selecTranTypeValue != null ) {
+            Transaction newTransaction = new Transaction();
+            newTransaction.setPerson(PersonDAO.getInstance().getByPhone(selecPersonValue));
+            newTransaction.setQuantity(Float.parseFloat(inputTransValue));
+            newTransaction.setType(TransactionsTypeDAO.getInstance().getByName(selecTranTypeValue));
+            newTransaction.setComment(inputCommentValue);
+            newTransaction.setDateCreat(InstantDateTimeInfo.getByStringDate(inputDateValue));
+            newTransaction.setDateUpdate(InstantDateTimeInfo.getByStringDate(inputDateValue));
+            newTransaction.setFlag(1);
+            TransactionDAO.getInstance().insert(newTransaction);
+            // xóa dữ liệu bảng cũ
+            while (tableModel.getRowCount() > 0) {
+                tableModel.removeRow(0);
+            }
+            // gọi ra bảng mới
+            addDataToTable();
+        } else {
+            System.out.println("douma nhập vào cái gì đi");
+        }
+
+
     }
 
     /**
@@ -619,9 +675,22 @@ public class TransactionView extends javax.swing.JFrame {
     private Object lockObject = new Object();
     // End of variables declaration
 
+    private String inputCommentValue;
+    private String inputDateValue;
+
+    private String inputTransValue;
+    private String selecPersonValue;
+    private String selecTranTypeValue;
+
+    private String selecTypeFilterValue;
+    private String inputDateFilterValue;
+    private String inputPersonPhoneFilterValue;
+
+
     private void addDataToTable() {
 
         List<model.Transaction> transactionList = TransactionDAO.getInstance().getAll();
+
         Object[][] transArr  = transactionList.stream().map(
                 s -> new Object[]{
                         s.getId(),
@@ -629,11 +698,19 @@ public class TransactionView extends javax.swing.JFrame {
                         s.getPerson().getPhone(),
                         s.getType().getType(),
                         s.getQuantity(),
-                        InstantDateTimeInfo.getTime(s.getDateCreat(),2),
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getDateCreat(),2),
                         s.getComment(),
                 }
 
         ).toArray(Object[][]::new);
+
+        // In các giá trị trong mảng 2D transArr
+//        for (Object[] row : transArr) {
+//            for (Object cell : row) {
+//                System.out.print(cell + "\t");
+//            }
+//            System.out.println();
+//        }
 
         this.dataTrans = transArr;
 
@@ -643,42 +720,30 @@ public class TransactionView extends javax.swing.JFrame {
         }
 //         Cập nhật bảng để hiển thị dữ liệu mới
         tableModel.fireTableDataChanged();
-        searchTableList();
     }
 
 
     public synchronized  void searchTableList() {
-
-//        String inputType = "Chi - Trả lương";
-        String inputType = "";
-//        final String inputPhone = "0918234567";
-        final String inputPhone = "";
-        String inputDate = "2023-07-27";
-//        String inputDate = "";
-
+        Object[][] arr = dataTrans;
         synchronized (lockObject) {
-            // Tạo luồng dữ liệu từ mảng
             Stream<Object[]> dataStream1 = Arrays.stream(dataTrans);
-            if (!inputType.equals("")) {
-                dataTrans = dataStream1.filter(row -> row[3].equals(inputType)).toArray(Object[][]::new);;
+            if (!selecTypeFilterValue.equals("")) {  // loại giao dịch
+                arr = dataStream1.filter(row -> row[3].equals(selecTypeFilterValue)).toArray(Object[][]::new);;
             }
-            Stream<Object[]> dataStream2 = Arrays.stream(dataTrans);
+            Stream<Object[]> dataStream2 = Arrays.stream(arr);
             // In ra giá trị của dataStream2
-            if (!inputPhone.equals("")) {
+            if (!inputPersonPhoneFilterValue.equals("")) {   // số điện thoại
                 //            ép về kiểu string trước khi so sánh
-                dataTrans = dataStream2.filter(row -> (row[2].toString()).equals(inputPhone)).toArray(Object[][]::new);;
+                arr = dataStream2.filter(row -> (row[2].toString()).equals(inputPersonPhoneFilterValue)).toArray(Object[][]::new);;
             }
 
-            Stream<Object[]> dataStream3 = Arrays.stream(dataTrans);
-            if (!inputDate.equals("")) {
-                dataTrans = dataStream3.filter(row -> row[5].toString().contains(inputDate)).toArray(Object[][]::new);;
+            Stream<Object[]> dataStream3 = Arrays.stream(arr);
+            if (!inputDateFilterValue.equals("")) {         // ngày giao dịch
+                arr = dataStream3.filter(row -> row[5].toString().contains(inputDateFilterValue)).toArray(Object[][]::new);;
             }
         }
         // Xóa dữ liệu hiện có trong bảng
         tableModel.setRowCount(0);
-
-        //        sắp xếp theo id trước khi thêm vào bảng
-//        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
 
         // Thêm từng hàng dữ liệu vào bảng
         for (Object[] row : this.dataTrans) {
@@ -688,4 +753,6 @@ public class TransactionView extends javax.swing.JFrame {
         // Cập nhật bảng để hiển thị dữ liệu mới
         tableModel.fireTableDataChanged();
     }
+
+
 }

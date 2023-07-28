@@ -446,9 +446,9 @@ public class TableListView extends javax.swing.JFrame {
                         s.getTable().getId(),  // id bàn
                         s.getTable().getType().getName(),  // loại bàn
                         s.getTable().getSeatingCapacity(),   // số ghế
-                        InstantDateTimeInfo.getTime(s.getInfo().getStart(),1),  // giờ bắt đầu
-                        InstantDateTimeInfo.getTime(s.getInfo().getEnd(),1),    // giờ kết thúc
-                        InstantDateTimeInfo.getTime(s.getInfo().getStart(),2),  // ngày
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getInfo().getStart(),1),  // giờ bắt đầu
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getInfo().getEnd(),1),    // giờ kết thúc
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getInfo().getStart(),2),  // ngày
                         s.getTable().getFlag(),  // trạng thái của bàn
                         uniqueElements.add(s.getTable().getId())
                 }
@@ -506,7 +506,7 @@ public class TableListView extends javax.swing.JFrame {
             // Tạo luồng dữ liệu từ mảng
             Stream<Object[]> dataStream1 = Arrays.stream(data);
             if (!a.equals("")) {
-                arr = dataStream1.filter(row -> row[1].equals(a)).toArray(Object[][]::new);;
+                arr = dataStream1.filter(row -> row[1].equals(a)).toArray(Object[][]::new);
             }
             Stream<Object[]> dataStream2 = Arrays.stream(arr);
             // In ra giá trị của dataStream2

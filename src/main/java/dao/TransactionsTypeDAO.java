@@ -3,6 +3,7 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import model.Person;
 import model.TransactionsType;
 import utils.PersistenceManager;
 
@@ -92,5 +93,13 @@ public class TransactionsTypeDAO implements DAOInterface<TransactionsType,Intege
         } finally {
             entityManager.close();
         }
+    }
+
+    public TransactionsType getByName(String typeName){
+        TransactionsType type = TransactionsTypeDAO.getInstance().getAll().stream()
+                .filter(s -> s.getType().equals(typeName))
+                .findFirst()
+                .orElse(null);
+        return type;
     }
 }

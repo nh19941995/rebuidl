@@ -101,19 +101,11 @@ public class EmployeeView extends JFrame {
                 return canEdit [columnIndex];
             }
         });
-
-
-
-
         jScrollPane1.setViewportView(jTable1);
-
-
         jPanel4.setBackground(new Color(102, 102, 102));
-
         jLabel7.setFont(new Font("Tahoma", 1, 24)); // NOI18N
         jLabel7.setForeground(new Color(255, 255, 255));
         jLabel7.setText("Customer Infomation ");
-
         btnAddcus.setBackground(new Color(255, 255, 255));
         btnAddcus.setText("Add ");
         btnAddcus.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -136,7 +128,6 @@ public class EmployeeView extends JFrame {
         jLabel8.setFont(new Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setForeground(new Color(255, 255, 255));
         jLabel8.setText("First name :");
-
         jLabel9.setFont(new Font("Tahoma", 0, 18)); // NOI18N
         jLabel9.setForeground(new Color(255, 255, 255));
         jLabel9.setText("Email :");
@@ -161,19 +152,13 @@ public class EmployeeView extends JFrame {
         jLabel11.setForeground(new Color(255, 255, 255));
         jLabel11.setText("Permission :");
 
-
-
 //        dữ liệu của select box
-//        pickPermission.setModel(new DefaultComboBoxModel<>(new String[] { "Cashier", "Manage", "Staff", "Chef", "Security" }));
         pickPermission.setModel(new DefaultComboBoxModel<>(
                 PermissionDAO.getInstance().getAll()
                 .stream()
                 .map(s -> s.getPermissionName())
                 .toArray(String[]::new)
         ));
-//
-
-
 
         pickPermission.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -362,8 +347,6 @@ public class EmployeeView extends JFrame {
 
             newPerson.setPermission(PermissionDAO.getInstance().getById(idNewPerson));
             PersonDAO.getInstance().insert(newPerson);
-
-
 //            đưa dư liệu vào bảng
             DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
 //            String data[] = {inputFname.getText(), inputLname.getText(), inputEmail.getText(), inputAddress.getText(), inputBirth.getText(), selectedPer,inputPhone.getText()};
@@ -377,7 +360,7 @@ public class EmployeeView extends JFrame {
             inputEmail.setText("");
             inputBirth.setText("");
             inputPhone.setText("");
-
+            // xóa dữ liệu bảng cũ
             while (tableModel.getRowCount() > 0) {
                 tableModel.removeRow(0);
             }
@@ -399,26 +382,17 @@ public class EmployeeView extends JFrame {
                         s.getLastName(),
                         s.getEmail(),
                         s.getAddress(),
-                        InstantDateTimeInfo.getTime(s.getDateOfBirth(),2),
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getDateOfBirth(),2),
                         s.getPermission().getPermissionName(),
                         s.getPhone(),
                 }
 
         ).toArray(Object[][]::new);
-
-
-
         this.dataTable = personArr;
-
-
-
         // Thêm từng hàng dữ liệu vào bảng
         for (Object[] row : dataTable) {
             tableModel.addRow(row);
         }
-        // Xóa tất cả các dòng cũ
-
-
         // Cập nhật bảng để hiển thị dữ liệu mới
         tableModel.fireTableDataChanged();
     }
