@@ -14,11 +14,9 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
-//import controller.MultiLineTableCellRenderer;
 /**
  *
  * @author Admin
@@ -108,6 +106,10 @@ public class TableListView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+
+
+
+
         tableTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
            tableTableMouseClicked(evt);

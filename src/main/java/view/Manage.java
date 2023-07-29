@@ -123,10 +123,10 @@ public class Manage extends javax.swing.JFrame {
         jLabel2.setText("SUM");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("From (year) :");
+        jLabel1.setText("From date:");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel3.setText("To (year) :");
+        jLabel3.setText("To date:");
 
         btnSearch.setText("Search");
 

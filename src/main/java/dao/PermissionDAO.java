@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import model.MenuName;
 import model.Permission;
+import model.Person;
 import utils.PersistenceManager;
 
 import java.util.ArrayList;
@@ -92,5 +93,13 @@ public class PermissionDAO implements DAOInterface<Permission,Integer>{
         } finally {
             entityManager.close();
         }
+    }
+
+    public Permission getPermissionByString(String StringPermission){
+        Permission permission = PermissionDAO.getInstance().getAll().stream()
+                .filter(s -> s.getPermissionName().equals(StringPermission))
+                .findFirst()
+                .orElse(null);
+        return permission;
     }
 }

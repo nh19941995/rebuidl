@@ -13,9 +13,11 @@ import dao.PersonDAO;
 import dao.TransactionDAO;
 import dao.TransactionsTypeDAO;
 import model.Transaction;
+import view.Tool.Boder;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,7 +26,7 @@ import java.util.stream.Stream;
  *
  * @author Admin
  */
-public class TransactionView extends javax.swing.JFrame {
+public class TransactionView extends JPanel {
 
     /**
      * Creates new form Transaction
@@ -34,7 +36,7 @@ public class TransactionView extends javax.swing.JFrame {
 //            chuyển giao diện sang giống ios
             UIManager.setLookAndFeel(new FlatLightLaf());
             initComponents();
-            setLocationRelativeTo(null);
+//            setLocationRelativeTo(null);
             // Khởi tạo mô hình dữ liệu cho bảng
             this.tableModel = (DefaultTableModel) tableTran.getModel();
 
@@ -110,7 +112,7 @@ public class TransactionView extends javax.swing.JFrame {
                         .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         Container.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -506,18 +508,18 @@ public class TransactionView extends javax.swing.JFrame {
                         .addComponent(panelRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(Container, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(Container, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        pack();
+//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+//        getContentPane().setLayout(layout);
+//        layout.setHorizontalGroup(
+//                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                        .addComponent(Container, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//        );
+//        layout.setVerticalGroup(
+//                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                        .addComponent(Container, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//        );
+//
+//        pack();
     }// </editor-fold>
 
     private void inputTranValueActionPerformed(java.awt.event.ActionEvent evt) {
