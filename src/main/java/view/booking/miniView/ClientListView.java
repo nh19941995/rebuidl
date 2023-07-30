@@ -169,40 +169,59 @@ public class ClientListView extends JPanel {
         buttonAddPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(inputFirstName.getText().equals("")||inputLastName.getText().equals("")||inputEmail.getText().equals("")||inputAdress.getText().equals("")||inputBirthday.getText().equals("")||inputPhone.getText().equals("")){
+                    JOptionPane.showMessageDialog(null, "Please enter all data !", "Notice", JOptionPane.WARNING_MESSAGE);
+                }else {
+                    if (!isValidName(inputFirstName.getText())) {
+                        JOptionPane.showMessageDialog(null, "Invalid first name !", "Notice", JOptionPane.WARNING_MESSAGE);
+                    } else if (!isValidName(inputLastName.getText())) {
+                        JOptionPane.showMessageDialog(null, "Invalid last name !", "Notice", JOptionPane.WARNING_MESSAGE);
+                    } else if (!isValidEmail(inputEmail.getText())) {
+                        JOptionPane.showMessageDialog(null, "Invalid email !", "Notice", JOptionPane.WARNING_MESSAGE);
+                    } else if (!isValidBirth(inputBirthday.getText())) {
+                        JOptionPane.showMessageDialog(null, "Invalid birthday !", "Notice", JOptionPane.WARNING_MESSAGE);
+                    } else if (!isValidAddress(inputAdress.getText())){
+                        JOptionPane.showMessageDialog(null, "Invalid address !", "Notice", JOptionPane.WARNING_MESSAGE);
+                    } else if (!isValidPhone(inputPhone.getText())){
+                        JOptionPane.showMessageDialog(null, "Invalid phone number !", "Notice", JOptionPane.WARNING_MESSAGE);
+                    }
 
-                    System.out.println("thêm mới");
-                    // lấy dữ liệu từ form
-                    firstName = inputFirstName.getText();
-                    lasttName = inputLastName.getText();
-                    email = inputEmail.getText();
-                    address = inputAdress.getText();
-                    birthday  = inputBirthday.getText();
-                    phone = inputPhone.getText();
-                    permission = (String) SelecType.getSelectedItem();
+                    else {
+                        // lấy dữ liệu từ form
+                        firstName = inputFirstName.getText();
+                        lasttName = inputLastName.getText();
+                        email = inputEmail.getText();
+                        address = inputAdress.getText();
+                        birthday  = inputBirthday.getText();
+                        phone = inputPhone.getText();
+                        permission = (String) SelecType.getSelectedItem();
 
-                    Person newPerson = new Person();
-                    // bắt đầu thêm
-                    newPerson.setLastName(lasttName);
-                    newPerson.setName(firstName);
-                    newPerson.setUsername("");
-                    newPerson.setPassword("");
-                    newPerson.setEmail(email);
-                    newPerson.setPhone(phone);
-                    newPerson.setAddress(address);
-                    newPerson.setDateOfBirth(InstantDateTimeInfo.getByStringDate(birthday));
-                    Instant now = Instant.now();
-                    newPerson.setDateCreat(now);
-                    newPerson.setDateUpdate(now);
-                    newPerson.setFlag(1);
-                    newPerson.setPermission(PermissionDAO.getInstance().getPermissionByString(permission));
-                    PersonDAO.getInstance().insert(newPerson);
-                    loadData();
-                    inputFirstName.setText("");
-                    inputLastName.setText("");
-                    inputAdress.setText("");
-                    inputEmail.setText("");
-                    inputBirthday.setText("");
-                    inputPhone.setText("");
+                        Person newPerson = new Person();
+                        // bắt đầu thêm
+                        newPerson.setLastName(lasttName);
+                        newPerson.setName(firstName);
+                        newPerson.setUsername("");
+                        newPerson.setPassword("");
+                        newPerson.setEmail(email);
+                        newPerson.setPhone(phone);
+                        newPerson.setAddress(address);
+                        newPerson.setDateOfBirth(InstantDateTimeInfo.getByStringDate(birthday));
+                        Instant now = Instant.now();
+                        newPerson.setDateCreat(now);
+                        newPerson.setDateUpdate(now);
+                        newPerson.setFlag(1);
+                        newPerson.setPermission(PermissionDAO.getInstance().getPermissionByString(permission));
+                        PersonDAO.getInstance().insert(newPerson);
+                        loadData();
+                        inputFirstName.setText("");
+                        inputLastName.setText("");
+                        inputAdress.setText("");
+                        inputEmail.setText("");
+                        inputBirthday.setText("");
+                        inputPhone.setText("");
+                    }
+                }
+
             }
         });
 
