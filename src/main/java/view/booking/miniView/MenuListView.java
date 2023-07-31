@@ -7,11 +7,15 @@ import dao.PersonDAO;
 import model.Menu;
 import model.MenuName;
 import model.Person;
+import view.Tool.Grid;
+import view.booking.BookingView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +23,7 @@ public class MenuListView  extends JPanel {
     private JTable table = new JTable();
     private DefaultTableModel tableModel;
     private Object[][] data;
-    private JButton selectTableBTN = new JButton("Choose a Menu for Booking ");
+    private JButton selectMenuBTN = new JButton("Choose a Menu for Booking ");
 
     public Object[][] getData() {
         return data;
@@ -39,7 +43,38 @@ public class MenuListView  extends JPanel {
         JScrollPane scrollPane = createTable();
         loadData();
         this.add(scrollPane, BorderLayout.CENTER);
+        add(gridControlMenuList(),BorderLayout.SOUTH);
 
+
+
+        // sự kiện click vào bảng
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
+                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
+                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
+                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
+                        BookingView.setIdClientList(id);
+                        System.out.println("Bảng menulist đang chọn hàng có id là: "+ id);
+                    }
+                }
+            }
+        });
+
+    }
+
+    private JPanel gridControlMenuList(){
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout(new BorderLayout());
+
+        // đặt kích thước
+        selectMenuBTN.setPreferredSize(new Dimension(200, 20));
+        selectMenuBTN.setBackground(Color.red);
+        Grid grid = new Grid();
+        grid.GridAddCustom(selectMenuBTN,0,0,20,20,20,20,1);
+        jPanel.add(grid);
+        return jPanel;
     }
 
     private JScrollPane createTable() {
@@ -99,6 +134,9 @@ public class MenuListView  extends JPanel {
         // Đặt layout cho table_Panel là BorderLayout
         return scrollPane;
     }
+
+
+
 
     private void loadData(){
         // Lấy model của bảng

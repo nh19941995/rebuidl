@@ -3,7 +3,7 @@ package view.booking;
 import view.Tool.Boder;
 import view.Tool.Grid;
 import view.booking.miniView.ClientListView;
-import view.booking.miniView.MenuListView;
+import view.booking.miniView.DishListView;
 import view.booking.miniView.TableListView;
 
 import javax.swing.*;
@@ -153,7 +153,7 @@ public class BookingView extends JPanel {
                 // Xóa tất cả các thành phần con khỏi JPanel
                 centerBooking.removeAll();
                 // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new MenuListView(),BorderLayout.CENTER);
+                centerBooking.add(new DishListView(),BorderLayout.CENTER);
 
                 // Gọi phương thức revalidate() và repaint() để load lại JPanel
                 centerBooking.revalidate();
