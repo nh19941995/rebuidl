@@ -303,13 +303,13 @@ public class ClientListView extends JPanel {
                 new Object [][] {
 
                 },
-                new String [] {"ID", "Name", "Date of birth", "Phone number", "Email", "Date created", "Permission"}
+                new String [] {"ID", "Fisrt name","Last name", "Phone number","Address", "Date of birth", "Email", "Date created", "Permission"}
         ){
             Class[] types = new Class [] {
-                    String.class, String.class, String.class, String.class, String.class, String.class, String.class
+                    String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class
             };
             boolean[] canEdit = new boolean [] {
-                    false, false, false, false, false, false, false
+                    false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -328,9 +328,11 @@ public class ClientListView extends JPanel {
         Object[][] data = personList.stream().map(
                 s -> new Object[]{
                         s.getId(),
-                        s.getName() + " " + s.getLastName(),
-                        InstantDateTimeInfo.getTimeStringToInstance(s.getDateOfBirth(), 2),
+                        s.getName(),
+                        s.getLastName(),
                         s.getPhone(),
+                        s.getAddress(),
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getDateOfBirth(), 2),
                         s.getEmail(),
                         InstantDateTimeInfo.getTimeStringToInstance(s.getDateCreat(), 2),
                         s.getPermission().getPermissionName(),
@@ -368,9 +370,11 @@ public class ClientListView extends JPanel {
         Object[][] data = personList.stream().map(
                 s -> new Object[]{
                         s.getId(),
-                        s.getName() + " " + s.getLastName(),
-                        InstantDateTimeInfo.getTimeStringToInstance(s.getDateOfBirth(), 2),
+                        s.getName(),
+                        s.getLastName(),
                         s.getPhone(),
+                        s.getAddress(),
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getDateOfBirth(), 2),
                         s.getEmail(),
                         InstantDateTimeInfo.getTimeStringToInstance(s.getDateCreat(), 2),
                         s.getPermission().getPermissionName(),
@@ -393,17 +397,26 @@ public class ClientListView extends JPanel {
 
 
         // đặt kích thước
-        inputFirstName.setPreferredSize(new Dimension(150, 20));
-        inputLastName.setPreferredSize(new Dimension(150, 20));
+        // cột 1
+        inputFirstName.setPreferredSize(new Dimension(200, 20));
         inputEmail.setPreferredSize(new Dimension(200, 20));
+
+
+        // cột 2
+        inputLastName.setPreferredSize(new Dimension(100, 20));
+        SelecType.setPreferredSize(new Dimension(100, 20));
+
+        // cột 3
+        inputBirthday.setPreferredSize(new Dimension(100, 20));
+        inputPhone.setPreferredSize(new Dimension(100, 20));
+        // cột 4 + 5
+
+        inputfilterByPhone.setPreferredSize(new Dimension(138, 20));
         inputAdress.setPreferredSize(new Dimension(230, 20));
-        inputBirthday.setPreferredSize(new Dimension(130, 20));
-        inputPhone.setPreferredSize(new Dimension(130, 20));
-        SelecType.setPreferredSize(new Dimension(200, 20));
+
         buttonAddPerson.setPreferredSize(new Dimension(150, 20));
         buttonDeletePerson.setPreferredSize(new Dimension(150, 20));
         buttonUpdatePerson.setPreferredSize(new Dimension(150, 20));
-        inputfilterByPhone.setPreferredSize(new Dimension(138, 20));
         buttonSelectPerson.setPreferredSize(new Dimension(150, 30));
         // Đặt màu cho nền của JButton
         buttonSelectPerson.setBackground(Color.RED);
@@ -414,20 +427,23 @@ public class ClientListView extends JPanel {
         Grid grid = new Grid();
         // cột 1
         grid.GridAdd(labelFirstName,0,0,10,10,5);
-        grid.GridAdd(inputFirstName,0,1,10,10,0);
-        grid.GridAdd(labelLastName,0,2,10,10,5);
-        grid.GridAddCustom(inputLastName,0,3,10,10,5,15,1);
+        grid.GridAdd(inputFirstName,0,1,10,10,5);
+        grid.GridAdd(labelEmail,0,2,10,10,5);
+        grid.GridAdd(inputEmail,0,3,10,10,5);
+
+
+
         // cột 2
-        grid.GridAdd(labelEmail,1,0,10,10,5);
-        grid.GridAdd(inputEmail,1,1,10,10,0);
+        grid.GridAdd(labelLastName,1,0,10,10,5);
+        grid.GridAddCustom(inputLastName,1,1,10,10,5,5,1);
         grid.GridAddCustom(labelPermission,1,2,10,10,5,5,1);
-        grid.GridAddCustom(SelecType,1,3,10,10,0,15,1);
+        grid.GridAddCustom(SelecType,1,3,10,10,5,5,1);
 
         // cột 3
         grid.GridAdd(labelBirthday,2,0,10,10,5);
-        grid.GridAdd(inputBirthday,2,1,10,10,0);
+        grid.GridAdd(inputBirthday,2,1,10,10,5);
         grid.GridAdd(labelPhone,2,2,10,10,5);
-        grid.GridAddCustom(inputPhone,2,3,10,10,5,15,1);
+        grid.GridAddCustom(inputPhone,2,3,10,10,5,5,1);
         // cột 4
         grid.GridAddCustom(labelfilterByPhone,3,0,10,10,5,5,2);
         grid.GridAddCustom(inputfilterByPhone,3,1,10,10,5,5,1);
@@ -489,24 +505,22 @@ public class ClientListView extends JPanel {
 
     private void tableMouseClicked(MouseEvent evt){
         int rowNumber = table.getSelectedRow();
-        TableModel tblModel = table.getModel();
+        TableModel model = table.getModel();
+
+        String firstName = model.getValueAt(rowNumber, 1 ).toString();
+        String lastName = model.getValueAt(rowNumber, 2 ).toString();
+        String phone = model.getValueAt(rowNumber, 3).toString();
+        String address = model.getValueAt(rowNumber, 4).toString();
+        String birthday = model.getValueAt(rowNumber, 5 ).toString();
+        String email = model.getValueAt(rowNumber, 6 ).toString();
 
 
 
-        String fName = tblModel.getValueAt(rowNumber, 1 ).toString();
-//        String lName = tblModel.getValueAt(rowNumber, 1 ).toString();
-        String birth = tblModel.getValueAt(rowNumber, 2 ).toString();
-        String phone = tblModel.getValueAt(rowNumber, 3).toString();
-        String email = tblModel.getValueAt(rowNumber, 4 ).toString();
-        String address = tblModel.getValueAt(rowNumber, 3).toString();
-
-
-
-        inputFirstName.setText(fName);
-//        inputLastName.setText(lName);
+        inputFirstName.setText(firstName);
+        inputLastName.setText(lastName);
         inputAdress.setText(address);
         inputEmail.setText(email);
-        inputBirthday.setText(birth);
+        inputBirthday.setText(birthday);
         inputPhone.setText(phone);
 
     }

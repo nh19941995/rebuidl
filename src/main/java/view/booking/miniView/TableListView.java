@@ -74,7 +74,7 @@ public class TableListView extends JPanel {
         tableModel.setRowCount(0);
 
         //        sắp xếp theo id trước khi thêm vào bảng
-//        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
+        //        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
         addDataToTable();
         // Thêm từng hàng dữ liệu vào bảng
         for (Object[] row : data) {
@@ -91,18 +91,18 @@ public class TableListView extends JPanel {
         // Thiết lập chiều rộng cho các cột
         table.getColumnModel().getColumn(0).setMinWidth(30); // Cột ID
         table.getColumnModel().getColumn(0).setMaxWidth(50); // Cột ID
-//
-//        table.getColumnModel().getColumn(1).setMinWidth(150); // Cột Name
-//        table.getColumnModel().getColumn(1).setMaxWidth(200); // Cột Name
-//
-//        table.getColumnModel().getColumn(2).setMinWidth(100); // Cột ngày sinh
-//        table.getColumnModel().getColumn(2).setMaxWidth(150); // Cột ngày sinh
-//
-//        table.getColumnModel().getColumn(3).setMinWidth(100);
-//        table.getColumnModel().getColumn(3).setMaxWidth(150);
-//
-//        table.getColumnModel().getColumn(4).setMinWidth(100);
-//        table.getColumnModel().getColumn(4).setMaxWidth(150);
+        //
+        //        table.getColumnModel().getColumn(1).setMinWidth(150); // Cột Name
+        //        table.getColumnModel().getColumn(1).setMaxWidth(200); // Cột Name
+        //
+        //        table.getColumnModel().getColumn(2).setMinWidth(100); // Cột ngày sinh
+        //        table.getColumnModel().getColumn(2).setMaxWidth(150); // Cột ngày sinh
+        //
+        //        table.getColumnModel().getColumn(3).setMinWidth(100);
+        //        table.getColumnModel().getColumn(3).setMaxWidth(150);
+        //
+        //        table.getColumnModel().getColumn(4).setMinWidth(100);
+        //        table.getColumnModel().getColumn(4).setMaxWidth(150);
         //        Tạo một JScrollPane để chứa bảng (thanh cuộn trang)
         JScrollPane scrollPane = new JScrollPane(table);
         //        Đặt layout cho table_Panel là BorderLayout
@@ -113,7 +113,7 @@ public class TableListView extends JPanel {
                 .map(s -> s.getName())
                 .toArray(String[]::new);
         SelecType = new JComboBox<String>();
-//        đăt kích thươc cho các thành phần
+        //        đăt kích thươc cho các thành phần
         SelecType.setModel(new javax.swing.DefaultComboBoxModel<>(selectList));
         filterBySeatingCapacity.setPreferredSize(new Dimension(150, 30));
         filterByDate.setPreferredSize(new Dimension(150, 30));

@@ -21,13 +21,12 @@ public class Menu {
     private Dish dish;
 
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    private float quantity;
 
     @Column(name = "unit_price", nullable = false)
     private Integer unitPrice;
 
-    @Column(name = "date_creat", nullable = false)
-    private Instant dateCreat;
+
 
     @Column(name = "flag", nullable = false)
     private Integer flag;
@@ -56,11 +55,11 @@ public class Menu {
         this.dish = dish;
     }
 
-    public Integer getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
@@ -72,13 +71,6 @@ public class Menu {
         this.unitPrice = unitPrice;
     }
 
-    public Instant getDateCreat() {
-        return dateCreat;
-    }
-
-    public void setDateCreat(Instant dateCreat) {
-        this.dateCreat = dateCreat;
-    }
 
     public Integer getFlag() {
         return flag;
