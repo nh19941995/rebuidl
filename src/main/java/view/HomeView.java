@@ -2,6 +2,8 @@ package view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import view.booking.BookingView;
+import view.booking.miniView.MenuListView;
+import view.booking.miniView.NewMenuListView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,6 +68,10 @@ public class HomeView extends JFrame {
         TransactionView transactionView = new TransactionView();
 //        thêm các view vào tab
         tab3.add(new BookingView(),BorderLayout.CENTER);
+        tab2.add(new NewMenuListView(),BorderLayout.CENTER);
+        tab4.add(new MenuListView(),BorderLayout.CENTER);
+
+        tab5.add(new MenuView(),BorderLayout.CENTER);
 
 
 

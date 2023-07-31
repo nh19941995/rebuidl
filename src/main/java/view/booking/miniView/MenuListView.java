@@ -11,6 +11,7 @@ import view.Tool.Grid;
 import view.booking.BookingView;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -73,6 +74,15 @@ public class MenuListView  extends JPanel {
         selectMenuBTN.setBackground(Color.red);
         Grid grid = new Grid();
         grid.GridAddCustom(selectMenuBTN,0,0,20,20,20,20,1);
+
+
+        // Create a LineBorder with a specified color and thickness
+        Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+        // Set the border for the JPanel
+        jPanel.setBorder(border);
+
+
+
         jPanel.add(grid);
         return jPanel;
     }

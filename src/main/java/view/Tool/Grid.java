@@ -30,9 +30,7 @@ public class Grid extends JPanel {
         gbc.gridx = x;
         gbc.gridy = y;
         gbc.gridwidth = width;
-
         add(element, gbc); // Thêm lớp trung gian vào JPanel
-        gbc.gridwidth = 1;
         // Đặt padding về giá trị mặc định
         gbc.insets = new Insets(0, 0, 0, 0);
     }

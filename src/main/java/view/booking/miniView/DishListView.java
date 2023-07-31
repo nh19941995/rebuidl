@@ -7,6 +7,9 @@ import view.Tool.Grid;
 import view.booking.BookingView;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -55,6 +58,16 @@ public class DishListView  extends JPanel {
         this.data = data;
     }
 
+    private String DishIdSelect;
+
+    public String getDishIdSelect() {
+        return DishIdSelect;
+    }
+
+    public void setDishIdSelect(String dishIdSelect) {
+        DishIdSelect = dishIdSelect;
+    }
+
     public DishListView() {
         setLayout(new BorderLayout());
         setBackground(Color.cyan);
@@ -78,6 +91,7 @@ public class DishListView  extends JPanel {
 //        loadData();
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(searchBarBlock(),BorderLayout.NORTH);
+        this.add(addToNewMenuBlock(),BorderLayout.SOUTH);
 
 
         // sự kiện click vào bảng
@@ -88,7 +102,8 @@ public class DishListView  extends JPanel {
                     int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
                     if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        BookingView.setIdClientList(id);
+//                        BookingView.setIdClientList(id);
+                        setDishIdSelect(id);
                         System.out.println("Bảng Dishlist đang chọn hàng có id là: "+ id);
                     }
                 }
@@ -104,12 +119,48 @@ public class DishListView  extends JPanel {
             }
         });
 
+        buttonAddToNewMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (getDishIdSelect()==null|| inputEnterNumber.getText().isEmpty()|| inputEnterPrice.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Please select the dish, set the price, and add the quantity before adding the item to the new menu. !", "Notice", JOptionPane.WARNING_MESSAGE);
+                }else {
+                    System.out.println("đẩy dữ liệu qua menu ");
+                    model.Menu menu = new model.Menu();
+                    menu.setQuantity(
+                            Float.parseFloat(inputEnterNumber.getText())
+                    );
+                    menu.setUnitPrice(
+                            Integer.parseInt(inputEnterPrice.getText())
+                    );
+                    menu.setFlag(1);
+                    Dish dish = DishDAO.getInstance().getById(Integer.parseInt(getDishIdSelect()));
+                    menu.setDish(dish);
+                    NewMenuListView.addNewDish(menu);
+
+
+
+
+                    NewMenuListView.loadData();
+                }
+
+
+
+            }
+        });
+
     }
 
 
     private JPanel searchBarBlock(){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
+
+        // đăt chiều cao cho jpanel
+        Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 70);
+        jPanel.setPreferredSize(preferredSize);
+
+
         // đặt kích thước
         SelecType.setPreferredSize(new Dimension(150, 20));
         inputFilerByPrice.setPreferredSize(new Dimension(200, 20));
@@ -124,6 +175,35 @@ public class DishListView  extends JPanel {
         jPanel.add(grid,BorderLayout.CENTER);
         jPanel.add(grid2,BorderLayout.EAST);
         return jPanel;
+    }
+
+    private JPanel addToNewMenuBlock(){
+        JPanel jPanel = new JPanel();
+
+//        jPanel.setBorder(new CompoundBorder(new TitledBorder("E-Mail"), new EmptyBorder(20, 20, 20, 20)));
+
+
+        jPanel.setLayout(new BorderLayout());
+
+        // đăt chiều cao cho jpanel
+        Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 70);
+        jPanel.setPreferredSize(preferredSize);
+
+        // đặt kích thước
+        inputEnterPrice.setPreferredSize(new Dimension(150, 20));
+        inputEnterNumber.setPreferredSize(new Dimension(150, 20));
+        buttonAddToNewMenu.setPreferredSize(new Dimension(150, 35));
+        Grid grid = new Grid();
+        grid.GridAddCustom(buttonAddToNewMenu,0,0,0,0,10,10,1);
+        Grid grid1 = new Grid();
+        grid1.GridAddCustom(labelEnterPrice,0,0,20,20,5,5,1);
+        grid1.GridAddCustom(inputEnterPrice,0,1,20,20,5,15,1);
+        grid1.GridAddCustom(labelEnterNumber,1,0,20,20,5,5,1);
+        grid1.GridAddCustom(inputEnterNumber,1,1,20,20,5,15,1);
+
+        jPanel.add(grid,BorderLayout.CENTER);
+        jPanel.add(grid1,BorderLayout.WEST);
+        return  jPanel;
     }
 
     public synchronized  void searchDish() {

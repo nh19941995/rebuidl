@@ -1,5 +1,6 @@
 package dao;
 
+import controller.InstantDateTimeInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -8,6 +9,10 @@ import model.MenuName;
 import utils.PersistenceManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class MenuNameDAO implements DAOInterface<MenuName,Integer>{
     private EntityManagerFactory entityManagerFactory;
@@ -91,5 +96,24 @@ public class MenuNameDAO implements DAOInterface<MenuName,Integer>{
         } finally {
             entityManager.close();
         }
+    }
+
+    public static MenuName getByStringName( String name) {
+        List<MenuName> menuNames = MenuNameDAO.getInstance().getAll();
+        // Tạo luồng dữ liệu từ danh sách menuNames
+        Optional<MenuName> menuNameOptional = menuNames.stream()
+                .filter(s -> s.getName().equals(name))
+                .findFirst();
+
+        // Nếu không tìm thấy, tạo mới đối tượng và lấy về ID
+        return menuNameOptional.orElseGet(() -> {
+            MenuName newMenu = new MenuName();
+            newMenu.setName(name);
+            newMenu.setFlag(1);
+            newMenu.setDateCreat(InstantDateTimeInfo.getNow());
+            newMenu.setDateUpdate(InstantDateTimeInfo.getNow());
+            MenuNameDAO.getInstance().insert(newMenu);
+            return newMenu;
+        });
     }
 }

@@ -80,4 +80,15 @@ public class Menu {
         this.flag = flag;
     }
 
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "id=" + id +
+                ", menuName=" + menuName.getName() +
+                ", dish=" + dish.getDishName() +
+                ", quantity=" + quantity +
+                ", unitPrice=" + unitPrice +
+                ", flag=" + flag +
+                '}';
+    }
 }
