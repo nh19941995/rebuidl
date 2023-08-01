@@ -259,6 +259,7 @@ public class ClientListView extends JPanel {
                 PersonDAO.getInstance().update(personUpdate);
                 // Gọi hàm để tải lại dữ liệu và cập nhật bảng
                 loadData();
+
             }
         });
         // thêm thông báo nếu chưa chọn người
