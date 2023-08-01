@@ -105,6 +105,11 @@ public class BookingView extends JPanel {
         gridSelectTableBTN.GridAdd(selectClientBTN,0,1,10,10,10);
         gridSelectTableBTN.GridAdd(selectMenuBTN,0,2,10,10,10);
         gridSelectTableBTN.GridAdd(submitBookingBTN,0,3,10,10,10);
+        // đặt kích thước
+        selectTableBTN.setPreferredSize(new Dimension(200, 20));
+        selectClientBTN.setPreferredSize(new Dimension(200, 20));
+        selectMenuBTN.setPreferredSize(new Dimension(200, 20));
+        submitBookingBTN.setPreferredSize(new Dimension(200, 20));
 
 
 

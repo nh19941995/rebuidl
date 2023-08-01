@@ -82,6 +82,8 @@ public class NewMenuListView extends JPanel {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
         Grid grid = new Grid();
+        // đặt kích thước
+        inputNameNewMenu.setPreferredSize(new Dimension(200, 20));
         grid.GridAdd(labelNameNewMenu,0,0,10,10,27);
         grid.GridAdd(inputNameNewMenu,1,0,10,10,10);
         jPanel.add(grid,BorderLayout.CENTER);
