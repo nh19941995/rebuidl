@@ -1,10 +1,9 @@
 package view.booking;
 
+import view.MenuView;
 import view.Tool.Boder;
 import view.Tool.Grid;
-import view.booking.miniView.ClientListView;
-import view.booking.miniView.DishListView;
-import view.booking.miniView.TableListView;
+import view.booking.miniView.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +14,16 @@ public class BookingView extends JPanel {
     // Tạo ô input và đặt kích thước mặc định
     JLabel startTimelabel = new JLabel("Start time");
     JLabel endTimelabel = new JLabel("End time");
-    JButton selectTableBTN = new JButton("select table from list");
-    JButton selectClientBTN = new JButton("sellect client from list");
-    JButton selectMenuBTN = new JButton("select menu from list");
-    JButton addToBookingListBTN = new JButton("select table from list");
-    JButton submitBookingBTN = new JButton("Submit all booking");
+
+    JButton buttonSelectTable = new JButton("Select table from list");
+    JButton buttonAddNewTable = new JButton("Add new");
+
+    JButton buttonSelectClient = new JButton("Sellect client from list");
+    JButton buttonAddNewClient = new JButton("Add new");
+
+    JButton buttonSelectMenu = new JButton("Select menu from list");
+    JButton buttonAddNewMenu = new JButton("Add new");
+    JButton buttonSubmitBooking = new JButton("Submit all booking");
     // các biến giao tiếp giữa các form
     private static String idClientList;
     private static String idCTableList;
@@ -86,7 +90,7 @@ public class BookingView extends JPanel {
         this.add(topBooking,BorderLayout.NORTH);
 
         leftBooking.setBackground(Color.RED);
-        leftBooking.setPreferredSize(new Dimension(300, 300));
+        leftBooking.setPreferredSize(new Dimension(500, 300));
 
         // thêm các phần tử vào layout chính
 
@@ -99,22 +103,17 @@ public class BookingView extends JPanel {
 //        JButton addToBookingListBTN = new JButton("select table from list");
 //        JButton submitBookingBTN = new JButton("select table from list");
 
-        //        thêm các phần tử vào grid
-        Grid gridSelectTableBTN = new Grid();
-        gridSelectTableBTN.GridAdd(selectTableBTN,0,0,10,10,10);
-        gridSelectTableBTN.GridAdd(selectClientBTN,0,1,10,10,10);
-        gridSelectTableBTN.GridAdd(selectMenuBTN,0,2,10,10,10);
-        gridSelectTableBTN.GridAdd(submitBookingBTN,0,3,10,10,10);
-        // đặt kích thước
-        selectTableBTN.setPreferredSize(new Dimension(200, 20));
-        selectClientBTN.setPreferredSize(new Dimension(200, 20));
-        selectMenuBTN.setPreferredSize(new Dimension(200, 20));
-        submitBookingBTN.setPreferredSize(new Dimension(200, 20));
+
+
 
 
 
         //       thêm grid vào layout chính
-        leftBooking.add(gridSelectTableBTN,BorderLayout.CENTER);
+        leftBooking.add(setTableAndMenuBlock(),BorderLayout.CENTER);
+        centerBooking.add( new MenuListView(),BorderLayout.CENTER);
+        leftBooking.add(setInfoBlock(),BorderLayout.SOUTH);
+
+
 
 
 
@@ -125,7 +124,7 @@ public class BookingView extends JPanel {
 //        botBooking.add(botLabel,BorderLayout.CENTER);
 //        topBooking.add(topLabel,BorderLayout.CENTER);
 
-        selectTableBTN.addActionListener(new ActionListener() {
+        buttonSelectTable.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Xóa tất cả các thành phần con khỏi JPanel
@@ -138,7 +137,7 @@ public class BookingView extends JPanel {
             }
         });
 
-        selectClientBTN.addActionListener(new ActionListener() {
+        buttonSelectClient.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Xóa tất cả các thành phần con khỏi JPanel
@@ -152,13 +151,27 @@ public class BookingView extends JPanel {
             }
         });
 
-        selectMenuBTN.addActionListener(new ActionListener() {
+        buttonSelectMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Xóa tất cả các thành phần con khỏi JPanel
                 centerBooking.removeAll();
                 // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new DishListView(),BorderLayout.CENTER);
+                centerBooking.add(new MenuListView(),BorderLayout.CENTER);
+
+                // Gọi phương thức revalidate() và repaint() để load lại JPanel
+                centerBooking.revalidate();
+                centerBooking.repaint();
+            }
+        });
+
+        buttonAddNewMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Xóa tất cả các thành phần con khỏi JPanel
+                centerBooking.removeAll();
+                // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
+                centerBooking.add(new MenuView(),BorderLayout.CENTER);
 
                 // Gọi phương thức revalidate() và repaint() để load lại JPanel
                 centerBooking.revalidate();
@@ -167,7 +180,10 @@ public class BookingView extends JPanel {
         });
 
 
-        submitBookingBTN.addActionListener(new ActionListener() {
+
+
+
+        buttonSubmitBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println(getIdClientList());
@@ -177,6 +193,58 @@ public class BookingView extends JPanel {
 
 
 
+    }
+
+    public JPanel setTableAndMenuBlock(){
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout(new BorderLayout());
+        Grid grid = new Grid();
+
+        JPanel table = new BookingListView();
+
+        grid.GridAddCustom(table,0,0,0,0,20,20,2);
+        // đặt kích thước
+        table.setPreferredSize(new Dimension(450, 200));
+        grid.GridAddCustom(buttonSelectMenu,0,1,20,20,20,20,1);
+        grid.GridAddCustom(buttonAddNewMenu,1,1,20,20,20,20,1);
+        grid.GridAddCustom(buttonSelectTable,0,2,20,20,20,20,1);
+        grid.GridAddCustom(buttonAddNewTable,1,2,20,20,20,20,1);
+
+        // đặt kích thước
+        buttonSelectTable.setPreferredSize(new Dimension(200, 20));
+        buttonSelectMenu.setPreferredSize(new Dimension(200, 20));
+
+        buttonAddNewMenu.setPreferredSize(new Dimension(100, 20));
+        buttonAddNewTable.setPreferredSize(new Dimension(100, 20));
+
+        jPanel.add(grid,BorderLayout.CENTER);
+        return jPanel;
+    }
+
+    public JPanel setInfoBlock(){
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout(new BorderLayout());
+
+        Grid grid = new Grid();
+//        JPanel table = new BookingListView();
+//        grid.GridAddCustom(table,0,0,0,0,20,20,2);
+        // đặt kích thước
+//        table.setPreferredSize(new Dimension(450, 200));
+
+        grid.GridAddCustom(buttonSelectClient,0,1,20,20,20,20,1);
+        grid.GridAddCustom(buttonAddNewClient,1,1,20,20,20,20,1);
+        grid.GridAddCustom(buttonSubmitBooking,0,2,20,20,20,20,2);
+
+        // đặt kích thước
+        buttonSelectClient.setPreferredSize(new Dimension(200, 20));
+        buttonSubmitBooking.setPreferredSize(new Dimension(200, 20));
+
+        buttonAddNewClient.setPreferredSize(new Dimension(100, 20));
+
+
+
+        jPanel.add(grid,BorderLayout.CENTER);
+        return jPanel;
     }
 }
 

@@ -1,9 +1,12 @@
 package view.booking.miniView;
 
 import controller.InstantDateTimeInfo;
+import controller.ObjectNullChecker;
 import dao.BookingDAO;
 import dao.TableListDAO;
 import dao.TableTypeDAO;
+import model.Booking;
+import model.TableList;
 import view.Tool.Grid;
 import view.booking.BookingView;
 
@@ -31,9 +34,17 @@ public class TableListView extends JPanel {
     private JLabel labelType = new JLabel("Select type");
 
     private JComboBox<String> SelecType;
-    private JButton selectTableBTN = new JButton("Select table");
-    private JButton filtertBTN = new JButton("Filter");
+    private JButton buttonSelectTable = new JButton("Select table");
+    private JButton buttonSearch = new JButton("Search");
+    private static int selectTableId;
 
+    public static int getSelectTableId() {
+        return selectTableId;
+    }
+
+    public static void setSelectTableId(int selectTableId) {
+        TableListView.selectTableId = selectTableId;
+    }
 
     // còn phải sửa chỉ hiển thị các booking tính từ ngày hiện tại trở đi.
 
@@ -118,11 +129,11 @@ public class TableListView extends JPanel {
         filterBySeatingCapacity.setPreferredSize(new Dimension(150, 30));
         filterByDate.setPreferredSize(new Dimension(150, 30));
         SelecType.setPreferredSize(new Dimension(150, 30));
-        selectTableBTN.setPreferredSize(new Dimension(150, 30));
+        buttonSelectTable.setPreferredSize(new Dimension(150, 30));
         // Đặt màu cho nền của JButton
-        selectTableBTN.setBackground(Color.RED);
+        buttonSelectTable.setBackground(Color.RED);
         // Đặt màu cho văn bản của JButton
-        selectTableBTN.setForeground(Color.WHITE);
+        buttonSelectTable.setForeground(Color.WHITE);
         this.add(scrollPane,BorderLayout.CENTER);
         Grid gridAllbutton = new Grid();
         gridAllbutton.GridAdd(labelDate,0,0,10,10,10);
@@ -131,8 +142,8 @@ public class TableListView extends JPanel {
         gridAllbutton.GridAdd(filterBySeatingCapacity,3,0,10,10,10);
         gridAllbutton.GridAdd(labelType,4,0,10,10,10);
         gridAllbutton.GridAdd(SelecType,5,0,10,10,10);
-        gridAllbutton.GridAdd(filtertBTN,6 ,0,10,10,10);
-        gridAllbutton.GridAdd(selectTableBTN,7 ,0,10,10,10);
+        gridAllbutton.GridAdd(buttonSearch,6 ,0,10,10,10);
+        gridAllbutton.GridAdd(buttonSelectTable,7 ,0,10,10,10);
         this.add(gridAllbutton,BorderLayout.SOUTH);
 
         // sự kiện click vào bảng
@@ -143,19 +154,42 @@ public class TableListView extends JPanel {
                     int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
                     if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        BookingView.setIdClientList(id);
+                        TableListView.setSelectTableId(Integer.parseInt(id));
                         System.out.println("Bảng Table đang chọn hàng có id là: "+ id);
                     }
                 }
             }
         });
 
-        filtertBTN.addActionListener(new ActionListener() {
+        buttonSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
                 searchTableList();
             }
+        });
+
+        buttonSelectTable.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("gửi dữ liệu về Booking list menu");
+                ArrayList<Booking> bookings = BookingListView.getBookings();
+                TableList table = TableListDAO.getInstance().getById(TableListView.getSelectTableId());
+                if (bookings.size()==0){
+                    Booking booking = new Booking();
+                    bookings.add(booking);
+                }else {
+                    bookings.forEach(s->{
+                        if ( ObjectNullChecker.hasNullFields(s)){
+                            Booking booking = new Booking();
+                            booking.setTable(table);
+                            bookings.add(booking);
+                        }
+                    });
+                }
+            }
+
+
         });
     }
 
