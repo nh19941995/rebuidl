@@ -1,5 +1,6 @@
 package view.booking;
 
+import model.Booking;
 import view.MenuView;
 import view.Tool.Boder;
 import view.Tool.Grid;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class BookingView extends JPanel {
     // Tạo ô input và đặt kích thước mặc định
@@ -16,18 +18,20 @@ public class BookingView extends JPanel {
     JLabel endTimelabel = new JLabel("End time");
 
     JButton buttonSelectTable = new JButton("Select table from list");
-    JButton buttonAddNewTable = new JButton("Add new");
+    JButton buttonRemoveARow = new JButton("Remove a row");
 
     JButton buttonSelectClient = new JButton("Sellect client from list");
-    JButton buttonAddNewClient = new JButton("Add new");
+    JButton buttonRemoveClient = new JButton("Remove client");
 
     JButton buttonSelectMenu = new JButton("Select menu from list");
-    JButton buttonAddNewMenu = new JButton("Add new");
+    JButton buttonAddNewMenu = new JButton("Creat new menu");
     JButton buttonSubmitBooking = new JButton("Submit all booking");
     // các biến giao tiếp giữa các form
     private static String idClientList;
     private static String idCTableList;
     private static String idMenuList;
+
+
 
     public static String getIdClientList() {
         return idClientList;
@@ -77,11 +81,7 @@ public class BookingView extends JPanel {
         Boder topBooking = new Boder();
         topBooking.setBackground(Color.yellow);
 
-
 //        thêm các layout chính vào layout class
-
-
-
 
         this.add(centerBooking,BorderLayout.CENTER);
         this.add(rightBooking,BorderLayout.EAST);
@@ -90,7 +90,8 @@ public class BookingView extends JPanel {
         this.add(topBooking,BorderLayout.NORTH);
 
         leftBooking.setBackground(Color.RED);
-        leftBooking.setPreferredSize(new Dimension(500, 300));
+        leftBooking.setPreferredSize(new Dimension(420, 300));
+        leftBooking.setBackground(Color.red);
 
         // thêm các phần tử vào layout chính
 
@@ -179,6 +180,15 @@ public class BookingView extends JPanel {
             }
         });
 
+        buttonRemoveARow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Booking> bookings = BookingListView.getBookings();
+                bookings.remove(BookingListView.getIdSelect()-1);
+                BookingListView.loadData();
+            }
+        });
+
 
 
 
@@ -191,6 +201,15 @@ public class BookingView extends JPanel {
             }
         });
 
+        buttonRemoveClient.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("x");
+//                removeAll();
+                revalidate();
+                repaint();
+            }
+        });
 
 
     }
@@ -204,18 +223,18 @@ public class BookingView extends JPanel {
 
         grid.GridAddCustom(table,0,0,0,0,20,20,2);
         // đặt kích thước
-        table.setPreferredSize(new Dimension(450, 200));
+        table.setPreferredSize(new Dimension(400, 200));
         grid.GridAddCustom(buttonSelectMenu,0,1,20,20,20,20,1);
         grid.GridAddCustom(buttonAddNewMenu,1,1,20,20,20,20,1);
         grid.GridAddCustom(buttonSelectTable,0,2,20,20,20,20,1);
-        grid.GridAddCustom(buttonAddNewTable,1,2,20,20,20,20,1);
+        grid.GridAddCustom(buttonRemoveARow,1,2,20,20,20,20,1);
 
         // đặt kích thước
-        buttonSelectTable.setPreferredSize(new Dimension(200, 20));
-        buttonSelectMenu.setPreferredSize(new Dimension(200, 20));
+        buttonSelectTable.setPreferredSize(new Dimension(150, 20));
+        buttonSelectMenu.setPreferredSize(new Dimension(150, 20));
 
-        buttonAddNewMenu.setPreferredSize(new Dimension(100, 20));
-        buttonAddNewTable.setPreferredSize(new Dimension(100, 20));
+        buttonAddNewMenu.setPreferredSize(new Dimension(150, 20));
+        buttonRemoveARow.setPreferredSize(new Dimension(150, 20));
 
         jPanel.add(grid,BorderLayout.CENTER);
         return jPanel;
@@ -226,20 +245,20 @@ public class BookingView extends JPanel {
         jPanel.setLayout(new BorderLayout());
 
         Grid grid = new Grid();
-//        JPanel table = new BookingListView();
-//        grid.GridAddCustom(table,0,0,0,0,20,20,2);
+        JPanel info = new InfoBookingView();
+        grid.GridAddCustom(info,0,0,0,0,20,20,2);
         // đặt kích thước
 //        table.setPreferredSize(new Dimension(450, 200));
 
         grid.GridAddCustom(buttonSelectClient,0,1,20,20,20,20,1);
-        grid.GridAddCustom(buttonAddNewClient,1,1,20,20,20,20,1);
+        grid.GridAddCustom(buttonRemoveClient,1,1,20,20,20,20,1);
         grid.GridAddCustom(buttonSubmitBooking,0,2,20,20,20,20,2);
 
         // đặt kích thước
-        buttonSelectClient.setPreferredSize(new Dimension(200, 20));
-        buttonSubmitBooking.setPreferredSize(new Dimension(200, 20));
+        buttonSelectClient.setPreferredSize(new Dimension(150, 20));
+        buttonSubmitBooking.setPreferredSize(new Dimension(150, 20));
 
-        buttonAddNewClient.setPreferredSize(new Dimension(100, 20));
+        buttonRemoveClient.setPreferredSize(new Dimension(150, 20));
 
 
 

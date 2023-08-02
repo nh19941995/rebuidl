@@ -3,6 +3,7 @@ import controller.InstantDateTimeInfo;
 import dao.PermissionDAO;
 import dao.PersonDAO;
 import dao.TableTypeDAO;
+import model.BookingsInfo;
 import model.Permission;
 import model.Person;
 import view.Tool.Grid;
@@ -18,8 +19,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -102,13 +101,13 @@ public class ClientListView extends JPanel {
     }
 
     private static boolean isValidName(String name){
-        String nameRegex = "^[a-zA-Z ]*$";
+        String nameRegex = "^[\\p{L} .'-]+$";
         Pattern pattern = Pattern.compile(nameRegex);
         Matcher matcher = pattern.matcher(name);
         return matcher.matches();
     }
     private static boolean isValidAddress(String address){
-        String addressRegex = "^[a-zA-Z ]*$";
+        String addressRegex = "^[0-9a-zA-Z ]*$";
         Pattern pattern = Pattern.compile(addressRegex);
         Matcher matcher = pattern.matcher(address);
         return matcher.matches();
@@ -154,16 +153,11 @@ public class ClientListView extends JPanel {
         });
 
         // các sự kiện
-
         table.addMouseListener(new java.awt.event.MouseAdapter()  {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableMouseClicked(evt);
             }
         });
-
-
-
-
 
 
         buttonAddPerson.addActionListener(new ActionListener() {
@@ -180,8 +174,6 @@ public class ClientListView extends JPanel {
                         JOptionPane.showMessageDialog(null, "Invalid email !", "Notice", JOptionPane.WARNING_MESSAGE);
                     } else if (!isValidBirth(inputBirthday.getText())) {
                         JOptionPane.showMessageDialog(null, "Invalid birthday !", "Notice", JOptionPane.WARNING_MESSAGE);
-                    } else if (!isValidAddress(inputAdress.getText())){
-                        JOptionPane.showMessageDialog(null, "Invalid address !", "Notice", JOptionPane.WARNING_MESSAGE);
                     } else if (!isValidPhone(inputPhone.getText())){
                         JOptionPane.showMessageDialog(null, "Invalid phone number !", "Notice", JOptionPane.WARNING_MESSAGE);
                     }
@@ -200,7 +192,7 @@ public class ClientListView extends JPanel {
                         // bắt đầu thêm
                         newPerson.setLastName(lasttName);
                         newPerson.setName(firstName);
-                        newPerson.setUsername("");
+                        newPerson.setUsername(phone);
                         newPerson.setPassword("");
                         newPerson.setEmail(email);
                         newPerson.setPhone(phone);
@@ -243,7 +235,7 @@ public class ClientListView extends JPanel {
                 Person personUpdate = PersonDAO.getInstance().getById(Integer.parseInt(getIdSelectInTable()));
                 personUpdate.setLastName(lasttName);
                 personUpdate.setName(firstName);
-                personUpdate.setUsername("");
+                personUpdate.setUsername(phone);
                 personUpdate.setPassword("");
                 personUpdate.setEmail(email);
                 personUpdate.setPhone(phone);
@@ -259,7 +251,12 @@ public class ClientListView extends JPanel {
                 PersonDAO.getInstance().update(personUpdate);
                 // Gọi hàm để tải lại dữ liệu và cập nhật bảng
                 loadData();
-
+                inputFirstName.setText("");
+                inputLastName.setText("");
+                inputPhone.setText("");
+                inputAdress.setText("");
+                inputEmail.setText("");
+                inputBirthday.setText("");
             }
         });
         // thêm thông báo nếu chưa chọn người
@@ -273,15 +270,39 @@ public class ClientListView extends JPanel {
                 // Gọi hàm reloadTableData() để tải lại dữ liệu và cập nhật bảng
                 loadData();
             }
+        });
 
 
+        // sự kiện click vào bảng
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
+                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
+                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
+                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
+                        setIdSelectInTable(id);
+                        System.out.println("Bảng ClientList đang chọn hàng có id là: "+ id);
+                    }
+                }
+            }
         });
 
         buttonSelectPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("chọn");
+                System.out.println("ClientListView id: "+ getIdSelectInTable());
+                BookingView.setIdClientList(ClientListView.getIdSelectInTable());
+                InfoBookingView bookingView = new InfoBookingView();
+                bookingView.reloadJpanel();
+
+                // reload jpanel infoBookingView
+
             }
+
+
+
+
         });
 
         buttonSearchPerson.addActionListener(new ActionListener() {
@@ -294,10 +315,6 @@ public class ClientListView extends JPanel {
         });
 
     }
-
-
-
-
 
     private JScrollPane createTable() {
         DefaultTableModel model = new DefaultTableModel(
@@ -365,7 +382,6 @@ public class ClientListView extends JPanel {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         // Xóa hết dữ liệu hiện có trong bảng
         model.setRowCount(0);
-
         // Tải lại dữ liệu mới từ cơ sở dữ liệu hoặc từ nguồn dữ liệu mới
         List<Person> personList = PersonDAO.getInstance().getAll();
         Object[][] data = personList.stream().map(
@@ -387,7 +403,6 @@ public class ClientListView extends JPanel {
         for (Object[] rowData : data) {
             model.addRow(rowData);
         }
-
         // Thông báo cho bảng biết rằng dữ liệu đã thay đổi để nó vẽ lại giao diện
         model.fireTableDataChanged();
     }
@@ -395,14 +410,10 @@ public class ClientListView extends JPanel {
     private JPanel blockAddPerson(){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
-
-
         // đặt kích thước
         // cột 1
         inputFirstName.setPreferredSize(new Dimension(200, 20));
         inputEmail.setPreferredSize(new Dimension(200, 20));
-
-
         // cột 2
         inputLastName.setPreferredSize(new Dimension(100, 20));
         SelecType.setPreferredSize(new Dimension(100, 20));
@@ -411,10 +422,8 @@ public class ClientListView extends JPanel {
         inputBirthday.setPreferredSize(new Dimension(100, 20));
         inputPhone.setPreferredSize(new Dimension(100, 20));
         // cột 4 + 5
-
         inputfilterByPhone.setPreferredSize(new Dimension(138, 20));
         inputAdress.setPreferredSize(new Dimension(230, 20));
-
         buttonAddPerson.setPreferredSize(new Dimension(150, 20));
         buttonDeletePerson.setPreferredSize(new Dimension(150, 20));
         buttonUpdatePerson.setPreferredSize(new Dimension(150, 20));
@@ -431,15 +440,11 @@ public class ClientListView extends JPanel {
         grid.GridAdd(inputFirstName,0,1,10,10,5);
         grid.GridAdd(labelEmail,0,2,10,10,5);
         grid.GridAdd(inputEmail,0,3,10,10,5);
-
-
-
         // cột 2
         grid.GridAdd(labelLastName,1,0,10,10,5);
         grid.GridAddCustom(inputLastName,1,1,10,10,5,5,1);
         grid.GridAddCustom(labelPermission,1,2,10,10,5,5,1);
         grid.GridAddCustom(SelecType,1,3,10,10,5,5,1);
-
         // cột 3
         grid.GridAdd(labelBirthday,2,0,10,10,5);
         grid.GridAdd(inputBirthday,2,1,10,10,5);
@@ -465,18 +470,11 @@ public class ClientListView extends JPanel {
         SelecType.setModel(new javax.swing.DefaultComboBoxModel<>(selectList));
         // nút select
         Grid gridAddPerson = new Grid();
-//        grid select person.
         gridAddPerson.GridAddCustom(buttonSelectPerson,0,1,10,10,5,5,2);
 
         // thêm toàn bộ các phần tử vào layout chính
         jPanel.add(grid,BorderLayout.CENTER);
         jPanel.add(gridAddPerson,BorderLayout.EAST);
-
-
-
-
-
-
         return jPanel;
     }
 
@@ -514,8 +512,6 @@ public class ClientListView extends JPanel {
         String address = model.getValueAt(rowNumber, 4).toString();
         String birthday = model.getValueAt(rowNumber, 5 ).toString();
         String email = model.getValueAt(rowNumber, 6 ).toString();
-
-
 
         inputFirstName.setText(firstName);
         inputLastName.setText(lastName);

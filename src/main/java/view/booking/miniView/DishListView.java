@@ -102,7 +102,6 @@ public class DishListView  extends JPanel {
                     int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
                     if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-//                        BookingView.setIdClientList(id);
                         setDishIdSelect(id);
                         System.out.println("Bảng Dishlist đang chọn hàng có id là: "+ id);
                     }
@@ -245,10 +244,6 @@ public class DishListView  extends JPanel {
         tableModel.fireTableDataChanged();
     }
 
-
-
-
-
     private JScrollPane createTable() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object [][] {
@@ -262,11 +257,9 @@ public class DishListView  extends JPanel {
             boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
-
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -307,9 +300,6 @@ public class DishListView  extends JPanel {
         return scrollPane;
     }
 
-
-
-
     private void loadData(){
         // Lấy model của bảng
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -345,8 +335,6 @@ public class DishListView  extends JPanel {
                     }
                 })
                 .toArray(Object[][]::new);
-
-
         setData(filteredData);
         // Thêm dữ liệu mới vào bảng
         for (Object[] rowData : filteredData) {

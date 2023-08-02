@@ -161,6 +161,13 @@ public class NewMenuListView extends JPanel {
         table.getColumnModel().getColumn(0).setMinWidth(30); // Cột ID
         table.getColumnModel().getColumn(0).setMaxWidth(50); // Cột ID
 
+//        table.getColumnModel().getColumn(1).setMinWidth(50); // Cột ID
+//        table.getColumnModel().getColumn(1).setMaxWidth(50); // Cột ID
+
+
+//        table.getColumnModel().getColumn(0).setMaxWidth(50); // Cột ID
+
+
         JScrollPane scrollPane = new JScrollPane(table);
         // Đặt layout cho table_Panel là BorderLayout
         return scrollPane;

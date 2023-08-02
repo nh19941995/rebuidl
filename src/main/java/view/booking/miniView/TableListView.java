@@ -175,18 +175,29 @@ public class TableListView extends JPanel {
                 System.out.println("gửi dữ liệu về Booking list menu");
                 ArrayList<Booking> bookings = BookingListView.getBookings();
                 TableList table = TableListDAO.getInstance().getById(TableListView.getSelectTableId());
-                if (bookings.size()==0){
+                if (bookings.size() == 0){
                     Booking booking = new Booking();
+                    booking.setTable(table);
                     bookings.add(booking);
                 }else {
-                    bookings.forEach(s->{
-                        if ( ObjectNullChecker.hasNullFields(s)){
-                            Booking booking = new Booking();
+                    boolean foundEmptyMenuName = false;
+                    for (Booking booking : bookings) {
+                        if (booking.getTable() == null) {
                             booking.setTable(table);
-                            bookings.add(booking);
+                            foundEmptyMenuName = true;
+                            break;
                         }
-                    });
+                    }
+
+                    if (!foundEmptyMenuName) {
+                        // Nếu không tìm thấy booking có menuName null, thêm mới một booking với menuName vào danh sách.
+                        Booking newBooking = new Booking();
+                        newBooking.setTable(table);
+                        bookings.add(newBooking);
+                    }
                 }
+                BookingListView.setBookings(bookings);
+                BookingListView.loadData();
             }
 
 
@@ -245,7 +256,7 @@ public class TableListView extends JPanel {
                 .filter(n->(int)n[6]>0)
                 .toArray(Object[][]::new);
         Object[][] allBooking = concatenateArrays(dataNoneBooking,dataOnBooking);
-//        sắp xếp theo id
+        //        sắp xếp theo id
         Arrays.sort(allBooking, Comparator.comparingInt(arr -> (int) arr[0]));
         this.data = allBooking;
         Arrays.stream(data).map(s->new Object[]{
@@ -260,9 +271,7 @@ public class TableListView extends JPanel {
         System.out.println(dateInput);
         System.out.println(CapacityInput);
         System.out.println(filterTypeInput);
-
         Object[][] arr = data;
-
         synchronized (lockObject) {
             // Tạo luồng dữ liệu từ mảng
             Stream<Object[]> dataStream1 = Arrays.stream(data);
@@ -290,8 +299,5 @@ public class TableListView extends JPanel {
         // Cập nhật bảng để hiển thị dữ liệu mới
         tableModel.fireTableDataChanged();
     }
-
-
-
 
 }

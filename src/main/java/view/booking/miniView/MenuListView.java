@@ -4,9 +4,8 @@ import controller.InstantDateTimeInfo;
 import dao.MenuDAO;
 import dao.MenuNameDAO;
 import dao.PersonDAO;
-import model.Menu;
-import model.MenuName;
-import model.Person;
+import dao.TableListDAO;
+import model.*;
 import view.Tool.Grid;
 import view.booking.BookingView;
 
@@ -15,8 +14,12 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.Menu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +27,16 @@ public class MenuListView  extends JPanel {
     private JTable table = new JTable();
     private DefaultTableModel tableModel;
     private Object[][] data;
-    private JButton selectMenuBTN = new JButton("Choose a Menu for Booking ");
+    private static int idSelectMenu;
+    private JButton buttonSelectMenu = new JButton("Choose a Menu for Booking ");
+
+    public static int getIdSelectMenu() {
+        return idSelectMenu;
+    }
+
+    public static void setIdSelectMenu(int idSelectMenu) {
+        MenuListView.idSelectMenu = idSelectMenu;
+    }
 
     public Object[][] getData() {
         return data;
@@ -33,6 +45,7 @@ public class MenuListView  extends JPanel {
     public void setData(Object[][] data) {
         this.data = data;
     }
+
 
     public MenuListView() {
         setLayout(new BorderLayout());
@@ -46,8 +59,6 @@ public class MenuListView  extends JPanel {
         this.add(scrollPane, BorderLayout.CENTER);
         add(gridControlMenuList(),BorderLayout.SOUTH);
 
-
-
         // sự kiện click vào bảng
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -56,11 +67,45 @@ public class MenuListView  extends JPanel {
                     int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
                     if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        BookingView.setIdClientList(id);
+                        setIdSelectMenu(Integer.parseInt(id));
                         System.out.println("Bảng menulist đang chọn hàng có id là: "+ id);
                     }
                 }
             }
+        });
+
+        buttonSelectMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("gửi dữ liệu menu về Booking list menu");
+                ArrayList<Booking> bookings = BookingListView.getBookings();
+                MenuName menuName = MenuNameDAO.getInstance().getById(MenuListView.getIdSelectMenu());
+                if (bookings.size() == 0){
+                    Booking booking = new Booking();
+                    booking.setMenuName(menuName);
+                    bookings.add(booking);
+                }else {
+                    boolean foundEmptyMenuName = false;
+                    for (Booking booking : bookings) {
+                        if (booking.getMenuName() == null) {
+                            booking.setMenuName(menuName);
+                            foundEmptyMenuName = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundEmptyMenuName) {
+                        // Nếu không tìm thấy booking có menuName null, thêm mới một booking với menuName vào danh sách.
+                        Booking newBooking = new Booking();
+                        newBooking.setMenuName(menuName);
+                        bookings.add(newBooking);
+                    }
+                }
+                BookingListView.setBookings(bookings);
+                BookingListView.loadData();
+            }
+
+
         });
 
     }
@@ -70,10 +115,10 @@ public class MenuListView  extends JPanel {
         jPanel.setLayout(new BorderLayout());
 
         // đặt kích thước
-        selectMenuBTN.setPreferredSize(new Dimension(200, 20));
-        selectMenuBTN.setBackground(Color.red);
+        buttonSelectMenu.setPreferredSize(new Dimension(200, 20));
+        buttonSelectMenu.setBackground(Color.red);
         Grid grid = new Grid();
-        grid.GridAddCustom(selectMenuBTN,0,0,20,20,20,20,1);
+        grid.GridAddCustom(buttonSelectMenu,0,0,20,20,20,20,1);
 
 
         // Create a LineBorder with a specified color and thickness
