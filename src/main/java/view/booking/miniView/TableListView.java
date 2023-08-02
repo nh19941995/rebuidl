@@ -38,6 +38,9 @@ public class TableListView extends JPanel {
     private JButton buttonSearch = new JButton("Search");
     private static int selectTableId;
 
+    // tạo set chứa id bàn
+    private static Set<Integer> tableId = new HashSet<>();
+
     public static int getSelectTableId() {
         return selectTableId;
     }
@@ -46,7 +49,18 @@ public class TableListView extends JPanel {
         TableListView.selectTableId = selectTableId;
     }
 
+    public static Set<Integer> getTableId() {
+        return tableId;
+    }
+
+    public static void setTableId(Set<Integer> tableId) {
+        TableListView.tableId = tableId;
+    }
+
+
     // còn phải sửa chỉ hiển thị các booking tính từ ngày hiện tại trở đi.
+
+
 
     public TableListView() {
 
@@ -173,34 +187,42 @@ public class TableListView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("gửi dữ liệu về Booking list menu");
+
+                // lấy về danh sách
                 ArrayList<Booking> bookings = BookingListView.getBookings();
+                // lấy id bàn đã chọn
                 TableList table = TableListDAO.getInstance().getById(TableListView.getSelectTableId());
-                if (bookings.size() == 0){
-                    Booking booking = new Booking();
-                    booking.setTable(table);
-                    bookings.add(booking);
+
+                // nếu id bàn đã có trong set
+                if (tableId.contains(TableListView.getSelectTableId())){
+                    // đã tồn tại trong set
+                    JOptionPane.showMessageDialog(null, "You can't book a table twice !", "Notice", JOptionPane.WARNING_MESSAGE);
                 }else {
-                    boolean foundEmptyMenuName = false;
-                    for (Booking booking : bookings) {
-                        if (booking.getTable() == null) {
-                            booking.setTable(table);
-                            foundEmptyMenuName = true;
-                            break;
+                    // chưa tồn tại trong set
+                    tableId.add(TableListView.getSelectTableId());
+                    if (bookings.size() == 0){   // danh sách chưa có phần tử nào thì tạo mới và thêm thuộc tính
+                        Booking booking = new Booking();
+                        booking.setTable(table);
+                        bookings.add(booking);
+                    }else {
+                        boolean foundEmptyMenuName = false;   // nếu đã có phần tử và có thuộc tính trống thì duyệt qua list và thêm thuộc tính trống cho 1 phần tử và thoát vòng
+                        for (Booking booking : bookings) {
+                            if (booking.getTable() == null) {
+                                booking.setTable(table);
+                                foundEmptyMenuName = true;
+                                break;
+                            }
+                        }
+                        if (!foundEmptyMenuName) {    // nếu có phần tủ nhưng tất cả đã dc thêm thuộc tính thì tạo mới 1 phần tử và thêm thuộc tính cho nó
+                            Booking newBooking = new Booking();
+                            newBooking.setTable(table);
+                            bookings.add(newBooking);
                         }
                     }
-
-                    if (!foundEmptyMenuName) {
-                        // Nếu không tìm thấy booking có menuName null, thêm mới một booking với menuName vào danh sách.
-                        Booking newBooking = new Booking();
-                        newBooking.setTable(table);
-                        bookings.add(newBooking);
-                    }
+                    BookingListView.setBookings(bookings);
+                    BookingListView.loadData();
                 }
-                BookingListView.setBookings(bookings);
-                BookingListView.loadData();
             }
-
-
         });
     }
 

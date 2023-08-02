@@ -21,11 +21,11 @@ public class BookingView extends JPanel {
     JButton buttonRemoveARow = new JButton("Remove a row");
 
     JButton buttonSelectClient = new JButton("Sellect client from list");
-    JButton buttonRemoveClient = new JButton("Remove client");
+    JButton buttonShowAllBooking = new JButton("Show all booking");
 
     JButton buttonSelectMenu = new JButton("Select menu from list");
     JButton buttonAddNewMenu = new JButton("Creat new menu");
-    JButton buttonSubmitBooking = new JButton("Submit all booking");
+    JButton buttonSubmitBooking = new JButton("Submit a new booking");
     // các biến giao tiếp giữa các form
     private static String idClientList;
     private static String idCTableList;
@@ -110,9 +110,9 @@ public class BookingView extends JPanel {
 
 
         //       thêm grid vào layout chính
-        leftBooking.add(setTableAndMenuBlock(),BorderLayout.CENTER);
+        leftBooking.add(setTableAndMenuBlock(),BorderLayout.NORTH);
         centerBooking.add( new MenuListView(),BorderLayout.CENTER);
-        leftBooking.add(setInfoBlock(),BorderLayout.SOUTH);
+        leftBooking.add(setInfoBlock(),BorderLayout.CENTER);
 
 
 
@@ -173,7 +173,6 @@ public class BookingView extends JPanel {
                 centerBooking.removeAll();
                 // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
                 centerBooking.add(new MenuView(),BorderLayout.CENTER);
-
                 // Gọi phương thức revalidate() và repaint() để load lại JPanel
                 centerBooking.revalidate();
                 centerBooking.repaint();
@@ -189,38 +188,35 @@ public class BookingView extends JPanel {
             }
         });
 
-
-
-
-
         buttonSubmitBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println(getIdClientList());
 
+
             }
         });
 
-        buttonRemoveClient.addActionListener(new ActionListener() {
+        buttonShowAllBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("x");
-//                removeAll();
-                revalidate();
-                repaint();
+                // Xóa tất cả các thành phần con khỏi JPanel
+                centerBooking.removeAll();
+                // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
+                centerBooking.add(new BookingListView(),BorderLayout.CENTER);
+                // Gọi phương thức revalidate() và repaint() để load lại JPanel
+                centerBooking.revalidate();
+                centerBooking.repaint();
+
             }
         });
-
-
     }
 
     public JPanel setTableAndMenuBlock(){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
         Grid grid = new Grid();
-
         JPanel table = new BookingListView();
-
         grid.GridAddCustom(table,0,0,0,0,20,20,2);
         // đặt kích thước
         table.setPreferredSize(new Dimension(400, 200));
@@ -232,10 +228,8 @@ public class BookingView extends JPanel {
         // đặt kích thước
         buttonSelectTable.setPreferredSize(new Dimension(150, 20));
         buttonSelectMenu.setPreferredSize(new Dimension(150, 20));
-
         buttonAddNewMenu.setPreferredSize(new Dimension(150, 20));
         buttonRemoveARow.setPreferredSize(new Dimension(150, 20));
-
         jPanel.add(grid,BorderLayout.CENTER);
         return jPanel;
     }
@@ -251,14 +245,14 @@ public class BookingView extends JPanel {
 //        table.setPreferredSize(new Dimension(450, 200));
 
         grid.GridAddCustom(buttonSelectClient,0,1,20,20,20,20,1);
-        grid.GridAddCustom(buttonRemoveClient,1,1,20,20,20,20,1);
+        grid.GridAddCustom(buttonShowAllBooking,1,1,20,20,20,20,1);
         grid.GridAddCustom(buttonSubmitBooking,0,2,20,20,20,20,2);
 
         // đặt kích thước
         buttonSelectClient.setPreferredSize(new Dimension(150, 20));
         buttonSubmitBooking.setPreferredSize(new Dimension(150, 20));
 
-        buttonRemoveClient.setPreferredSize(new Dimension(150, 20));
+        buttonShowAllBooking.setPreferredSize(new Dimension(150, 20));
 
 
 

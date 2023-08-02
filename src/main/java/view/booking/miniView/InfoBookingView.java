@@ -6,6 +6,8 @@ import view.Tool.Grid;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InfoBookingView extends JPanel {
     private static JLabel labelFirstName = new JLabel("Fist name Client: ");
@@ -25,6 +27,8 @@ public class InfoBookingView extends JPanel {
         setLayout(new BorderLayout());
         add(block(),BorderLayout.CENTER);
         setBackground(Color.green);
+
+
     }
 
     public JPanel block(){
@@ -54,12 +58,16 @@ public class InfoBookingView extends JPanel {
         return  jPanel;
     }
 
-    public void reloadJpanel(){
+    public static void reloadJpanel(){
         int id = Integer.parseInt(ClientListView.getIdSelectInTable());
         Person person = PersonDAO.getInstance().getById(id);
         labelFirstNameValue.setText(person.getName()); // Đặt giá trị cho JLabel
         labelLastNameValue.setText(person.getLastName()); // Đặt giá trị cho JLabel
-
+        labelFirstNameValue.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
+        labelLastNameValue.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
+//        removeAll();
+//        revalidate();
+//        repaint();
     }
 
 

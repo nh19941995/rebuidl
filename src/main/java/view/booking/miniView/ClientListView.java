@@ -292,17 +292,10 @@ public class ClientListView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("ClientListView id: "+ getIdSelectInTable());
+                // đẩy id person qua class BookingView
                 BookingView.setIdClientList(ClientListView.getIdSelectInTable());
-                InfoBookingView bookingView = new InfoBookingView();
-                bookingView.reloadJpanel();
-
-                // reload jpanel infoBookingView
-
+                InfoBookingView.reloadJpanel();
             }
-
-
-
-
         });
 
         buttonSearchPerson.addActionListener(new ActionListener() {
