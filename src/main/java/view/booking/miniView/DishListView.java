@@ -2,14 +2,8 @@ package view.booking.miniView;
 
 import dao.*;
 import model.Dish;
-
 import view.Tool.Grid;
-import view.booking.BookingView;
-
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -73,10 +67,8 @@ public class DishListView  extends JPanel {
         setBackground(Color.cyan);
         // Khởi tạo bảng với mô hình dữ liệu trống
         table.setModel(new DefaultTableModel());
-
         // Tạo JScrollPane chứa bảng và thêm nó vào JPanel
         JScrollPane scrollPane = createTable();
-
         // Khởi tạo JComboBox SelecType
         SelecType = new JComboBox<>();
         // thêm data cho boder box
@@ -84,11 +76,6 @@ public class DishListView  extends JPanel {
                 .map(s -> s.getType())
                 .toArray(String[]::new);
         SelecType.setModel(new javax.swing.DefaultComboBoxModel<>(selectList));
-
-
-
-
-//        loadData();
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(searchBarBlock(),BorderLayout.NORTH);
         this.add(addToNewMenuBlock(),BorderLayout.SOUTH);
@@ -114,7 +101,6 @@ public class DishListView  extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("tìm kiếm");
                 searchDish();
-//                loadData();
             }
         });
 
@@ -136,15 +122,8 @@ public class DishListView  extends JPanel {
                     Dish dish = DishDAO.getInstance().getById(Integer.parseInt(getDishIdSelect()));
                     menu.setDish(dish);
                     NewMenuListView.addNewDish(menu);
-
-
-
-
                     NewMenuListView.loadData();
                 }
-
-
-
             }
         });
 
@@ -154,12 +133,9 @@ public class DishListView  extends JPanel {
     private JPanel searchBarBlock(){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
-
         // đăt chiều cao cho jpanel
         Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 70);
         jPanel.setPreferredSize(preferredSize);
-
-
         // đặt kích thước
         SelecType.setPreferredSize(new Dimension(150, 20));
         inputFilerByPrice.setPreferredSize(new Dimension(200, 20));
@@ -178,16 +154,10 @@ public class DishListView  extends JPanel {
 
     private JPanel addToNewMenuBlock(){
         JPanel jPanel = new JPanel();
-
-//        jPanel.setBorder(new CompoundBorder(new TitledBorder("E-Mail"), new EmptyBorder(20, 20, 20, 20)));
-
-
         jPanel.setLayout(new BorderLayout());
-
         // đăt chiều cao cho jpanel
         Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 70);
         jPanel.setPreferredSize(preferredSize);
-
         // đặt kích thước
         inputEnterPrice.setPreferredSize(new Dimension(150, 20));
         inputEnterNumber.setPreferredSize(new Dimension(150, 20));
@@ -199,14 +169,12 @@ public class DishListView  extends JPanel {
         grid1.GridAddCustom(inputEnterPrice,0,1,20,20,5,15,1);
         grid1.GridAddCustom(labelEnterNumber,1,0,20,20,5,5,1);
         grid1.GridAddCustom(inputEnterNumber,1,1,20,20,5,15,1);
-
         jPanel.add(grid,BorderLayout.CENTER);
         jPanel.add(grid1,BorderLayout.WEST);
         return  jPanel;
     }
 
     public synchronized  void searchDish() {
-//        table.setModel(tableModel);
         String dishPrice = inputFilerByPrice.getText();
         String dishType = (String) SelecType.getSelectedItem();
         System.out.println(dishPrice);
@@ -218,7 +186,6 @@ public class DishListView  extends JPanel {
             if (!dishType.equals("")) {
                 arr = dataStream1.filter(row -> row[3].equals(dishType)).toArray(Object[][]::new);
             }
-
             // In ra giá trị của dataStream2
             if (!dishPrice.equals("")) {
                 Stream<Object[]> dataStream2 = Arrays.stream(arr);
@@ -227,15 +194,9 @@ public class DishListView  extends JPanel {
                     return priceString.equals(dishPrice);
                 }).toArray(Object[][]::new);
             }
-//            Stream<Object[]> dataStream3 = Arrays.stream(arr);
-//            if (!dateInput.equals("")) {
-//                arr = dataStream3.filter(row -> row[5].toString().contains(dateInput)).toArray(Object[][]::new);
-//            }
         }
-
         // Xóa dữ liệu hiện có trong bảng
         tableModel.setRowCount(0);
-
         // Thêm từng hàng dữ liệu vào bảng
         for (Object[] row : arr) {
             tableModel.addRow(row);
@@ -247,7 +208,6 @@ public class DishListView  extends JPanel {
     private JScrollPane createTable() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object [][] {
-
                 },
                 new String [] {"ID", "Dish name","reference price","Dish type", "Note"}
         ){
@@ -305,7 +265,6 @@ public class DishListView  extends JPanel {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         // Xóa hết dữ liệu hiện có trong bảng
         model.setRowCount(0);
-
         // Tải lại dữ liệu mới từ cơ sở dữ liệu hoặc từ nguồn dữ liệu mới
         List<Dish> dishList = DishDAO.getInstance().getAll();
         Object[][] data = dishList.stream().map(
@@ -318,7 +277,6 @@ public class DishListView  extends JPanel {
                 }
         ).toArray(Object[][]::new);
         setData(data);
-
         Object[][] filteredData = Arrays.stream(data)
                 .filter(row -> {
                     // Lấy giá trị từ cột thứ 4 (đếm từ 0)

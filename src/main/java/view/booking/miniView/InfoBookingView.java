@@ -1,21 +1,17 @@
 package view.booking.miniView;
-
+import controller.BookingController;
 import dao.PersonDAO;
 import model.Person;
 import view.Tool.Grid;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public class InfoBookingView extends JPanel {
     private static JLabel labelFirstName = new JLabel("Fist name Client: ");
     private static JLabel labelFirstNameValue = new JLabel("value");
-
     private static JLabel labelLastName = new JLabel("Last name Client: ");
     private static JLabel labelLastNameValue = new JLabel("value");
-
     private JLabel labelDeposit = new JLabel("Deposit: ");
     private JLabel labelStartTime = new JLabel("Start time: ");
     private JLabel labelEndTime = new JLabel("End time: ");
@@ -30,7 +26,6 @@ public class InfoBookingView extends JPanel {
 
 
     }
-
     public JPanel block(){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
@@ -59,19 +54,11 @@ public class InfoBookingView extends JPanel {
     }
 
     public static void reloadJpanel(){
-        int id = Integer.parseInt(ClientListView.getIdSelectInTable());
+        int id = BookingController.getPersonIdSelect();
         Person person = PersonDAO.getInstance().getById(id);
         labelFirstNameValue.setText(person.getName()); // Đặt giá trị cho JLabel
         labelLastNameValue.setText(person.getLastName()); // Đặt giá trị cho JLabel
         labelFirstNameValue.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
         labelLastNameValue.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
-//        removeAll();
-//        revalidate();
-//        repaint();
     }
-
-
-
-
-
 }

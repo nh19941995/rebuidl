@@ -1,13 +1,11 @@
 package view.booking.miniView;
 import controller.BookingController;
-import model.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 
 public class BookingListView extends JPanel {
@@ -19,24 +17,18 @@ public class BookingListView extends JPanel {
     private JButton buttonremoveFromNewBooking = new JButton("Remove from list");
     private JLabel BookingList = new JLabel("New booking list");
     private static int idSelect;
-
     public static int getIdSelect() {
         return idSelect;
     }
-
     public static void setIdSelect(int idSelect) {
         BookingListView.idSelect = idSelect;
     }
-
     public static JTable getTable() {
         return table;
     }
-
     public static void setTable(JTable table) {
         BookingListView.table = table;
     }
-
-
     public static Object[][] getData() {
         return data;
     }

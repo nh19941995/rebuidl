@@ -33,64 +33,45 @@ public class TableListView extends JPanel {
     private JLabel labelSeatingCapacity = new JLabel("Filter by seating capacity");
     private JLabel labelDate = new JLabel("Filter by date");
     private JLabel labelType = new JLabel("Select type");
-
     private JComboBox<String> SelecType;
     private static JButton buttonSelectTable = new JButton("Select table");
     private JButton buttonSearch = new JButton("Search");
     private static int selectTableId;
-
     // tạo set chứa id bàn
     private static Set<Integer> tableId = new HashSet<>();
-
     public static int getSelectTableId() {
         return selectTableId;
     }
-
     public static void setSelectTableId(int selectTableId) {
         TableListView.selectTableId = selectTableId;
     }
-
     public static JButton getButtonSelectTable() {
         return buttonSelectTable;
     }
-
     public static void setButtonSelectTable(JButton buttonSelectTable) {
         TableListView.buttonSelectTable = buttonSelectTable;
     }
-
     public static Set<Integer> getTableId() {
         return tableId;
     }
-
     public static void setTableId(Set<Integer> tableId) {
         TableListView.tableId = tableId;
     }
-
     public static JTable getTable() {
         return table;
     }
-
     public static void setTable(JTable table) {
         TableListView.table = table;
     }
-
     // còn phải sửa chỉ hiển thị các booking tính từ ngày hiện tại trở đi.
 
-
-
     public TableListView() {
-
-
 //        set layout chính
         setLayout(new BorderLayout());
         setBackground(Color.cyan);
-
-
 //        Phần bảng ----------------------------------------------------------------------------------------------------
-
         table.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
-
                 },
                 new String [] {"ID", "Table type", "Seating Capacity","Rental start time","Rental end time","Date time","Status"}
         ) {
@@ -100,11 +81,9 @@ public class TableListView extends JPanel {
             boolean[] canEdit = new boolean [] {
                     false, false, false, false, false, false, false
             };
-
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -113,9 +92,7 @@ public class TableListView extends JPanel {
         tableModel = (DefaultTableModel) table.getModel();
         // Xóa dữ liệu hiện có trong bảng
         tableModel.setRowCount(0);
-
         //        sắp xếp theo id trước khi thêm vào bảng
-        //        Arrays.sort(this.data, Comparator.comparingInt(arr -> (int) arr[0]));
         addDataToTable();
         // Thêm từng hàng dữ liệu vào bảng
         for (Object[] row : data) {
@@ -132,22 +109,9 @@ public class TableListView extends JPanel {
         // Thiết lập chiều rộng cho các cột
         table.getColumnModel().getColumn(0).setMinWidth(30); // Cột ID
         table.getColumnModel().getColumn(0).setMaxWidth(50); // Cột ID
-        //
-        //        table.getColumnModel().getColumn(1).setMinWidth(150); // Cột Name
-        //        table.getColumnModel().getColumn(1).setMaxWidth(200); // Cột Name
-        //
-        //        table.getColumnModel().getColumn(2).setMinWidth(100); // Cột ngày sinh
-        //        table.getColumnModel().getColumn(2).setMaxWidth(150); // Cột ngày sinh
-        //
-        //        table.getColumnModel().getColumn(3).setMinWidth(100);
-        //        table.getColumnModel().getColumn(3).setMaxWidth(150);
-        //
-        //        table.getColumnModel().getColumn(4).setMinWidth(100);
-        //        table.getColumnModel().getColumn(4).setMaxWidth(150);
         //        Tạo một JScrollPane để chứa bảng (thanh cuộn trang)
         JScrollPane scrollPane = new JScrollPane(table);
         //        Đặt layout cho table_Panel là BorderLayout
-
         add(scrollPane,BorderLayout.CENTER);
         //        thêm dữ liệu vào select list
         String[] selectList = TableTypeDAO.getInstance().getAll().stream()
@@ -175,22 +139,6 @@ public class TableListView extends JPanel {
         gridAllbutton.GridAdd(buttonSearch,6 ,0,10,10,10);
         gridAllbutton.GridAdd(buttonSelectTable,7 ,0,10,10,10);
         this.add(gridAllbutton,BorderLayout.SOUTH);
-
-        // sự kiện click vào bảng
-//        table.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
-//                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
-//                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
-//                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-//                        TableListView.setSelectTableId(Integer.parseInt(id));
-//                        System.out.println("Bảng Table đang chọn hàng có id là: "+ id);
-//                    }
-//                }
-//            }
-//        });
-
         buttonSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -198,52 +146,7 @@ public class TableListView extends JPanel {
                 searchTableList();
             }
         });
-
-//        buttonSelectTable.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("gửi dữ liệu về Booking list menu");
-//
-//                // lấy về danh sách
-//                ArrayList<Booking> bookings = BookingController.getBookings();
-//                // lấy id bàn đã chọn
-//                TableList table = TableListDAO.getInstance().getById(TableListView.getSelectTableId());
-//
-//                // nếu id bàn đã có trong set
-//                if (tableId.contains(TableListView.getSelectTableId())){
-//                    // đã tồn tại trong set
-//                    JOptionPane.showMessageDialog(null, "You can't book a table twice !", "Notice", JOptionPane.WARNING_MESSAGE);
-//                }else {
-//                    // chưa tồn tại trong set
-//                    tableId.add(TableListView.getSelectTableId());
-//                    if (bookings.size() == 0){   // danh sách chưa có phần tử nào thì tạo mới và thêm thuộc tính
-//                        Booking booking = new Booking();
-//                        booking.setTable(table);
-//                        bookings.add(booking);
-//                    }else {
-//                        boolean foundEmptyMenuName = false;   // nếu đã có phần tử và có thuộc tính trống thì duyệt qua list và thêm thuộc tính trống cho 1 phần tử và thoát vòng
-//                        for (Booking booking : bookings) {
-//                            if (booking.getTable() == null) {
-//                                booking.setTable(table);
-//                                foundEmptyMenuName = true;
-//                                break;
-//                            }
-//                        }
-//                        if (!foundEmptyMenuName) {    // nếu có phần tủ nhưng tất cả đã dc thêm thuộc tính thì tạo mới 1 phần tử và thêm thuộc tính cho nó
-//                            Booking newBooking = new Booking();
-//                            newBooking.setTable(table);
-//                            bookings.add(newBooking);
-//                        }
-//                    }
-////                    BookingListView.setBookings(bookings);
-////                    BookingListView.loadData();
-//                }
-//            }
-//        });
     }
-
-
-
 
     // hàm nối mảng
     public static Object[][] concatenateArrays(Object[][] arr1, Object[][] arr2) {
@@ -302,7 +205,6 @@ public class TableListView extends JPanel {
     }
 
     public synchronized  void searchTableList() {
-//        table.setModel(tableModel);
         String dateInput = filterByDate.getText();
         String CapacityInput = filterBySeatingCapacity.getText();
         String filterTypeInput = (String) SelecType.getSelectedItem();

@@ -1,13 +1,10 @@
 package view.booking.miniView;
 
-import dao.DishDAO;
 import dao.MenuDAO;
 import dao.MenuNameDAO;
-import model.Dish;
 import model.Menu;
 import model.MenuName;
 import view.Tool.Grid;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -15,8 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class NewMenuListView extends JPanel {
     private static JTable table = new JTable();
@@ -25,19 +20,13 @@ public class NewMenuListView extends JPanel {
     private JButton buttonCreatNewMenu = new JButton("Creat new menu");
     private static JTextField inputNameNewMenu = new JTextField();
     private JLabel labelNameNewMenu = new JLabel("Menu name:");
-
-
     public static Object[][] getData() {
         return data;
     }
-
     public static void setData(Object[][] data) {
         NewMenuListView.data = data;
     }
-
     private static ArrayList<Menu> menus = new ArrayList<>();
-
-
     public NewMenuListView() {
         setLayout(new BorderLayout());
         setBackground(Color.cyan);
@@ -48,9 +37,6 @@ public class NewMenuListView extends JPanel {
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(nameBarBlock(),BorderLayout.NORTH);
         this.add(createNewMenuBlock(),BorderLayout.SOUTH);
-
-
-
         buttonCreatNewMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -61,21 +47,16 @@ public class NewMenuListView extends JPanel {
                 }else {
                     menus.forEach(s->s.setMenuName(MenuNameDAO.getByStringName(inputNameNewMenu.getText())));
                     menus.forEach(s-> MenuDAO.getInstance().insert(s));
-
                 }
-
             }
         });
-
     }
 
     public static void addNewDish(Menu menu){
-
         MenuName menuName = MenuNameDAO.getByStringName(inputNameNewMenu.getText());
         menu.setMenuName(menuName);
         menus.add(menu);
         menus.stream().forEach(s->s.toString());
-
     }
 
     private JPanel nameBarBlock(){
@@ -95,19 +76,16 @@ public class NewMenuListView extends JPanel {
         Grid grid = new Grid();
         grid.GridAdd(buttonCreatNewMenu,0,0,20,20,24);
         jPanel.add(grid, BorderLayout.CENTER);
-
         // Đặt kích thước chiều ngang cho jPanel
         int width = 550; // Đặt kích thước mong muốn tại đây
         Dimension preferredSize = new Dimension(width, jPanel.getPreferredSize().height);
         jPanel.setPreferredSize(preferredSize);
-
         return jPanel;
     }
 
     private JScrollPane createTable() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object [][] {
-
                 },
                 new String [] {"ID", "Dish name","Quantity","Price","Type"}
         ){
@@ -117,11 +95,9 @@ public class NewMenuListView extends JPanel {
             boolean[] canEdit = new boolean [] {
                     false, false, false, false, false
             };
-
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
@@ -131,7 +107,6 @@ public class NewMenuListView extends JPanel {
         table.setModel(model);
         this.tableModel = model;
         final int count = 1;
-
         // Biến count là final, vì vậy nó sẽ không gây ra lỗi.
         Object[][] data = menus.stream().map(
                 s -> {
@@ -141,12 +116,10 @@ public class NewMenuListView extends JPanel {
                     row[2] = s.getQuantity();
                     row[3] = s.getUnitPrice();
                     row[4] = s.getDish().getType().getType();
-
                     return row;
                 }
         ).toArray(Object[][]::new);
         setData(data);
-
         // thêm dữ liệu vào bảng
         for (Object[] rowData : data) {
             model.addRow(rowData);
@@ -160,26 +133,16 @@ public class NewMenuListView extends JPanel {
         // Thiết lập chiều rộng cho các cột
         table.getColumnModel().getColumn(0).setMinWidth(30); // Cột ID
         table.getColumnModel().getColumn(0).setMaxWidth(50); // Cột ID
-
-//        table.getColumnModel().getColumn(1).setMinWidth(50); // Cột ID
-//        table.getColumnModel().getColumn(1).setMaxWidth(50); // Cột ID
-
-
-//        table.getColumnModel().getColumn(0).setMaxWidth(50); // Cột ID
-
-
         JScrollPane scrollPane = new JScrollPane(table);
         // Đặt layout cho table_Panel là BorderLayout
         return scrollPane;
     }
 
     public static void loadData(){
-
         // Lấy model của bảng
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         // Xóa hết dữ liệu hiện có trong bảng
         model.setRowCount(0);
-
         // Biến count là final, vì vậy nó sẽ không gây ra lỗi.
         Object[][] data = menus.stream().map(
                 s -> {
@@ -189,22 +152,15 @@ public class NewMenuListView extends JPanel {
                     row[2] = s.getQuantity();
                     row[3] = s.getUnitPrice();
                     row[4] = s.getDish().getType().getType();
-
                     return row;
                 }
         ).toArray(Object[][]::new);
         setData(data);
-
         // Thêm dữ liệu mới vào bảng
         for (Object[] rowData : data) {
             model.addRow(rowData);
         }
         // Thông báo cho bảng biết rằng dữ liệu đã thay đổi để nó vẽ lại giao diện
         model.fireTableDataChanged();
-
-
-
     }
-
-
 }

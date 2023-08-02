@@ -28,35 +28,35 @@ public class BookingView extends JPanel {
     JButton buttonAddNewMenu = new JButton("Creat new menu");
     JButton buttonSubmitBooking = new JButton("Submit a new booking");
     // các biến giao tiếp giữa các form
-    private static String idClientList;
-    private static String idCTableList;
-    private static String idMenuList;
+//    private static String idClientList;
+//    private static String idCTableList;
+//    private static String idMenuList;
 
 
 
-    public static String getIdClientList() {
-        return idClientList;
-    }
+//    public static String getIdClientList() {
+//        return idClientList;
+//    }
+//
+//    public static void setIdClientList(String idClientList) {
+//        BookingView.idClientList = idClientList;
+//    }
 
-    public static void setIdClientList(String idClientList) {
-        BookingView.idClientList = idClientList;
-    }
+//    public static String getIdCTableList() {
+//        return idCTableList;
+//    }
+//
+//    public static void setIdCTableList(String idCTableList) {
+//        BookingView.idCTableList = idCTableList;
+//    }
 
-    public static String getIdCTableList() {
-        return idCTableList;
-    }
-
-    public static void setIdCTableList(String idCTableList) {
-        BookingView.idCTableList = idCTableList;
-    }
-
-    public static String getIdMenuList() {
-        return idMenuList;
-    }
-
-    public static void setIdMenuList(String idMenuList) {
-        BookingView.idMenuList = idMenuList;
-    }
+//    public static String getIdMenuList() {
+//        return idMenuList;
+//    }
+//
+//    public static void setIdMenuList(String idMenuList) {
+//        BookingView.idMenuList = idMenuList;
+//    }
 
     public BookingView() {
         // Xóa phần khởi tạo ở đây, thay vào đó bạn chỉ cần khởi tạo JPanel (BookingView là một JPanel)
@@ -189,14 +189,14 @@ public class BookingView extends JPanel {
             }
         });
 
-        buttonSubmitBooking.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(getIdClientList());
-
-
-            }
-        });
+//        buttonSubmitBooking.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println(getIdClientList());
+//
+//
+//            }
+//        });
 
         buttonShowAllBooking.addActionListener(new ActionListener() {
             @Override

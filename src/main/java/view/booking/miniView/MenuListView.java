@@ -26,23 +26,18 @@ public class MenuListView  extends JPanel {
     public static void setButtonSelectMenu(JButton buttonSelectMenu) {
         MenuListView.buttonSelectMenu = buttonSelectMenu;
     }
-
     public static int getIdSelectMenu() {
         return idSelectMenu;
     }
-
     public static void setIdSelectMenu(int idSelectMenu) {
         MenuListView.idSelectMenu = idSelectMenu;
     }
-
     public Object[][] getData() {
         return data;
     }
-
     public void setData(Object[][] data) {
         this.data = data;
     }
-
     public static JTable getTable() {
         return table;
     }
@@ -54,19 +49,16 @@ public class MenuListView  extends JPanel {
         setBackground(Color.cyan);
         // Khởi tạo bảng với mô hình dữ liệu trống
         table.setModel(new DefaultTableModel());
-
         // Tạo JScrollPane chứa bảng và thêm nó vào JPanel
         JScrollPane scrollPane = createTable();
         loadData();
         this.add(scrollPane, BorderLayout.CENTER);
         add(gridControlMenuList(),BorderLayout.SOUTH);
-
     }
 
     private JPanel gridControlMenuList(){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
-
         // đặt kích thước
         buttonSelectMenu.setPreferredSize(new Dimension(200, 20));
         buttonSelectMenu.setBackground(Color.red);
@@ -92,16 +84,13 @@ public class MenuListView  extends JPanel {
             boolean[] canEdit = new boolean [] {
                     false, false, false, false, false, false
             };
-
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         };
-
         // Khởi tạo mô hình dữ liệu cho bảng
         table.setModel(model);
         // lấy dữ liệu từ sever
@@ -117,7 +106,6 @@ public class MenuListView  extends JPanel {
                 }
         ).toArray(Object[][]::new);
         setData(data);
-
         // thêm dữ liệu vào bảng
         for (Object[] rowData : data) {
             model.addRow(rowData);
@@ -131,7 +119,6 @@ public class MenuListView  extends JPanel {
         // Thiết lập chiều rộng cho các cột
         table.getColumnModel().getColumn(0).setMinWidth(30); // Cột ID
         table.getColumnModel().getColumn(0).setMaxWidth(50); // Cột ID
-
         JScrollPane scrollPane = new JScrollPane(table);
         // Đặt layout cho table_Panel là BorderLayout
         return scrollPane;

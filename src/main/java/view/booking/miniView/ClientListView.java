@@ -1,4 +1,5 @@
 package view.booking.miniView;
+import controller.BookingController;
 import controller.InstantDateTimeInfo;
 import dao.PermissionDAO;
 import dao.PersonDAO;
@@ -50,9 +51,11 @@ public class ClientListView extends JPanel {
     private JButton buttonDeletePerson = new JButton("Delete person");
     private JButton buttonUpdatePerson = new JButton("Update person");
     private JButton buttonSearchPerson = new JButton("Search");
-    private JButton buttonSelectPerson = new JButton("Select person");
+    private static JButton buttonSelectPerson = new JButton("Select person");
 
-    private JTable table = new JTable();
+
+
+    private static JTable table = new JTable();
 
 //    các giá trị
     private static Object[][] data;
@@ -65,24 +68,28 @@ public class ClientListView extends JPanel {
     private String permission;
     private static String searchPhone;
 
-    private static String idSelectInTable;
 
-    public static String getIdSelectInTable() {
-        return idSelectInTable;
+
+    public static JTable getTable() {
+        return table;
     }
 
-    public static void setIdSelectInTable(String idSelectInTable) {
-        ClientListView.idSelectInTable = idSelectInTable;
+    public static void setTable(JTable table) {
+        ClientListView.table = table;
     }
 
+    public static JButton getButtonSelectPerson() {
+        return buttonSelectPerson;
+    }
+    public static void setButtonSelectPerson(JButton buttonSelectPerson) {
+        ClientListView.buttonSelectPerson = buttonSelectPerson;
+    }
     public static Object[][] getData() {
         return data;
     }
-
     public static void setData(Object[][] data) {
         ClientListView.data = data;
     }
-
     public static String getSearchPhone() {
         return searchPhone;
     }
@@ -135,31 +142,12 @@ public class ClientListView extends JPanel {
         this.add(scrollPane, BorderLayout.CENTER);
         // thêm block add person
         this.add(blockAddPerson(), BorderLayout.SOUTH);
-
-        // sự kiện click vào bảng
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
-                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
-                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
-                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        BookingView.setIdClientList(id);
-                        setIdSelectInTable(id);
-                        System.out.println("Bảng Client đang chọn hàng có id là: "+ id);
-                    }
-                }
-            }
-        });
-
         // các sự kiện
         table.addMouseListener(new java.awt.event.MouseAdapter()  {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableMouseClicked(evt);
             }
         });
-
-
         buttonAddPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -187,7 +175,6 @@ public class ClientListView extends JPanel {
                         birthday  = inputBirthday.getText();
                         phone = inputPhone.getText();
                         permission = (String) SelecType.getSelectedItem();
-
                         Person newPerson = new Person();
                         // bắt đầu thêm
                         newPerson.setLastName(lasttName);
@@ -213,15 +200,12 @@ public class ClientListView extends JPanel {
                         inputPhone.setText("");
                     }
                 }
-
             }
         });
-
 
         buttonUpdatePerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 System.out.println("cập nhật");
                 // lấy dữ liệu từ form
                 firstName = inputFirstName.getText();
@@ -232,7 +216,8 @@ public class ClientListView extends JPanel {
                 phone = inputPhone.getText();
                 permission = (String) SelecType.getSelectedItem();
                 // gọi đối tượng cũ qua id để update
-                Person personUpdate = PersonDAO.getInstance().getById(Integer.parseInt(getIdSelectInTable()));
+                int id = BookingController.getPersonIdSelect();
+                Person personUpdate = PersonDAO.getInstance().getById(id);
                 personUpdate.setLastName(lasttName);
                 personUpdate.setName(firstName);
                 personUpdate.setUsername(phone);
@@ -241,9 +226,7 @@ public class ClientListView extends JPanel {
                 personUpdate.setPhone(phone);
                 personUpdate.setAddress(address);
                 personUpdate.setDateOfBirth(InstantDateTimeInfo.getByStringDate(birthday));
-                personUpdate.setDateCreat(PersonDAO.getInstance().getById(
-                        Integer.parseInt(getIdSelectInTable())
-                ).getDateCreat());
+                personUpdate.setDateCreat(PersonDAO.getInstance().getById(id).getDateCreat());
                 Instant now = Instant.now();
                 personUpdate.setDateUpdate(now);
                 personUpdate.setFlag(1);
@@ -264,37 +247,11 @@ public class ClientListView extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("xóa");
-                Person personDelete = PersonDAO.getInstance().getById(Integer.parseInt(ClientListView.getIdSelectInTable()));
+                Person personDelete = PersonDAO.getInstance().getById(BookingController.getPersonIdSelect());
                 personDelete.setFlag(0);
                 PersonDAO.getInstance().update(personDelete);
                 // Gọi hàm reloadTableData() để tải lại dữ liệu và cập nhật bảng
                 loadData();
-            }
-        });
-
-
-        // sự kiện click vào bảng
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
-                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
-                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
-                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        setIdSelectInTable(id);
-                        System.out.println("Bảng ClientList đang chọn hàng có id là: "+ id);
-                    }
-                }
-            }
-        });
-
-        buttonSelectPerson.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("ClientListView id: "+ getIdSelectInTable());
-                // đẩy id person qua class BookingView
-                BookingView.setIdClientList(ClientListView.getIdSelectInTable());
-                InfoBookingView.reloadJpanel();
             }
         });
 
@@ -306,13 +263,11 @@ public class ClientListView extends JPanel {
                 searchByPhone();
             }
         });
-
     }
 
     private JScrollPane createTable() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object [][] {
-
                 },
                 new String [] {"ID", "Fisrt name","Last name", "Phone number","Address", "Date of birth", "Email", "Date created", "Permission"}
         ){
@@ -322,16 +277,13 @@ public class ClientListView extends JPanel {
             boolean[] canEdit = new boolean [] {
                     false, false, false, false, false, false, false, false, false
             };
-
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         };
-
         // Khởi tạo mô hình dữ liệu cho bảng
         table.setModel(model);
         // lấy dữ liệu từ sever
@@ -350,7 +302,6 @@ public class ClientListView extends JPanel {
                 }
         ).toArray(Object[][]::new);
         setData(data);
-
         // thêm dữ liệu vào bảng
         for (Object[] rowData : data) {
             model.addRow(rowData);
@@ -390,7 +341,6 @@ public class ClientListView extends JPanel {
                         s.getPermission().getPermissionName(),
                 }
         ).toArray(Object[][]::new);
-
         ClientListView.setData(data);
         // Thêm dữ liệu mới vào bảng
         for (Object[] rowData : data) {
@@ -410,7 +360,6 @@ public class ClientListView extends JPanel {
         // cột 2
         inputLastName.setPreferredSize(new Dimension(100, 20));
         SelecType.setPreferredSize(new Dimension(100, 20));
-
         // cột 3
         inputBirthday.setPreferredSize(new Dimension(100, 20));
         inputPhone.setPreferredSize(new Dimension(100, 20));
@@ -425,7 +374,6 @@ public class ClientListView extends JPanel {
         buttonSelectPerson.setBackground(Color.RED);
         // Đặt màu cho văn bản của JButton
         buttonSelectPerson.setForeground(Color.WHITE);
-
         // bố trí các phần tử
         Grid grid = new Grid();
         // cột 1
@@ -450,12 +398,10 @@ public class ClientListView extends JPanel {
         grid.GridAddCustom(buttonSearchPerson,4,1,10,10,5,5,1);
         grid.GridAddCustom(labelAdress,3,2,10,10,5,5,2);
         grid.GridAddCustom(inputAdress,3,3,10,10,5,15,2);
-
         // cột 5
         grid.GridAdd(buttonDeletePerson,5,1,20,10,3);
         grid.GridAdd(buttonUpdatePerson,5,2,20,10,3);
         grid.GridAddCustom(buttonAddPerson,5,3,20,10,3,15,1);
-
         // thêm data cho boder box
         String[] selectList = PermissionDAO.getInstance().getAll().stream()
                 .map(s -> s.getPermissionName())
@@ -474,7 +420,6 @@ public class ClientListView extends JPanel {
     public void searchByPhone() {
         String searchPhone = ClientListView.getSearchPhone();
         System.out.println(searchPhone);
-
         if (!searchPhone.isEmpty()) {
             Object[][] originalData = ClientListView.getData();
             // Tạo luồng dữ liệu từ mảng
@@ -498,24 +443,17 @@ public class ClientListView extends JPanel {
     private void tableMouseClicked(MouseEvent evt){
         int rowNumber = table.getSelectedRow();
         TableModel model = table.getModel();
-
         String firstName = model.getValueAt(rowNumber, 1 ).toString();
         String lastName = model.getValueAt(rowNumber, 2 ).toString();
         String phone = model.getValueAt(rowNumber, 3).toString();
         String address = model.getValueAt(rowNumber, 4).toString();
         String birthday = model.getValueAt(rowNumber, 5 ).toString();
         String email = model.getValueAt(rowNumber, 6 ).toString();
-
         inputFirstName.setText(firstName);
         inputLastName.setText(lastName);
         inputAdress.setText(address);
         inputEmail.setText(email);
         inputBirthday.setText(birthday);
         inputPhone.setText(phone);
-
     }
-
-
-
-
 }
