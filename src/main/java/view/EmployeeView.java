@@ -83,7 +83,7 @@ public class EmployeeView extends JFrame {
 
                 },
                 new String [] {
-                        "First name", "Last name", "Email", "Address", "Birth day", "Permission", "Phone number"
+                        "Id","First name", "Last name", "Email", "Address", "Birth day", "Permission", "Phone number"
                 }
         ) {
             Class[] types = new Class [] {
@@ -101,19 +101,11 @@ public class EmployeeView extends JFrame {
                 return canEdit [columnIndex];
             }
         });
-
-
-
-
         jScrollPane1.setViewportView(jTable1);
-
-
         jPanel4.setBackground(new Color(102, 102, 102));
-
         jLabel7.setFont(new Font("Tahoma", 1, 24)); // NOI18N
         jLabel7.setForeground(new Color(255, 255, 255));
         jLabel7.setText("Customer Infomation ");
-
         btnAddcus.setBackground(new Color(255, 255, 255));
         btnAddcus.setText("Add ");
         btnAddcus.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -136,7 +128,6 @@ public class EmployeeView extends JFrame {
         jLabel8.setFont(new Font("Tahoma", 0, 18)); // NOI18N
         jLabel8.setForeground(new Color(255, 255, 255));
         jLabel8.setText("First name :");
-
         jLabel9.setFont(new Font("Tahoma", 0, 18)); // NOI18N
         jLabel9.setForeground(new Color(255, 255, 255));
         jLabel9.setText("Email :");
@@ -161,17 +152,13 @@ public class EmployeeView extends JFrame {
         jLabel11.setForeground(new Color(255, 255, 255));
         jLabel11.setText("Permission :");
 
-
-
 //        dữ liệu của select box
-//        pickPermission.setModel(new DefaultComboBoxModel<>(new String[] { "Cashier", "Manage", "Staff", "Chef", "Security" }));
-        pickPermission.setModel(new DefaultComboBoxModel<>(PermissionDAO.getInstance().getAll()
+        pickPermission.setModel(new DefaultComboBoxModel<>(
+                PermissionDAO.getInstance().getAll()
                 .stream()
                 .map(s -> s.getPermissionName())
-                .toArray(String[]::new)));
-//
-
-
+                .toArray(String[]::new)
+        ));
 
         pickPermission.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -330,7 +317,7 @@ public class EmployeeView extends JFrame {
             JOptionPane.showMessageDialog(rootPane, "Please enter all data !");
         }else{
             String selectedPer = (String) pickPermission.getSelectedItem();
-            String data[] = {inputFname.getText(), inputLname.getText(), inputEmail.getText(), inputAddress.getText(), inputBirth.getText(), selectedPer,inputPhone.getText()};
+
 //            tạo đối tượng person với dữ liệu người dùng nhập vào
             Person newPerson = new Person();
             newPerson.setName(inputFname.getText());
@@ -360,11 +347,10 @@ public class EmployeeView extends JFrame {
 
             newPerson.setPermission(PermissionDAO.getInstance().getById(idNewPerson));
             PersonDAO.getInstance().insert(newPerson);
-
-
 //            đưa dư liệu vào bảng
             DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
-            tblModel.addRow(data);
+//            String data[] = {inputFname.getText(), inputLname.getText(), inputEmail.getText(), inputAddress.getText(), inputBirth.getText(), selectedPer,inputPhone.getText()};
+//            tblModel.addRow(data);
             // Cập nhật bảng để hiển thị dữ liệu mới
             tableModel.fireTableDataChanged();
 //            làm trống trở lại phần input
@@ -374,6 +360,12 @@ public class EmployeeView extends JFrame {
             inputEmail.setText("");
             inputBirth.setText("");
             inputPhone.setText("");
+            // xóa dữ liệu bảng cũ
+            while (tableModel.getRowCount() > 0) {
+                tableModel.removeRow(0);
+            }
+
+            addDataToTable();
         }
     }
 
@@ -385,23 +377,18 @@ public class EmployeeView extends JFrame {
         java.util.List<Person> personList = PersonDAO.getInstance().getAll();
         Object[][] personArr  = personList.stream().map(
                 s -> new Object[]{
+                        s.getId(),
                         s.getName(),
                         s.getLastName(),
                         s.getEmail(),
                         s.getAddress(),
-                        InstantDateTimeInfo.getTime(s.getDateOfBirth(),2),
+                        InstantDateTimeInfo.getTimeStringToInstance(s.getDateOfBirth(),2),
                         s.getPermission().getPermissionName(),
                         s.getPhone(),
                 }
 
         ).toArray(Object[][]::new);
-
-
-
         this.dataTable = personArr;
-
-
-
         // Thêm từng hàng dữ liệu vào bảng
         for (Object[] row : dataTable) {
             tableModel.addRow(row);
@@ -422,15 +409,15 @@ public class EmployeeView extends JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt){
         int rowNumber = jTable1.getSelectedRow();
         TableModel tblModel = jTable1.getModel();
-
-        String fName = tblModel.getValueAt(rowNumber, 0 ).toString();
-        String lName = tblModel.getValueAt(rowNumber, 1 ).toString();
-        String email = tblModel.getValueAt(rowNumber, 2 ).toString();
-        String address = tblModel.getValueAt(rowNumber, 3).toString();
-        String birth = tblModel.getValueAt(rowNumber, 4).toString();
-        String permission = tblModel.getValueAt(rowNumber, 5).toString();
-        String phone = tblModel.getValueAt(rowNumber, 6).toString();
-
+        String id = tblModel.getValueAt(rowNumber, 0).toString();
+        this.selectId = Integer.parseInt(id);
+        String fName = tblModel.getValueAt(rowNumber, 1 ).toString();
+        String lName = tblModel.getValueAt(rowNumber, 2 ).toString();
+        String email = tblModel.getValueAt(rowNumber, 3 ).toString();
+        String address = tblModel.getValueAt(rowNumber, 4).toString();
+        String birth = tblModel.getValueAt(rowNumber, 5).toString();
+        String permission = tblModel.getValueAt(rowNumber, 6).toString();
+        String phone = tblModel.getValueAt(rowNumber, 7).toString();
         inputFname.setText(fName);
         inputLname.setText(lName);
         inputAddress.setText(address);
@@ -493,19 +480,19 @@ public class EmployeeView extends JFrame {
             String phone = inputPhone.getText();
             String permissionUpdate = (String) pickPermission.getSelectedItem();
 
-            tblModel.setValueAt(fName, jTable1.getSelectedRow(), 0);
-            tblModel.setValueAt(lName, jTable1.getSelectedRow(), 1);
-            tblModel.setValueAt(email, jTable1.getSelectedRow(), 2);
-            tblModel.setValueAt(address, jTable1.getSelectedRow(), 3);
-            tblModel.setValueAt(birth, jTable1.getSelectedRow(), 4);
-            tblModel.setValueAt(permissionUpdate, jTable1.getSelectedRow(),5);
-            tblModel.setValueAt(phone, jTable1.getSelectedRow(), 6);
+            tblModel.setValueAt(fName, jTable1.getSelectedRow(), 1);
+            tblModel.setValueAt(lName, jTable1.getSelectedRow(), 2);
+            tblModel.setValueAt(email, jTable1.getSelectedRow(), 3);
+            tblModel.setValueAt(address, jTable1.getSelectedRow(), 4);
+            tblModel.setValueAt(birth, jTable1.getSelectedRow(), 5);
+            tblModel.setValueAt(permissionUpdate, jTable1.getSelectedRow(),6);
+            tblModel.setValueAt(phone, jTable1.getSelectedRow(), 7);
 
             JOptionPane.showMessageDialog(this,"Update succesfully !");
             Person personUpdate = new Person();
-            personUpdate.setId(this.selectTableID);
+            personUpdate.setId(this.selectId);
             personUpdate.setAddress(address);
-            personUpdate.setDateCreat(PersonDAO.getInstance().getById(this.selectTableID).getDateCreat());
+            personUpdate.setDateCreat(PersonDAO.getInstance().getById(this.selectId).getDateCreat());
             //            chuyển string thành Instant
             LocalDate localDateUpdate = LocalDate.parse(birth);
             // Đặt giờ, phút, giây và millisecond thành 0 để có ngày giờ cụ thể (00:00:00)
@@ -533,25 +520,37 @@ public class EmployeeView extends JFrame {
             // Xóa dữ liệu hiện có trong bảng
             tableModel.setRowCount(0);
             addDataToTable();
+            inputFname.setText("");
+            inputLname.setText("");
+            inputAddress.setText("");
+            inputEmail.setText("");
+            inputBirth.setText("");
+            inputPhone.setText("");
         }
     }
 
     private void btnDeleteMouseClicked(java.awt.event.MouseEvent evt) {
-//        DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
-//        if(jTable1.getSelectedRowCount() != 0){
-//            int option = JOptionPane.showOptionDialog(rootPane, "Do you want delete "+ jTable1.getSelectedRowCount() + " user ?", "Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, "Yes");
-//            // Xử lý lựa chọn của người dùng
-//            if (option == JOptionPane.YES_OPTION) {
-//                tblModel.removeRow(jTable1.getSelectedRow());
-//            }
-//        }else {
-//            if(jTable1.getRowCount() == 0){
-//                JOptionPane.showMessageDialog(rootPane, "Table user is empty !");
-//            }else{
-//                JOptionPane.showMessageDialog(rootPane, "Please select single row for delete!");
-//            }
-//        }
-        Person personDelete = PersonDAO.getInstance().getById(this.selectTableID);
+        DefaultTableModel tblModel = (DefaultTableModel) jTable1.getModel();
+        if(jTable1.getSelectedRowCount() != 0){
+            int option = JOptionPane.showOptionDialog(rootPane, "Do you want delete "+ jTable1.getSelectedRowCount() + " user ?", "Delete", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, "Yes");
+            // Xử lý lựa chọn của người dùng
+            if (option == JOptionPane.YES_OPTION) {
+                tblModel.removeRow(jTable1.getSelectedRow());
+                inputFname.setText("");
+                inputLname.setText("");
+                inputAddress.setText("");
+                inputEmail.setText("");
+                inputBirth.setText("");
+                inputPhone.setText("");
+            }
+        }else {
+            if(jTable1.getRowCount() == 0){
+                JOptionPane.showMessageDialog(rootPane, "Table user is empty !");
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Please select single row for delete!");
+            }
+        }
+        Person personDelete = PersonDAO.getInstance().getById(this.selectId);
         personDelete.setFlag(0);
         PersonDAO.getInstance().update(personDelete);
         // Xóa dữ liệu hiện có trong bảng
@@ -641,8 +640,9 @@ public class EmployeeView extends JFrame {
     // End of variables declaration
     private DefaultTableModel tableModel;
     private Object[][] dataTable;
+    private int selectId;
 
 //    id của người muốn update
-    private int selectTableID = 4;
+//    private int selectTableID = 4;
 }
 

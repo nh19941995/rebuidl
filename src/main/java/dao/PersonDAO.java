@@ -95,4 +95,12 @@ public class PersonDAO implements DAOInterface<Person,Integer>{
             entityManager.close();
         }
     }
+
+    public Person getByPhone(String phone){
+        Person person = PersonDAO.getInstance().getAll().stream()
+                .filter(s -> s.getPhone().equals(phone))
+                .findFirst()
+                .orElse(null);
+        return person;
+    }
 }

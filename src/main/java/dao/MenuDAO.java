@@ -1,37 +1,31 @@
 package dao;
 
-import controller.InstantDateTimeInfo;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import model.DishType;
+import jakarta.persistence.*;
+import model.Menu;
 import model.MenuName;
 import utils.PersistenceManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
-public class MenuNameDAO implements DAOInterface<MenuName,Integer>{
+public class MenuDAO implements DAOInterface<Menu,Integer>{
     private EntityManagerFactory entityManagerFactory;
 
-    public static MenuNameDAO getInstance(){
-        return new MenuNameDAO();
+    public static MenuDAO getInstance(){
+        return new MenuDAO();
     }
-    public MenuNameDAO() {
+    public MenuDAO() {
         entityManagerFactory = PersistenceManager.getEntityManagerFactory();
     }
 
     @Override
-    public boolean insert(MenuName menuName) {
+    public boolean insert(Menu menu) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();
-            entityManager.persist(menuName);
+            entityManager.persist(menu);
             transaction.commit();
             return true;
         } catch (Exception e) {
@@ -46,13 +40,13 @@ public class MenuNameDAO implements DAOInterface<MenuName,Integer>{
     }
 
     @Override
-    public int update(MenuName menuName) {
+    public int update(Menu menu) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();
-            entityManager.merge(menuName);
+            entityManager.merge(menu);
             transaction.commit();
             return 1;
         } catch (Exception e) {
@@ -67,15 +61,14 @@ public class MenuNameDAO implements DAOInterface<MenuName,Integer>{
     }
 
     @Override
-    public ArrayList<MenuName> getAll() {
+    public ArrayList<Menu> getAll() {
         //        Với truy vấn đọc (SELECT), bạn không cần bắt EntityTransaction.
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             // Sử dụng JPQL (Java Persistence Query Language) để truy vấn danh sách DishType
-            String queryStr = "SELECT d FROM MenuName d";
-            ArrayList<MenuName> a  =  new ArrayList<>(entityManager.createQuery(queryStr, MenuName.class).getResultList());
-//            a.stream().forEach(s-> System.out.println(s.toString()) );
+            String queryStr = "SELECT d FROM Menu d";
+            ArrayList<Menu> a  =  new ArrayList<>(entityManager.createQuery(queryStr, Menu.class).getResultList());
             return a;
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,10 +79,10 @@ public class MenuNameDAO implements DAOInterface<MenuName,Integer>{
     }
 
     @Override
-    public MenuName getById(int menuNameId) {
+    public Menu getById(int menuId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            return entityManager.find(MenuName.class, menuNameId);
+            return entityManager.find(Menu.class, menuId);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -98,22 +91,42 @@ public class MenuNameDAO implements DAOInterface<MenuName,Integer>{
         }
     }
 
-    public static MenuName getByStringName( String name) {
-        List<MenuName> menuNames = MenuNameDAO.getInstance().getAll();
-        // Tạo luồng dữ liệu từ danh sách menuNames
-        Optional<MenuName> menuNameOptional = menuNames.stream()
-                .filter(s -> s.getName().equals(name))
-                .findFirst();
-
-        // Nếu không tìm thấy, tạo mới đối tượng và lấy về ID
-        return menuNameOptional.orElseGet(() -> {
-            MenuName newMenu = new MenuName();
-            newMenu.setName(name);
-            newMenu.setFlag(1);
-            newMenu.setDateCreat(InstantDateTimeInfo.getNow());
-            newMenu.setDateUpdate(InstantDateTimeInfo.getNow());
-            MenuNameDAO.getInstance().insert(newMenu);
-            return newMenu;
-        });
+    public List<Menu> getMenuByMenuNameID(int id) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String queryStr = "SELECT m FROM Menu m WHERE m.menuName = :id";
+            TypedQuery<Menu> query = entityManager.createQuery(queryStr, Menu.class);
+            query.setParameter("id", id);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+        }
     }
+
+    public Double getTotalPriceByMenuNameID(Integer id) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String queryStr = "SELECT SUM(m.quantity * m.unitPrice) FROM Menu m WHERE m.menuName.id = :id";
+            TypedQuery<Double> query = entityManager.createQuery(queryStr, Double.class);
+            query.setParameter("id", id);
+            Double totalPrice = query.getSingleResult();
+            return totalPrice != null ? totalPrice : 0.0; // Trả về 0.0 thay vì 0 nếu không có kết quả
+        } catch (NoResultException e) {
+            return 0.0; // Trả về 0.0 nếu không có kết quả
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0.0;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
+
+
+
+
 }
