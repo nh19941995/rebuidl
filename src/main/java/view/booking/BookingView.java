@@ -1,5 +1,6 @@
 package view.booking;
 
+import controller.BookingController;
 import model.Booking;
 import view.MenuView;
 import view.Tool.Boder;
@@ -182,7 +183,7 @@ public class BookingView extends JPanel {
         buttonRemoveARow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Booking> bookings = BookingListView.getBookings();
+                ArrayList<Booking> bookings = BookingController.getBookings();
                 bookings.remove(BookingListView.getIdSelect()-1);
                 BookingListView.loadData();
             }

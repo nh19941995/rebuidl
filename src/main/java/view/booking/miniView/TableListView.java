@@ -1,5 +1,6 @@
 package view.booking.miniView;
 
+import controller.BookingController;
 import controller.InstantDateTimeInfo;
 import controller.ObjectNullChecker;
 import dao.BookingDAO;
@@ -24,7 +25,7 @@ import java.util.stream.Stream;
 
 public class TableListView extends JPanel {
     private Object lockObject = new Object();
-    private JTable table = new JTable();
+    private static JTable table = new JTable();
     private DefaultTableModel tableModel;
     private Object[][] data;
     private JTextField filterBySeatingCapacity = new JTextField();
@@ -34,7 +35,7 @@ public class TableListView extends JPanel {
     private JLabel labelType = new JLabel("Select type");
 
     private JComboBox<String> SelecType;
-    private JButton buttonSelectTable = new JButton("Select table");
+    private static JButton buttonSelectTable = new JButton("Select table");
     private JButton buttonSearch = new JButton("Search");
     private static int selectTableId;
 
@@ -49,6 +50,14 @@ public class TableListView extends JPanel {
         TableListView.selectTableId = selectTableId;
     }
 
+    public static JButton getButtonSelectTable() {
+        return buttonSelectTable;
+    }
+
+    public static void setButtonSelectTable(JButton buttonSelectTable) {
+        TableListView.buttonSelectTable = buttonSelectTable;
+    }
+
     public static Set<Integer> getTableId() {
         return tableId;
     }
@@ -57,6 +66,13 @@ public class TableListView extends JPanel {
         TableListView.tableId = tableId;
     }
 
+    public static JTable getTable() {
+        return table;
+    }
+
+    public static void setTable(JTable table) {
+        TableListView.table = table;
+    }
 
     // còn phải sửa chỉ hiển thị các booking tính từ ngày hiện tại trở đi.
 
@@ -161,19 +177,19 @@ public class TableListView extends JPanel {
         this.add(gridAllbutton,BorderLayout.SOUTH);
 
         // sự kiện click vào bảng
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
-                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
-                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
-                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        TableListView.setSelectTableId(Integer.parseInt(id));
-                        System.out.println("Bảng Table đang chọn hàng có id là: "+ id);
-                    }
-                }
-            }
-        });
+//        table.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
+//                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
+//                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
+//                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
+//                        TableListView.setSelectTableId(Integer.parseInt(id));
+//                        System.out.println("Bảng Table đang chọn hàng có id là: "+ id);
+//                    }
+//                }
+//            }
+//        });
 
         buttonSearch.addActionListener(new ActionListener() {
             @Override
@@ -183,47 +199,47 @@ public class TableListView extends JPanel {
             }
         });
 
-        buttonSelectTable.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("gửi dữ liệu về Booking list menu");
-
-                // lấy về danh sách
-                ArrayList<Booking> bookings = BookingListView.getBookings();
-                // lấy id bàn đã chọn
-                TableList table = TableListDAO.getInstance().getById(TableListView.getSelectTableId());
-
-                // nếu id bàn đã có trong set
-                if (tableId.contains(TableListView.getSelectTableId())){
-                    // đã tồn tại trong set
-                    JOptionPane.showMessageDialog(null, "You can't book a table twice !", "Notice", JOptionPane.WARNING_MESSAGE);
-                }else {
-                    // chưa tồn tại trong set
-                    tableId.add(TableListView.getSelectTableId());
-                    if (bookings.size() == 0){   // danh sách chưa có phần tử nào thì tạo mới và thêm thuộc tính
-                        Booking booking = new Booking();
-                        booking.setTable(table);
-                        bookings.add(booking);
-                    }else {
-                        boolean foundEmptyMenuName = false;   // nếu đã có phần tử và có thuộc tính trống thì duyệt qua list và thêm thuộc tính trống cho 1 phần tử và thoát vòng
-                        for (Booking booking : bookings) {
-                            if (booking.getTable() == null) {
-                                booking.setTable(table);
-                                foundEmptyMenuName = true;
-                                break;
-                            }
-                        }
-                        if (!foundEmptyMenuName) {    // nếu có phần tủ nhưng tất cả đã dc thêm thuộc tính thì tạo mới 1 phần tử và thêm thuộc tính cho nó
-                            Booking newBooking = new Booking();
-                            newBooking.setTable(table);
-                            bookings.add(newBooking);
-                        }
-                    }
-                    BookingListView.setBookings(bookings);
-                    BookingListView.loadData();
-                }
-            }
-        });
+//        buttonSelectTable.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("gửi dữ liệu về Booking list menu");
+//
+//                // lấy về danh sách
+//                ArrayList<Booking> bookings = BookingController.getBookings();
+//                // lấy id bàn đã chọn
+//                TableList table = TableListDAO.getInstance().getById(TableListView.getSelectTableId());
+//
+//                // nếu id bàn đã có trong set
+//                if (tableId.contains(TableListView.getSelectTableId())){
+//                    // đã tồn tại trong set
+//                    JOptionPane.showMessageDialog(null, "You can't book a table twice !", "Notice", JOptionPane.WARNING_MESSAGE);
+//                }else {
+//                    // chưa tồn tại trong set
+//                    tableId.add(TableListView.getSelectTableId());
+//                    if (bookings.size() == 0){   // danh sách chưa có phần tử nào thì tạo mới và thêm thuộc tính
+//                        Booking booking = new Booking();
+//                        booking.setTable(table);
+//                        bookings.add(booking);
+//                    }else {
+//                        boolean foundEmptyMenuName = false;   // nếu đã có phần tử và có thuộc tính trống thì duyệt qua list và thêm thuộc tính trống cho 1 phần tử và thoát vòng
+//                        for (Booking booking : bookings) {
+//                            if (booking.getTable() == null) {
+//                                booking.setTable(table);
+//                                foundEmptyMenuName = true;
+//                                break;
+//                            }
+//                        }
+//                        if (!foundEmptyMenuName) {    // nếu có phần tủ nhưng tất cả đã dc thêm thuộc tính thì tạo mới 1 phần tử và thêm thuộc tính cho nó
+//                            Booking newBooking = new Booking();
+//                            newBooking.setTable(table);
+//                            bookings.add(newBooking);
+//                        }
+//                    }
+////                    BookingListView.setBookings(bookings);
+////                    BookingListView.loadData();
+//                }
+//            }
+//        });
     }
 
 

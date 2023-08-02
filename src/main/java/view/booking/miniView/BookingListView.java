@@ -1,4 +1,5 @@
 package view.booking.miniView;
+import controller.BookingController;
 import model.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -27,7 +28,14 @@ public class BookingListView extends JPanel {
         BookingListView.idSelect = idSelect;
     }
 
-    private static ArrayList<Booking> bookings = new ArrayList<>();
+    public static JTable getTable() {
+        return table;
+    }
+
+    public static void setTable(JTable table) {
+        BookingListView.table = table;
+    }
+
 
     public static Object[][] getData() {
         return data;
@@ -35,14 +43,6 @@ public class BookingListView extends JPanel {
 
     public static void setData(Object[][] data) {
         BookingListView.data = data;
-    }
-
-    public static ArrayList<Booking> getBookings() {
-        return bookings;
-    }
-
-    public static void setBookings(ArrayList<Booking> bookings) {
-        BookingListView.bookings = bookings;
     }
 
     public BookingListView() {
@@ -74,7 +74,6 @@ public class BookingListView extends JPanel {
     private JScrollPane createTable() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object [][] {
-
                 },
                 new String [] {"ID","Table ID", "Table type","Menu name","Status"}
         ){
@@ -93,13 +92,12 @@ public class BookingListView extends JPanel {
                 return canEdit [columnIndex];
             }
         };
-
         // Khởi tạo mô hình dữ liệu cho bảng
         table.setModel(model);
         this.tableModel = model;
         // lấy dữ liệu từ sever
 
-        Object[][] data = bookings.stream().map(
+        Object[][] data = BookingController.getBookings().stream().map(
                 s -> new Object[]{
                         null,
                         s.getTable() != null ? s.getTable().getId() : "", // Thay thế bằng giá trị mặc định nếu s.getTable() là null
@@ -136,8 +134,7 @@ public class BookingListView extends JPanel {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         // Xóa hết dữ liệu hiện có trong bảng
         model.setRowCount(0);
-
-        Object[][] data = bookings.stream().map(
+        Object[][] data = BookingController.getBookings().stream().map(
                 s -> new Object[]{
                         null,
                         s.getTable() != null ? s.getTable().getId() : "", // Thay thế bằng giá trị mặc định nếu s.getTable() là null
@@ -146,7 +143,6 @@ public class BookingListView extends JPanel {
                         s.getTable() != null ? s.getTable().getFlag() : "", // Thay thế bằng giá trị mặc định nếu s.getTable() là null
                 }
         ).toArray(Object[][]::new);
-
         int n = 1;
         for (Object[] a : data) {
             a[0] = n++;

@@ -1,6 +1,7 @@
 package view;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import controller.BookingController;
 import view.booking.BookingView;
 import view.booking.miniView.ClientListView;
 import view.booking.miniView.MenuListView;
@@ -179,11 +180,7 @@ public class HomeView extends JFrame {
         });
 
 
-
-
-
-
-
+        BookingController bookingController = new BookingController();
 
 
 
