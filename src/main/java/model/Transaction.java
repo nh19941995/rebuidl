@@ -100,4 +100,19 @@ public class Transaction {
         this.flag = flag;
     }
 
+    public Transaction() {
+    }
+
+    public Transaction(Person person, TransactionsType type, Float quantity, String comment, Instant dateCreat, Instant dateUpdate, Integer flag) {
+        this.person = person;
+        this.type = type;
+        this.quantity = quantity;
+        this.comment = comment;
+        this.dateCreat = dateCreat;
+        this.dateUpdate = dateUpdate;
+        this.flag = flag;
+    }
+
+    public void setVisible(boolean b) {
+    }
 }

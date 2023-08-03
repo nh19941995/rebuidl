@@ -22,7 +22,7 @@ public class Booking {
     @JoinColumn(name = "menu_name_id", nullable = false)
     private MenuName menuName;
 
-    @Column(name = "flag", nullable = false)
+    @Column(name = "flag", nullable = true)
     private Integer flag;
 
     public Integer getId() {

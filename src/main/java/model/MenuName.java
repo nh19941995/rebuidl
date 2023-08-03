@@ -2,6 +2,7 @@ package model;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -19,11 +20,33 @@ public class MenuName {
     @Column(name = "flag", nullable = false)
     private Integer flag;
 
+    @Column(name = "date_creat", nullable = false)
+    private Instant dateCreat;
+
+    @Column(name = "date_update", nullable = false)
+    private Instant dateUpdate;
+
     @OneToMany(mappedBy = "menuName")
     private Set<Booking> bookings = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "menuName")
     private Set<Menu> menus = new LinkedHashSet<>();
+
+    public Instant getDateUpdate() {
+        return dateUpdate;
+    }
+
+    public void setDateUpdate(Instant dateUpdate) {
+        this.dateUpdate = dateUpdate;
+    }
+
+    public Instant getDateCreat() {
+        return dateCreat;
+    }
+
+    public void setDateCreat(Instant dateCreat) {
+        this.dateCreat = dateCreat;
+    }
 
     public Integer getId() {
         return id;
@@ -64,5 +87,7 @@ public class MenuName {
     public void setMenus(Set<Menu> menus) {
         this.menus = menus;
     }
+
+
 
 }

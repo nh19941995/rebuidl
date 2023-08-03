@@ -20,6 +20,9 @@ public class Dish {
     @Column(name = "price", nullable = false)
     private Integer price;
 
+    @Column(name = "dish_comment", length = 1000)
+    private String comment;
+
     @Column(name = "date_creat")
     private Instant dateCreat;
 
@@ -40,6 +43,14 @@ public class Dish {
 
     @OneToMany(mappedBy = "dish")
     private Set<Menu> menus = new LinkedHashSet<>();
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public Integer getId() {
         return id;
@@ -109,9 +120,10 @@ public class Dish {
     public Dish() {
     }
 
-    public Dish(String dishName, Integer price, Instant dateCreat, Instant dateUpdate, Integer flag, DishType type, Set<Menu> menus) {
+    public Dish(String dishName, Integer price, String comment, Instant dateCreat, Instant dateUpdate, Integer flag, DishType type, Set<Menu> menus) {
         this.dishName = dishName;
         this.price = price;
+        this.comment = comment;
         this.dateCreat = dateCreat;
         this.dateUpdate = dateUpdate;
         this.flag = flag;
@@ -119,19 +131,6 @@ public class Dish {
         this.menus = menus;
     }
 
-    @Override
-    public String toString() {
-        return "Dish{" +
-                "id=" + id +
-                ", dishName='" + dishName + '\'' +
-                ", price=" + price +
-                ", dateCreat=" + dateCreat +
-                ", dateUpdate=" + dateUpdate +
-                ", flag=" + flag +
-                ", type=" + type +
-                ", menus=" + menus +
-                '}';
-    }
     public void add(DishType dishType){
         if (dishType.getType() == null){
             this.setType(dishType);
