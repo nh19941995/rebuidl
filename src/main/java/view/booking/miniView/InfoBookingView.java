@@ -13,20 +13,35 @@ public class InfoBookingView extends JPanel {
     private static JLabel labelLastName = new JLabel("Last name Client: ");
     private static JLabel labelLastNameValue = new JLabel();
     private JLabel labelDeposit = new JLabel("Deposit: ");
+    private JLabel labelDate = new JLabel("Date of Event: ");
     private JLabel labelStartTime = new JLabel("Start time: ");
     private JLabel labelEndTime = new JLabel("End time: ");
     private JLabel labelComment = new JLabel("Comment: ");
-    private JTextField inputStartTime = new JTextField();
-    private JTextField inputDeposit = new JTextField();
-    private JTextField inputEndTime = new JTextField();
-    private JTextField inputComment = new JTextField();
+    private static JTextField inputStartTime = new JTextField();
+    private static JTextField inputDeposit = new JTextField();
+    private static JTextField inputEndTime = new JTextField();
+    private static JTextField inputComment = new JTextField();
+    private static JTextField inputDate = new JTextField();
+    public static JTextField getInputStartTime() {
+        return inputStartTime;
+    }
+    public static JTextField getInputDeposit() {
+        return inputDeposit;
+    }
+    public static JTextField getInputEndTime() {
+        return inputEndTime;
+    }
+    public static JTextField getInputComment() {
+        return inputComment;
+    }
+    public static JTextField getInputDate() {
+        return inputDate;
+    }
 
     public InfoBookingView() {
         setLayout(new BorderLayout());
         add(block(),BorderLayout.CENTER);
         setBackground(Color.green);
-
-
     }
     public JPanel block(){
         JPanel jPanel = new JPanel();
@@ -43,15 +58,21 @@ public class InfoBookingView extends JPanel {
         grid.GridAddCustom(inputDeposit,1,2,10,10,5,5,1);
         inputDeposit.setPreferredSize(new Dimension(200, 20));
 
-        grid.GridAddCustom(labelStartTime,0,3,35,10,5,5,1);
-        grid.GridAddCustom(inputStartTime,1,3,10,10,5,5,1);
+        grid.GridAddCustom(labelDate,0,3,18,10,5,5,1);
+        grid.GridAddCustom(inputDate,1,3,10,10,5,5,1);
+        inputDate.setPreferredSize(new Dimension(200, 20));
+
+
+
+        grid.GridAddCustom(labelStartTime,0,4,35,10,5,5,1);
+        grid.GridAddCustom(inputStartTime,1,4,10,10,5,5,1);
         inputStartTime.setPreferredSize(new Dimension(200, 20));
 
-        grid.GridAddCustom(labelEndTime,0,4,38,10,5,5,1);
-        grid.GridAddCustom(inputEndTime,1,4,10,10,5,5,1);
+        grid.GridAddCustom(labelEndTime,0,5,38,10,5,5,1);
+        grid.GridAddCustom(inputEndTime,1,5,10,10,5,5,1);
         inputEndTime.setPreferredSize(new Dimension(200, 20));
-        grid.GridAddCustom(labelComment,0,5,38,10,5,5,1);
-        grid.GridAddCustom(inputComment,1,5,10,10,5,5,1);
+        grid.GridAddCustom(labelComment,0,6,38,10,5,5,1);
+        grid.GridAddCustom(inputComment,1,6,10,10,5,5,1);
         inputComment.setPreferredSize(new Dimension(200, 50));
 
 

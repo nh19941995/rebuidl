@@ -10,6 +10,8 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,8 +19,14 @@ public class MenuListView  extends JPanel {
     private static JTable table = new JTable();
     private DefaultTableModel tableModel;
     private Object[][] data;
-    private static int idSelectMenu;
+
+    private static int menuIdSelect;
+
     private static JButton buttonSelectMenu = new JButton("Choose a Menu for Booking ");
+
+    public static int getMenuIdSelect() {
+        return menuIdSelect;
+    }
 
     public static JButton getButtonSelectMenu() {
         return buttonSelectMenu;
@@ -26,12 +34,7 @@ public class MenuListView  extends JPanel {
     public static void setButtonSelectMenu(JButton buttonSelectMenu) {
         MenuListView.buttonSelectMenu = buttonSelectMenu;
     }
-    public static int getIdSelectMenu() {
-        return idSelectMenu;
-    }
-    public static void setIdSelectMenu(int idSelectMenu) {
-        MenuListView.idSelectMenu = idSelectMenu;
-    }
+
     public Object[][] getData() {
         return data;
     }
@@ -54,6 +57,7 @@ public class MenuListView  extends JPanel {
         loadData();
         this.add(scrollPane, BorderLayout.CENTER);
         add(gridControlMenuList(),BorderLayout.SOUTH);
+        getMenuFromList();
     }
 
     private JPanel gridControlMenuList(){
@@ -165,4 +169,24 @@ public class MenuListView  extends JPanel {
         // Thông báo cho bảng biết rằng dữ liệu đã thay đổi để nó vẽ lại giao diện
         model.fireTableDataChanged();
     }
+
+    public static void getMenuFromList(){
+        // sự kiện click vào bảng menu
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
+                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
+                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
+                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
+                        System.out.println("select:" + id);
+                        menuIdSelect = Integer.parseInt(id);
+                        System.out.println("Menu: "+ id);
+                    }
+                }
+            }
+        });
+    }
+
+
 }

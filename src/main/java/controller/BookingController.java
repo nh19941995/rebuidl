@@ -1,16 +1,15 @@
 package controller;
 
-import dao.MenuNameDAO;
-import dao.TableListDAO;
-import model.Booking;
-import model.MenuName;
-import model.TableList;
+import dao.*;
+import model.*;
+import view.booking.BookingView;
 import view.booking.miniView.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,9 +27,21 @@ public class BookingController {
     private static JButton buttonSelectTable = TableListView.getButtonSelectTable();
     private static JButton buttonSelectMenu = MenuListView.getButtonSelectMenu();
     private static JButton buttonSelectPerson = ClientListView.getButtonSelectPerson();
+
+    private static JButton buttonSubmitNewBooking = BookingView.getButtonSubmitBooking();
     private static int tableIdSelect;
     private static int menuIdSelect;
     private static int personIdSelect;
+
+//    private static BookingsInfo bookingsInfo = new BookingsInfo();
+
+//    public static BookingsInfo getBookingsInfo() {
+//        return bookingsInfo;
+//    }
+//
+//    public static void setBookingsInfo(BookingsInfo bookingsInfo) {
+//        BookingController.bookingsInfo = bookingsInfo;
+//    }
 
     public static int getPersonIdSelect() {
         return personIdSelect;
@@ -49,82 +60,23 @@ public class BookingController {
     }
 
     public BookingController() {
-        getTableFromList();
-        getMenuFromList();
-        getPersonFromList();
         selectTable();
         selectMenu();
         selectPerson();
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-    public static void getTableFromList(){
-        // sự kiện click vào bảng table
-        jtableTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
-                    int row = jtableTable.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
-                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
-                        String idTable = jtableTable.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        tableIdSelect = Integer.parseInt(idTable);
-                        System.out.println("Table: "+ idTable);
-                    }
-                }
-            }
-
-        });
+        submitNewBooking();
     }
 
-    public static void getMenuFromList(){
-        // sự kiện click vào bảng menu
-        jtableMenu.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
-                    int row = jtableMenu.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
-                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
-                        String id = jtableMenu.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        menuIdSelect = Integer.parseInt(id);
-                        System.out.println("Menu: "+ id);
-                    }
-                }
-            }
-        });
-    }
 
-    public static void getPersonFromList(){
-        // sự kiện click vào bảng
-        jTablePerson.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
-                    int row = jTablePerson.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
-                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
-                        String id = jTablePerson.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        personIdSelect = Integer.parseInt(id);
-                        System.out.println("Person :"+ id);
-                    }
-                }
-            }
-        });
-    }
+
+
+
 
     public static void selectTable(){
         // sự kiện click vào bảng menu
         buttonSelectTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                tableIdSelect = TableListView.getTableIdSelect();
                 System.out.println("gửi dữ liệu về Booking list menu");
                 // lấy về đối tương table theo id bàn đã chọn từ bảng
                 TableList tableObject = TableListDAO.getInstance().getById(tableIdSelect);
@@ -165,6 +117,8 @@ public class BookingController {
         buttonSelectMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                menuIdSelect = MenuListView.getMenuIdSelect();
                 System.out.println("Select Menu");
                 MenuName menuName = MenuNameDAO.getInstance().getById(menuIdSelect);
                 if (bookings.size() == 0){
@@ -192,16 +146,128 @@ public class BookingController {
         });
     }
 
+    public static void submitNewBooking(){
+        buttonSubmitNewBooking.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(personIdSelect);
+                BookingsInfo newInfo = new BookingsInfo();
+                String startTimeString = InfoBookingView.getInputStartTime().getText();
+                String dateString = InfoBookingView.getInputDate().getText();
+                String endTimeString = InfoBookingView.getInputEndTime().getText();
+                String depositString = InfoBookingView.getInputDeposit().getText();
+                String commentString = InfoBookingView.getInputComment().getText();
+
+                int check = 1;
+                if (startTimeString.isEmpty()||endTimeString.isEmpty()||commentString.isEmpty()||personIdSelect ==0||dateString.isEmpty()){
+                    if (check==1){
+                        JOptionPane.showMessageDialog(null, "You must fill in all the required information before proceeding to make a reservation !", "Notice", JOptionPane.WARNING_MESSAGE);
+                    }
+                    check =0;
+                }
+                if (!RegexMatcher.hourCheck(
+                        startTimeString,"").equals("")
+                        ||!RegexMatcher.hourCheck(endTimeString, "").equals("")
+                        ||!RegexMatcher.dayCheck(dateString,"").equals("")
+                ){
+                    if (check ==1){
+                        JOptionPane.showMessageDialog(null,
+                                RegexMatcher.hourCheck(startTimeString, "Star time: ")+
+                                        RegexMatcher.hourCheck(endTimeString, "End time: ")+
+                                        RegexMatcher.dayCheck(dateString,"Date of event: "),
+                                "Notice", JOptionPane.WARNING_MESSAGE);
+                    }
+                    check = 0;
+                }
+                if (!depositString.equals("")){
+                    if (!RegexMatcher.floatCheck(depositString,"").equals("")){
+                        if (check ==1){
+                            JOptionPane.showMessageDialog(null, RegexMatcher.floatCheck(depositString, "Deposit: "), "Notice", JOptionPane.WARNING_MESSAGE);
+                        }
+                        check = 0;
+                    }
+                }
+                BookingsInfo bookingsInfo = new BookingsInfo();
+                if (check==1){
+                    Instant instantStartTime = InstantDateTimeInfo.getByDayAndHour(dateString,startTimeString);
+                    Instant instantEndTime = InstantDateTimeInfo.getByDayAndHour(dateString,startTimeString);
+                    Instant instantNow = InstantDateTimeInfo.getNow();
+                    if (!depositString.isEmpty()){
+                        Float floatDeposit = Float.parseFloat(depositString);
+                        bookingsInfo.setDeposit(floatDeposit);
+                    }
+                    System.out.println(instantNow);
+
+                    if (instantStartTime.isBefore(instantNow)) {
+                        if (check == 1) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Incorrect start date for the event. The start date must be after the current date. Please try again",
+                                    "Notice",
+                                    JOptionPane.WARNING_MESSAGE);
+                            check = 0;
+                        }
+                    }
+                    if (instantEndTime.isBefore(instantNow)) {
+                        if (check == 1) {
+                            JOptionPane.showMessageDialog(null,
+                                    "The end date of the event must be after the current date. Please try again.",
+                                    "Notice",
+                                    JOptionPane.WARNING_MESSAGE);
+                            check = 0;
+                        }
+                    }
+
+                    if(checkInfoTableAndMenu()){
+                        Person person = PersonDAO.getInstance().getById(personIdSelect);
+                        bookingsInfo.setEnd(instantEndTime);
+                        bookingsInfo.setStart(instantStartTime);
+                        bookingsInfo.setDateCreat(instantNow);
+                        bookingsInfo.setPerson(person);
+                        bookingsInfo.setInfo(commentString);
+                        bookingsInfo.setFlag(1);
+                        BookingsInfoDAO.getInstance().insert(bookingsInfo);
+                        getBookings().forEach(s->{
+                            s.setInfo(bookingsInfo);
+                            s.setFlag(1);
+                            BookingDAO.getInstance().insert(s);
+                        });
+                    }
+
+                }
+            }
+        });
+    }
+
     public static void selectPerson(){
         buttonSelectPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("ClientListView id: "+ getIdSelectInTable());
-                // đẩy id person qua class BookingView
-//                BookingView.setIdClientList(ClientListView.getIdSelectInTable());
+                personIdSelect = ClientListView.getMenuIdSelect();
                 InfoBookingView.reloadJpanel();
             }
         });
+    }
+
+    public static boolean checkInfoTableAndMenu(){
+        ArrayList<Booking> bookings = getBookings();
+        for (Booking element : bookings) {
+            if (element.getTable() == null) {
+                JOptionPane.showMessageDialog(null,
+                        "The number of tables and the menu must be equal.",
+                        "Notice",
+                        JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+            if (element.getMenuName() == null) {
+                JOptionPane.showMessageDialog(null,
+                        "The number of tables and the menu must be equal.",
+                        "Notice",
+                        JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+
+        }
+        return true;
     }
 
 

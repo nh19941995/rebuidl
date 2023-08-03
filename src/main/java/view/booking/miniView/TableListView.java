@@ -36,15 +36,15 @@ public class TableListView extends JPanel {
     private JComboBox<String> SelecType;
     private static JButton buttonSelectTable = new JButton("Select table");
     private JButton buttonSearch = new JButton("Search");
-    private static int selectTableId;
+    private static int tableIdSelect;
+
+    public static int getTableIdSelect() {
+        return tableIdSelect;
+    }
+
     // tạo set chứa id bàn
     private static Set<Integer> tableId = new HashSet<>();
-    public static int getSelectTableId() {
-        return selectTableId;
-    }
-    public static void setSelectTableId(int selectTableId) {
-        TableListView.selectTableId = selectTableId;
-    }
+
     public static JButton getButtonSelectTable() {
         return buttonSelectTable;
     }
@@ -145,6 +145,26 @@ public class TableListView extends JPanel {
                 // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
                 searchTableList();
             }
+        });
+        getTableFromList();
+    }
+
+    public static void getTableFromList(){
+        // sự kiện click vào bảng table
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
+                int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
+                if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
+                    String idTable = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
+                    System.out.println("Select:" + idTable);
+                    tableIdSelect = Integer.parseInt(idTable);
+                    System.out.println("Table: "+ idTable);
+                }
+            }
+            }
+
         });
     }
 

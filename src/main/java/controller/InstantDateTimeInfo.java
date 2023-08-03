@@ -48,4 +48,15 @@ public class InstantDateTimeInfo {
         return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
 
+    public static Instant getByDayAndHour(String day, String hour){
+        // Kết hợp chuỗi ngày và giờ thành chuỗi đầy đủ
+        String dateTimeString = day + "T" + hour + ":00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
+        Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
+        return instant;
+    }
+
+
+
 }

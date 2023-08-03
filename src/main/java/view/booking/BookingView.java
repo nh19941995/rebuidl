@@ -14,49 +14,20 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class BookingView extends JPanel {
-    // Tạo ô input và đặt kích thước mặc định
-    JLabel startTimelabel = new JLabel("Start time");
-    JLabel endTimelabel = new JLabel("End time");
 
-    JButton buttonSelectTable = new JButton("Select table from list");
-    JButton buttonRemoveARow = new JButton("Remove a row");
+    private JButton buttonSelectTable = new JButton("Select table from list");
+    private JButton buttonRemoveARow = new JButton("Remove a row");
 
-    JButton buttonSelectClient = new JButton("Sellect client from list");
-    JButton buttonShowAllBooking = new JButton("Show all booking");
+    private JButton buttonSelectClient = new JButton("Sellect client from list");
+    private JButton buttonShowAllBooking = new JButton("Show all booking");
 
-    JButton buttonSelectMenu = new JButton("Select menu from list");
-    JButton buttonAddNewMenu = new JButton("Creat new menu");
-    JButton buttonSubmitBooking = new JButton("Submit a new booking");
-    // các biến giao tiếp giữa các form
-//    private static String idClientList;
-//    private static String idCTableList;
-//    private static String idMenuList;
+    private JButton buttonSelectMenu = new JButton("Select menu from list");
+    private JButton buttonAddNewMenu = new JButton("Creat new menu");
+    private static JButton buttonSubmitBooking = new JButton("Submit a new booking");
 
-
-
-//    public static String getIdClientList() {
-//        return idClientList;
-//    }
-//
-//    public static void setIdClientList(String idClientList) {
-//        BookingView.idClientList = idClientList;
-//    }
-
-//    public static String getIdCTableList() {
-//        return idCTableList;
-//    }
-//
-//    public static void setIdCTableList(String idCTableList) {
-//        BookingView.idCTableList = idCTableList;
-//    }
-
-//    public static String getIdMenuList() {
-//        return idMenuList;
-//    }
-//
-//    public static void setIdMenuList(String idMenuList) {
-//        BookingView.idMenuList = idMenuList;
-//    }
+    public static JButton getButtonSubmitBooking() {
+        return buttonSubmitBooking;
+    }
 
     public BookingView() {
         // Xóa phần khởi tạo ở đây, thay vào đó bạn chỉ cần khởi tạo JPanel (BookingView là một JPanel)
@@ -94,37 +65,11 @@ public class BookingView extends JPanel {
         leftBooking.setPreferredSize(new Dimension(420, 300));
         leftBooking.setBackground(Color.red);
 
-        // thêm các phần tử vào layout chính
-
-//        JLabel startTimelabel = new JLabel("Start time");
-//        JLabel endTimelabel = new JLabel("End time");
-//
-//        JButton selectTableBTN = new JButton("select table from list");
-//        JButton selectClientBTN = new JButton("sellect client from list");
-//        JButton selectMenuBTN = new JButton("select menu from list");
-//        JButton addToBookingListBTN = new JButton("select table from list");
-//        JButton submitBookingBTN = new JButton("select table from list");
-
-
-
-
-
-
         //       thêm grid vào layout chính
         leftBooking.add(setTableAndMenuBlock(),BorderLayout.NORTH);
         centerBooking.add( new MenuListView(),BorderLayout.CENTER);
         leftBooking.add(setInfoBlock(),BorderLayout.CENTER);
 
-
-
-
-
-//
-//        centerBooking.add(centerLabel,BorderLayout.CENTER);
-//        rightBooking.add(rightLabel,BorderLayout.CENTER);
-//        leftBooking.add(leftLabel,BorderLayout.CENTER);
-//        botBooking.add(botLabel,BorderLayout.CENTER);
-//        topBooking.add(topLabel,BorderLayout.CENTER);
 
         buttonSelectTable.addActionListener(new ActionListener() {
             @Override

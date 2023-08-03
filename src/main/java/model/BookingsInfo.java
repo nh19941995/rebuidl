@@ -30,10 +30,10 @@ public class BookingsInfo {
     @Column(name = "end", nullable = false)
     private Instant end;
 
-    @Column(name = "deposit", nullable = false)
+    @Column(name = "deposit", nullable = true)
     private Float deposit;
 
-    @Column(name = "flag", nullable = false)
+    @Column(name = "flag", nullable = true)
     private Integer flag;
 
     @OneToMany(mappedBy = "info")

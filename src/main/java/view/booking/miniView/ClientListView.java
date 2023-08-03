@@ -66,9 +66,13 @@ public class ClientListView extends JPanel {
     private String  birthday;
     private String phone;
     private String permission;
+
+    private static int menuIdSelect;
     private static String searchPhone;
 
-
+    public static int getMenuIdSelect() {
+        return menuIdSelect;
+    }
 
     public static JTable getTable() {
         return table;
@@ -97,40 +101,6 @@ public class ClientListView extends JPanel {
     public static void setSearchPhone(String searchPhone) {
         ClientListView.searchPhone = searchPhone;
     }
-    private static boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    private static boolean isValidName(String name){
-        String nameRegex = "^[\\p{L} .'-]+$";
-        Pattern pattern = Pattern.compile(nameRegex);
-        Matcher matcher = pattern.matcher(name);
-        return matcher.matches();
-    }
-    private static boolean isValidAddress(String address){
-        String addressRegex = "^[0-9a-zA-Z ]*$";
-        Pattern pattern = Pattern.compile(addressRegex);
-        Matcher matcher = pattern.matcher(address);
-        return matcher.matches();
-    }
-    private static boolean isValidPhone(String phone){
-        String phoneRegex = "^[0-9]{10}$";
-        Pattern pattern = Pattern.compile(phoneRegex);
-        Matcher matcher = pattern.matcher(phone);
-        return matcher.matches();
-    }
-    private static boolean isValidBirth(String birth){
-        String birthRegex = "^(19[0-9]{2}|20[0-2][0-2])-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$";
-        Pattern pattern = Pattern.compile(birthRegex);
-        Matcher matcher = pattern.matcher(birth);
-        return matcher.matches();
-    }
 
     public ClientListView() {
         setLayout(new BorderLayout());
@@ -148,6 +118,8 @@ public class ClientListView extends JPanel {
                 tableMouseClicked(evt);
             }
         });
+
+        // add person
         buttonAddPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -202,7 +174,7 @@ public class ClientListView extends JPanel {
                 }
             }
         });
-
+        // update person
         buttonUpdatePerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -242,7 +214,7 @@ public class ClientListView extends JPanel {
                 inputBirthday.setText("");
             }
         });
-        // thêm thông báo nếu chưa chọn người
+        // delete person
         buttonDeletePerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -255,6 +227,22 @@ public class ClientListView extends JPanel {
             }
         });
 
+        // click get id
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
+                    int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
+                    if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
+                        String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
+                        menuIdSelect = Integer.parseInt(id);
+                        System.out.println("Menu: "+ id);
+                    }
+                }
+            }
+        });
+
+
         buttonSearchPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -263,6 +251,42 @@ public class ClientListView extends JPanel {
                 searchByPhone();
             }
         });
+    }
+
+
+    private static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private static boolean isValidName(String name){
+        String nameRegex = "^[\\p{L} .'-]+$";
+        Pattern pattern = Pattern.compile(nameRegex);
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
+    }
+    private static boolean isValidAddress(String address){
+        String addressRegex = "^[0-9a-zA-Z ]*$";
+        Pattern pattern = Pattern.compile(addressRegex);
+        Matcher matcher = pattern.matcher(address);
+        return matcher.matches();
+    }
+    private static boolean isValidPhone(String phone){
+        String phoneRegex = "^[0-9]{10}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        Matcher matcher = pattern.matcher(phone);
+        return matcher.matches();
+    }
+    private static boolean isValidBirth(String birth){
+        String birthRegex = "^(19[0-9]{2}|20[0-2][0-2])-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$";
+        Pattern pattern = Pattern.compile(birthRegex);
+        Matcher matcher = pattern.matcher(birth);
+        return matcher.matches();
     }
 
     private JScrollPane createTable() {
