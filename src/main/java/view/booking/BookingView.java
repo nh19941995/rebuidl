@@ -204,7 +204,7 @@ public class BookingView extends JPanel {
                 // Xóa tất cả các thành phần con khỏi JPanel
                 centerBooking.removeAll();
                 // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new BookingListView(),BorderLayout.CENTER);
+//                centerBooking.add(new BookingListView(),BorderLayout.CENTER);
                 // Gọi phương thức revalidate() và repaint() để load lại JPanel
                 centerBooking.revalidate();
                 centerBooking.repaint();

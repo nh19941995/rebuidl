@@ -9,15 +9,17 @@ import java.awt.*;
 
 public class InfoBookingView extends JPanel {
     private static JLabel labelFirstName = new JLabel("Fist name Client: ");
-    private static JLabel labelFirstNameValue = new JLabel("value");
+    private static JLabel labelFirstNameValue = new JLabel();
     private static JLabel labelLastName = new JLabel("Last name Client: ");
-    private static JLabel labelLastNameValue = new JLabel("value");
+    private static JLabel labelLastNameValue = new JLabel();
     private JLabel labelDeposit = new JLabel("Deposit: ");
     private JLabel labelStartTime = new JLabel("Start time: ");
     private JLabel labelEndTime = new JLabel("End time: ");
+    private JLabel labelComment = new JLabel("Comment: ");
     private JTextField inputStartTime = new JTextField();
     private JTextField inputDeposit = new JTextField();
     private JTextField inputEndTime = new JTextField();
+    private JTextField inputComment = new JTextField();
 
     public InfoBookingView() {
         setLayout(new BorderLayout());
@@ -48,6 +50,10 @@ public class InfoBookingView extends JPanel {
         grid.GridAddCustom(labelEndTime,0,4,38,10,5,5,1);
         grid.GridAddCustom(inputEndTime,1,4,10,10,5,5,1);
         inputEndTime.setPreferredSize(new Dimension(200, 20));
+        grid.GridAddCustom(labelComment,0,5,38,10,5,5,1);
+        grid.GridAddCustom(inputComment,1,5,10,10,5,5,1);
+        inputComment.setPreferredSize(new Dimension(200, 50));
+
 
         jPanel.add(grid,BorderLayout.CENTER);
         return  jPanel;
