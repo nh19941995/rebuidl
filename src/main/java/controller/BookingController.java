@@ -3,14 +3,18 @@ package controller;
 import dao.MenuNameDAO;
 import dao.TableListDAO;
 import model.Booking;
+import model.BookingsInfo;
 import model.MenuName;
 import model.TableList;
+import view.ClientListView;
+import view.booking.NewBookingView;
 import view.booking.miniView.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,18 +32,17 @@ public class BookingController {
     private static JButton buttonSelectTable = TableListView.getButtonSelectTable();
     private static JButton buttonSelectMenu = MenuListView.getButtonSelectMenu();
     private static JButton buttonSelectPerson = ClientListView.getButtonSelectPerson();
+
+    private static JButton buttonSubmitBooking = NewBookingView.getButtonSubmitBooking();
     private static int tableIdSelect;
     private static int menuIdSelect;
     private static int personIdSelect;
-
     public static int getPersonIdSelect() {
         return personIdSelect;
     }
-
     public static void setPersonIdSelect(int personIdSelect) {
         BookingController.personIdSelect = personIdSelect;
     }
-
     public static ArrayList<Booking> getBookings() {
         return bookings;
     }
@@ -120,7 +123,7 @@ public class BookingController {
         });
     }
 
-    public static void selectTable(){
+    public static void selectTable(){  // lấy đối tượng table cho booking
         // sự kiện click vào bảng menu
         buttonSelectTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -161,7 +164,7 @@ public class BookingController {
         });
     }
 
-    public static void selectMenu(){
+    public static void selectMenu(){  // lấy đối tượng menuName cho booking
         buttonSelectMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -192,17 +195,37 @@ public class BookingController {
         });
     }
 
-    public static void selectPerson(){
+    public static void selectPerson(){  // lấy đối tượng person và tạo đối tượng bookingInfo
         buttonSelectPerson.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("ClientListView id: "+ getIdSelectInTable());
-                // đẩy id person qua class BookingView
-//                BookingView.setIdClientList(ClientListView.getIdSelectInTable());
                 InfoBookingView.reloadJpanel();
             }
         });
     }
+
+    public static void submitBooking(){
+        buttonSubmitBooking.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String start = InfoBookingView.getInputStartTime().getText();
+                String end = InfoBookingView.getInputEndTime().getText();
+                String depositString = InfoBookingView.getInputDeposit().getText();
+                if (start.isEmpty()||end.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Please fill in all the required information before booking !", "Notice", JOptionPane.WARNING_MESSAGE);
+                }else {
+                    Instant instantStartTime = InstantDateTimeInfo.getByStringDate(start) ;
+                    Instant instantEndTime = InstantDateTimeInfo.getByStringDate(end) ;
+                    // tạo mới đối tượng bookingInfo
+                    BookingsInfo info = new BookingsInfo();
+                    info.setStart(instantStartTime);
+                    info.setEnd(instantEndTime);
+
+                }
+            }
+        });
+    }
+
 
 
 

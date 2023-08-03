@@ -3,7 +3,7 @@ package view;
 import com.formdev.flatlaf.FlatLightLaf;
 import controller.BookingController;
 import view.booking.BookingView;
-import view.booking.miniView.ClientListView;
+import view.booking.NewBookingView;
 import view.booking.miniView.MenuListView;
 import view.booking.miniView.NewMenuListView;
 
@@ -56,7 +56,7 @@ public class HomeView extends JFrame {
         JPanel tab3 = new JPanel();
         JPanel tab4 = new JPanel();
         JPanel tab5 = new JPanel();
-        tabbedPane.addTab("Employee", tab1);
+        tabbedPane.addTab("Person", tab1);
         tabbedPane.addTab("Transaction", tab2);
         tabbedPane.addTab("Booking", tab3);
         tabbedPane.addTab("Manage", tab4);
@@ -68,13 +68,10 @@ public class HomeView extends JFrame {
         tab4.setLayout(new BorderLayout());
         tab5.setLayout(new BorderLayout());
 
-        // Tạo một đối tượng TransactionView và thêm nó vào tab2
-        TransactionView transactionView = new TransactionView();
 //        thêm các view vào tab
-        tab3.add(new BookingView(),BorderLayout.CENTER);
-        tab2.add(new NewMenuListView(),BorderLayout.CENTER);
         tab1.add(new ClientListView(),BorderLayout.CENTER);
-
+        tab2.add(new BookingView(),BorderLayout.CENTER);
+        tab3.add(new NewBookingView(),BorderLayout.CENTER);
         tab4.add(new MenuListView(),BorderLayout.CENTER);
         tab5.add(new MenuView(),BorderLayout.CENTER);
 
@@ -151,25 +148,28 @@ public class HomeView extends JFrame {
                     case 0:
                         // Cập nhật nội dung cho tab 1 (Nhân viên)
                         tab1.removeAll(); // Xóa các thành phần hiện tại
-                        tab1.add(new ClientListView(), BorderLayout.CENTER); // Thêm các thành phần mới
+                        tab1.add(new ClientListView()); // Thêm các thành phần mới
                         break;
                     case 1:
+                        // Cập nhật nội dung cho tab 1 (Nhân viên)
+                        tab2.removeAll(); // Xóa các thành phần hiện tại
+                        tab2.add(new BookingView(),BorderLayout.CENTER); // Thêm các thành phần mới
                         // Cập nhật nội dung cho tab 2 (Giao dịch)
                         break;
                     case 2:
                         // Load lại nội dung cho tab 3 (Đặt chỗ)
                         tab3.removeAll(); // Xóa các thành phần hiện tại
-                        tab3.add(new BookingView(), BorderLayout.CENTER); // Thêm các thành phần mới
+                        tab3.add(new NewBookingView()); // Thêm các thành phần mới
                         break;
                     case 3:
                         // Load lại nội dung cho tab 4 (Quản lý)
                         tab4.removeAll(); // Xóa các thành phần hiện tại
-                        tab4.add(new MenuListView(), BorderLayout.CENTER); // Thêm các thành phần mới
+                        tab4.add(new MenuListView()); // Thêm các thành phần mới
                         break;
                     case 4:
                         // Load lại nội dung cho tab 5 (Thực đơn)
                         tab5.removeAll(); // Xóa các thành phần hiện tại
-                        tab5.add(new MenuView(), BorderLayout.CENTER); // Thêm các thành phần mới
+                        tab5.add(new MenuView()); // Thêm các thành phần mới
                         break;
                 }
 

@@ -1,14 +1,10 @@
-package view.booking.miniView;
+package view;
 import controller.BookingController;
 import controller.InstantDateTimeInfo;
 import dao.PermissionDAO;
 import dao.PersonDAO;
-import dao.TableTypeDAO;
-import model.BookingsInfo;
-import model.Permission;
 import model.Person;
 import view.Tool.Grid;
-import view.booking.BookingView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -17,7 +13,6 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.Instant;
 import java.util.Arrays;

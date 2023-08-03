@@ -1,5 +1,7 @@
 package view.booking.miniView;
 import controller.BookingController;
+import view.ClientListView;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;

@@ -1,264 +1,114 @@
 package view.booking;
 
-import controller.BookingController;
-import model.Booking;
-import view.MenuView;
 import view.Tool.Boder;
 import view.Tool.Grid;
-import view.booking.miniView.*;
+import view.booking.miniView.BookingListView;
+import view.booking.miniView.InfoBookingView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class BookingView extends JPanel {
     // Tạo ô input và đặt kích thước mặc định
-    JLabel startTimelabel = new JLabel("Start time");
-    JLabel endTimelabel = new JLabel("End time");
+    private static JButton buttonSelectTable = new JButton("Select table from list");
+    private static   JButton buttonRemoveARow = new JButton("Remove a row");
 
-    JButton buttonSelectTable = new JButton("Select table from list");
-    JButton buttonRemoveARow = new JButton("Remove a row");
+    private static JButton buttonSelectClient = new JButton("Sellect client from list");
+    private static JButton buttonShowAllBooking = new JButton("Show all booking");
 
-    JButton buttonSelectClient = new JButton("Sellect client from list");
-    JButton buttonShowAllBooking = new JButton("Show all booking");
-
-    JButton buttonSelectMenu = new JButton("Select menu from list");
-    JButton buttonAddNewMenu = new JButton("Creat new menu");
-    JButton buttonSubmitBooking = new JButton("Submit a new booking");
-    // các biến giao tiếp giữa các form
-//    private static String idClientList;
-//    private static String idCTableList;
-//    private static String idMenuList;
+    private static JButton buttonSelectMenu = new JButton("Select menu from list");
+    private static JButton buttonAddNewMenu = new JButton("Creat new menu");
+    private static JButton buttonSubmitBooking = new JButton("Submit a new booking");
 
 
-
-//    public static String getIdClientList() {
-//        return idClientList;
-//    }
-//
-//    public static void setIdClientList(String idClientList) {
-//        BookingView.idClientList = idClientList;
-//    }
-
-//    public static String getIdCTableList() {
-//        return idCTableList;
-//    }
-//
-//    public static void setIdCTableList(String idCTableList) {
-//        BookingView.idCTableList = idCTableList;
-//    }
-
-//    public static String getIdMenuList() {
-//        return idMenuList;
-//    }
-//
-//    public static void setIdMenuList(String idMenuList) {
-//        BookingView.idMenuList = idMenuList;
-//    }
-
-    public BookingView() {
-        // Xóa phần khởi tạo ở đây, thay vào đó bạn chỉ cần khởi tạo JPanel (BookingView là một JPanel)
-
-        setLayout(new BorderLayout());
-        this.setBackground(Color.red);
-        JLabel centerLabel = new JLabel ("giữa");
-        JLabel leftLabel = new JLabel ("trái");
-        JLabel rightLabel = new JLabel ("phải");
-        JLabel topLabel = new JLabel ("trên");
-        JLabel botLabel = new JLabel ("dưới");
-
-
-//        lauout chính của booking
-        Boder centerBooking = new Boder();
-        centerBooking.setBackground(Color.red);
-        Boder rightBooking = new Boder();
-        rightBooking.setBackground(Color.blue);
-        Boder leftBooking = new Boder();
-        rightBooking.setBackground(Color.gray);
-        Boder botBooking = new Boder();
-        botBooking.setBackground(Color.green);
-        Boder topBooking = new Boder();
-        topBooking.setBackground(Color.yellow);
-
-//        thêm các layout chính vào layout class
-
-        this.add(centerBooking,BorderLayout.CENTER);
-        this.add(rightBooking,BorderLayout.EAST);
-        this.add(leftBooking,BorderLayout.WEST);
-        this.add(botBooking,BorderLayout.SOUTH);
-        this.add(topBooking,BorderLayout.NORTH);
-
-        leftBooking.setBackground(Color.RED);
-        leftBooking.setPreferredSize(new Dimension(420, 300));
-        leftBooking.setBackground(Color.red);
-
-        // thêm các phần tử vào layout chính
-
-//        JLabel startTimelabel = new JLabel("Start time");
-//        JLabel endTimelabel = new JLabel("End time");
-//
-//        JButton selectTableBTN = new JButton("select table from list");
-//        JButton selectClientBTN = new JButton("sellect client from list");
-//        JButton selectMenuBTN = new JButton("select menu from list");
-//        JButton addToBookingListBTN = new JButton("select table from list");
-//        JButton submitBookingBTN = new JButton("select table from list");
+    // infor block
+    private static JLabel labelFirstName = new JLabel("Fist name Client :");
+    private static JLabel labelFirstNameValue = new JLabel();
+    private static JLabel labelLastName = new JLabel("Last name Client :");
+    private static JLabel labelLastNameValue = new JLabel();
+    private JLabel labelDeposit = new JLabel("Deposit         : ");
+    private JLabel labelStartTime = new JLabel("Start time      : ");
+    private JLabel labelEndTime = new JLabel("End time        : ");
+    private JLabel labelComment = new JLabel("Comment         : ");
+    private static JTextField inputStartTime = new JTextField();
+    private static JTextField inputDeposit = new JTextField();
+    private static JTextField inputEndTime = new JTextField();
+    private static JTextField inputComment = new JTextField();
 
 
 
-
-
-
-        //       thêm grid vào layout chính
-        leftBooking.add(setTableAndMenuBlock(),BorderLayout.NORTH);
-        centerBooking.add( new MenuListView(),BorderLayout.CENTER);
-        leftBooking.add(setInfoBlock(),BorderLayout.CENTER);
-
-
-
-
-
-//
-//        centerBooking.add(centerLabel,BorderLayout.CENTER);
-//        rightBooking.add(rightLabel,BorderLayout.CENTER);
-//        leftBooking.add(leftLabel,BorderLayout.CENTER);
-//        botBooking.add(botLabel,BorderLayout.CENTER);
-//        topBooking.add(topLabel,BorderLayout.CENTER);
-
-        buttonSelectTable.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Xóa tất cả các thành phần con khỏi JPanel
-                centerBooking.removeAll();
-                // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new TableListView(),BorderLayout.CENTER);
-                // Gọi phương thức revalidate() và repaint() để load lại JPanel
-                centerBooking.revalidate();
-                centerBooking.repaint();
-            }
-        });
-
-        buttonSelectClient.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Xóa tất cả các thành phần con khỏi JPanel
-                centerBooking.removeAll();
-                // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new ClientListView(),BorderLayout.CENTER);
-
-                // Gọi phương thức revalidate() và repaint() để load lại JPanel
-                centerBooking.revalidate();
-                centerBooking.repaint();
-            }
-        });
-
-        buttonSelectMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Xóa tất cả các thành phần con khỏi JPanel
-                centerBooking.removeAll();
-                // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new MenuListView(),BorderLayout.CENTER);
-
-                // Gọi phương thức revalidate() và repaint() để load lại JPanel
-                centerBooking.revalidate();
-                centerBooking.repaint();
-            }
-        });
-
-        buttonAddNewMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Xóa tất cả các thành phần con khỏi JPanel
-                centerBooking.removeAll();
-                // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new MenuView(),BorderLayout.CENTER);
-                // Gọi phương thức revalidate() và repaint() để load lại JPanel
-                centerBooking.revalidate();
-                centerBooking.repaint();
-            }
-        });
-
-        buttonRemoveARow.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<Booking> bookings = BookingController.getBookings();
-                bookings.remove(BookingListView.getIdSelect()-1);
-                BookingListView.loadData();
-            }
-        });
-
-//        buttonSubmitBooking.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println(getIdClientList());
-//
-//
-//            }
-//        });
-
-        buttonShowAllBooking.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Xóa tất cả các thành phần con khỏi JPanel
-                centerBooking.removeAll();
-                // Gọi hàm searchTableList() để thực hiện tìm kiếm và cập nhật dữ liệu
-                centerBooking.add(new BookingListView(),BorderLayout.CENTER);
-                // Gọi phương thức revalidate() và repaint() để load lại JPanel
-                centerBooking.revalidate();
-                centerBooking.repaint();
-
-            }
-        });
+    public static JButton getButtonSubmitBooking() {
+        return buttonSubmitBooking;
     }
+    public BookingView() {
+        setLayout(new BorderLayout());
+        //        lauout chính của booking
+        Boder centerBooking = new Boder();
+        Boder leftBooking = new Boder();
+        //        thêm các layout chính vào layout class
+        this.add(centerBooking,BorderLayout.CENTER);
+        this.add(leftBooking,BorderLayout.WEST);
 
-    public JPanel setTableAndMenuBlock(){
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
+
+
+
         Grid grid = new Grid();
         JPanel table = new BookingListView();
-        grid.GridAddCustom(table,0,0,0,0,20,20,2);
+        Grid gridTop = new Grid();
+        gridTop.GridAddCustom(table,            0,0,0,0,20,20,2);
+        // hàng 0
         // đặt kích thước
         table.setPreferredSize(new Dimension(400, 200));
-        grid.GridAddCustom(buttonSelectMenu,0,1,20,20,20,20,1);
-        grid.GridAddCustom(buttonAddNewMenu,1,1,20,20,20,20,1);
+        // hàng 1
+        grid.GridAddCustom(buttonSelectMenu, 0,1,20,20,20,20,1);
+        grid.GridAddCustom(buttonAddNewMenu, 1,1,20,20,20,20,1);
+        // hàng 2
         grid.GridAddCustom(buttonSelectTable,0,2,20,20,20,20,1);
-        grid.GridAddCustom(buttonRemoveARow,1,2,20,20,20,20,1);
-
-        // đặt kích thước
+        grid.GridAddCustom(buttonRemoveARow, 1,2,20,20,20,20,1);
+//
+//        // đặt kích thước
         buttonSelectTable.setPreferredSize(new Dimension(150, 20));
         buttonSelectMenu.setPreferredSize(new Dimension(150, 20));
         buttonAddNewMenu.setPreferredSize(new Dimension(150, 20));
         buttonRemoveARow.setPreferredSize(new Dimension(150, 20));
-        jPanel.add(grid,BorderLayout.CENTER);
-        return jPanel;
-    }
 
-    public JPanel setInfoBlock(){
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
+        // hàng 3
+        grid.GridAddCustom(labelFirstName,     0,3,0,0,5,5,1);
+        grid.GridAddCustom(labelFirstNameValue,1,3,0,0,5,5,1);
 
-        Grid grid = new Grid();
-        JPanel info = new InfoBookingView();
-        grid.GridAddCustom(info,0,0,0,0,20,20,2);
-        // đặt kích thước
-//        table.setPreferredSize(new Dimension(450, 200));
+        grid.GridAddCustom(labelLastName,      0,4,0,0,5,5,1);
+        grid.GridAddCustom(labelLastNameValue, 1,4,0,0,5,5,1);
 
-        grid.GridAddCustom(buttonSelectClient,0,1,20,20,20,20,1);
-        grid.GridAddCustom(buttonShowAllBooking,1,1,20,20,20,20,1);
-        grid.GridAddCustom(buttonSubmitBooking,0,2,20,20,20,20,2);
+        grid.GridAddCustom(labelDeposit,       0,5,0,0,5,5,1);
+        grid.GridAddCustom(inputDeposit,       1,5,0,0,5,5,1);
+        inputDeposit.setPreferredSize(new Dimension(200, 20));
+
+        grid.GridAddCustom(labelStartTime,     0,6,0,0,5,5,1);
+        grid.GridAddCustom(inputStartTime,     1,6,0,0,5,5,1);
+        inputStartTime.setPreferredSize(new Dimension(200, 20));
+
+        grid.GridAddCustom(labelEndTime,       0,7,0,0,5,5,1);
+        grid.GridAddCustom(inputEndTime,       1,7,0,0,5,5,1);
+        inputEndTime.setPreferredSize(new Dimension(200, 20));
+
+
+
+        // hàng 4
+        grid.GridAddCustom(buttonSelectClient,0,8,20,20,20,20,1);
+        grid.GridAddCustom(buttonShowAllBooking,1,8,20,20,20,20,1);
+        // hàng 5
+        Grid gridBot = new Grid();
+        gridBot.GridAddCustom(buttonSubmitBooking,0,0,20,20,20,20,0);
 
         // đặt kích thước
         buttonSelectClient.setPreferredSize(new Dimension(150, 20));
         buttonSubmitBooking.setPreferredSize(new Dimension(150, 20));
-
         buttonShowAllBooking.setPreferredSize(new Dimension(150, 20));
+        leftBooking.add(grid,BorderLayout.CENTER);
+        leftBooking.add(gridBot,BorderLayout.SOUTH);
+        leftBooking.add(gridTop,BorderLayout.NORTH);
+        leftBooking.setPreferredSize(new Dimension(450, 300));
 
 
-
-        jPanel.add(grid,BorderLayout.CENTER);
-        return jPanel;
     }
 }
-
