@@ -33,7 +33,7 @@ public class Transaction {
     @Column(name = "date_update", nullable = true)
     private Instant dateUpdate;
 
-    @Column(name = "flag", nullable = false)
+    @Column(name = "flag", nullable = true)
     private Integer flag;
 
     public Integer getId() {

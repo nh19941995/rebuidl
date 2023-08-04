@@ -34,11 +34,7 @@ public class BookingView extends JPanel {
 
         setLayout(new BorderLayout());
         this.setBackground(Color.red);
-        JLabel centerLabel = new JLabel ("giữa");
-        JLabel leftLabel = new JLabel ("trái");
-        JLabel rightLabel = new JLabel ("phải");
-        JLabel topLabel = new JLabel ("trên");
-        JLabel botLabel = new JLabel ("dưới");
+
 
 
 //        lauout chính của booking
@@ -134,15 +130,6 @@ public class BookingView extends JPanel {
             }
         });
 
-//        buttonSubmitBooking.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println(getIdClientList());
-//
-//
-//            }
-//        });
-
         buttonShowAllBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -197,11 +184,7 @@ public class BookingView extends JPanel {
         // đặt kích thước
         buttonSelectClient.setPreferredSize(new Dimension(150, 20));
         buttonSubmitBooking.setPreferredSize(new Dimension(150, 20));
-
         buttonShowAllBooking.setPreferredSize(new Dimension(150, 20));
-
-
-
         jPanel.add(grid,BorderLayout.CENTER);
         return jPanel;
     }

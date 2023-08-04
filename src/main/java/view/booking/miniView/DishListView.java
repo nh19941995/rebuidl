@@ -113,10 +113,10 @@ public class DishListView  extends JPanel {
                     System.out.println("đẩy dữ liệu qua menu ");
                     model.Menu menu = new model.Menu();
                     menu.setQuantity(
-                            Double.parseDouble(inputEnterNumber.getText())
+                            Integer.parseInt(inputEnterNumber.getText())
                     );
                     menu.setUnitPrice(
-                            Integer.parseInt(inputEnterPrice.getText())
+                            Double.parseDouble(inputEnterPrice.getText())
                     );
                     menu.setFlag(1);
                     Dish dish = DishDAO.getInstance().getById(Integer.parseInt(getDishIdSelect()));

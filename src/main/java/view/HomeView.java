@@ -2,10 +2,12 @@ package view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import controller.BookingController;
+import controller.TransactionController;
 import view.booking.BookingView;
 import view.booking.miniView.ClientListView;
 import view.booking.miniView.MenuListView;
 import view.booking.miniView.NewMenuListView;
+import view.booking.miniView.TransactionListView;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -72,7 +74,7 @@ public class HomeView extends JFrame {
         TransactionView transactionView = new TransactionView();
 //        thêm các view vào tab
         tab3.add(new BookingView(),BorderLayout.CENTER);
-        tab2.add(new NewMenuListView(),BorderLayout.CENTER);
+        tab2.add(new TransactionListView(),BorderLayout.CENTER);
         tab1.add(new ClientListView(),BorderLayout.CENTER);
 
         tab4.add(new MenuListView(),BorderLayout.CENTER);
@@ -155,6 +157,9 @@ public class HomeView extends JFrame {
                         break;
                     case 1:
                         // Cập nhật nội dung cho tab 2 (Giao dịch)
+                        tab2.removeAll(); // Xóa các thành phần hiện tại
+                        tab2.add(new TransactionListView(), BorderLayout.CENTER); // Thêm các thành phần mới
+
                         break;
                     case 2:
                         // Load lại nội dung cho tab 3 (Đặt chỗ)
@@ -181,6 +186,7 @@ public class HomeView extends JFrame {
 
 
         BookingController bookingController = new BookingController();
+        TransactionController transactionController = new TransactionController();
 
 
 

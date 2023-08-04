@@ -248,11 +248,15 @@ public class BookingController {
                         bookingsInfo.setFlag(1);
                         BookingsInfoDAO.getInstance().insert(bookingsInfo);
                         System.out.println("khởi tạo id info: "+bookingsInfo.getId());
+
+//                        check
+
                         getBookings().forEach(s->{
                             s.setInfo(bookingsInfo);
                             s.setFlag(1);
                             BookingDAO.getInstance().insert(s);
                         });
+
                         // tạo giao dịch nợ (chỉ tạo được sau khi tạo xong booking )
                         Transaction tranReceivable = new Transaction();
                         tranReceivable.setType(TransactionsTypeDAO.getInstance().getByName("Nợ - Khách hàng còn thiếu"));
@@ -282,6 +286,7 @@ public class BookingController {
             public void actionPerformed(ActionEvent e) {
                 personIdSelect = ClientListView.getMenuIdSelect();
                 InfoBookingView.reloadJpanel();
+                TransactionListView.reloadJpanel();
             }
         });
     }
@@ -305,6 +310,12 @@ public class BookingController {
             }
 
         }
+        return true;
+    }
+
+    public boolean checkTimeBookingTable(){
+
+
         return true;
     }
 

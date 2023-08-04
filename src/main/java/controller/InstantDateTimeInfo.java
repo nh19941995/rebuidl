@@ -7,19 +7,25 @@ import java.time.format.DateTimeFormatter;
 
 public class InstantDateTimeInfo {
     public static void main(String[] args) {
-        Instant instant = Instant.now();
+//        Instant instant = Instant.now();
+//
+//        // Lấy giờ từ Instant
+//        String hour = getTimeStringToInstance(instant, 1);
+//        System.out.println("Hour: " + hour);
+//
+//        // Lấy ngày từ Instant
+//        String day = getTimeStringToInstance(instant, 2);
+//        System.out.println("Day: " + day);
+//
+//        // Lấy năm từ Instant
+//        String year = getTimeStringToInstance(instant, 3);
+//        System.out.println("Year: " + year);
+//
+//        ZonedDateTime localDateTime = ZonedDateTime.now();
+//        System.out.println(localDateTime);
 
-        // Lấy giờ từ Instant
-        String hour = getTimeStringToInstance(instant, 1);
-        System.out.println("Hour: " + hour);
-
-        // Lấy ngày từ Instant
-        String day = getTimeStringToInstance(instant, 2);
-        System.out.println("Day: " + day);
-
-        // Lấy năm từ Instant
-        String year = getTimeStringToInstance(instant, 3);
-        System.out.println("Year: " + year);
+        System.out.println(getByDayAndHour("2023-08-04","16:39"));
+        System.out.println(getNow());
     }
 
     public static String getTimeStringToInstance(Instant instant, int infoType) {
@@ -48,14 +54,28 @@ public class InstantDateTimeInfo {
         return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
 
-    public static Instant getByDayAndHour(String day, String hour){
-        // Kết hợp chuỗi ngày và giờ thành chuỗi đầy đủ
-        String dateTimeString = day + "T" + hour + ":00";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeString, formatter);
-        Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
-        return instant;
+    public static Instant getByDayAndHour(String dateStr, String timeStr){
+        try {
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            // Chuyển đổi định dạng thời gian và ngày thành LocalDateTime
+            LocalTime time = LocalTime.parse(timeStr, timeFormatter);
+            LocalDate date = LocalDate.parse(dateStr, dateFormatter);
+            LocalDateTime localDateTime = LocalDateTime.of(date, time);
+
+            // Chuyển đổi LocalDateTime thành ZonedDateTime với múi giờ địa phương (ZoneId.systemDefault())
+            ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+
+            // Chuyển đổi ZonedDateTime thành Instant
+            return zonedDateTime.toInstant();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+
 
 
 

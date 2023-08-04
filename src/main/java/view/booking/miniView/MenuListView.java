@@ -49,7 +49,6 @@ public class MenuListView  extends JPanel {
     }
     public MenuListView() {
         setLayout(new BorderLayout());
-        setBackground(Color.cyan);
         // Khởi tạo bảng với mô hình dữ liệu trống
         table.setModel(new DefaultTableModel());
         // Tạo JScrollPane chứa bảng và thêm nó vào JPanel
@@ -64,8 +63,10 @@ public class MenuListView  extends JPanel {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
         // đặt kích thước
-        buttonSelectMenu.setPreferredSize(new Dimension(200, 20));
+        buttonSelectMenu.setPreferredSize(new Dimension(200, 30));
         buttonSelectMenu.setBackground(Color.red);
+        // Đặt màu cho văn bản của JButton
+        buttonSelectMenu.setForeground(Color.WHITE);
         Grid grid = new Grid();
         grid.GridAddCustom(buttonSelectMenu,0,0,20,20,20,20,1);
         // Create a LineBorder with a specified color and thickness
@@ -179,9 +180,8 @@ public class MenuListView  extends JPanel {
                     int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
                     if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
-                        System.out.println("select:" + id);
                         menuIdSelect = Integer.parseInt(id);
-                        System.out.println("Menu: "+ id);
+                        System.out.println("Menu x: "+ id);
                     }
                 }
             }

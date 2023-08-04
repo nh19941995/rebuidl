@@ -187,8 +187,8 @@ public class ClientListView extends JPanel {
                 birthday  = inputBirthday.getText();
                 phone = inputPhone.getText();
                 permission = (String) SelecType.getSelectedItem();
-                // gọi đối tượng cũ qua id để update
-                int id = BookingController.getPersonIdSelect();
+                // gọi đối tượng cũ qua id để update (id tạm của bảng clientView)
+                int id = menuIdSelect;
                 Person personUpdate = PersonDAO.getInstance().getById(id);
                 personUpdate.setLastName(lasttName);
                 personUpdate.setName(firstName);
@@ -224,6 +224,7 @@ public class ClientListView extends JPanel {
                 PersonDAO.getInstance().update(personDelete);
                 // Gọi hàm reloadTableData() để tải lại dữ liệu và cập nhật bảng
                 loadData();
+
             }
         });
 
@@ -402,22 +403,22 @@ public class ClientListView extends JPanel {
         Grid grid = new Grid();
         // cột 1
         grid.GridAdd(labelFirstName,0,0,10,10,5);
-        grid.GridAdd(inputFirstName,0,1,10,10,5);
-        grid.GridAdd(labelEmail,0,2,10,10,5);
-        grid.GridAdd(inputEmail,0,3,10,10,5);
+        grid.GridAddCustom(inputFirstName,0,1,10,10,5,5,1);
+        grid.GridAddCustom(labelEmail,0,2,10,10,5,5,1);
+        grid.GridAddCustom(inputEmail,0,3,10,10,5,15,1);
         // cột 2
         grid.GridAdd(labelLastName,1,0,10,10,5);
         grid.GridAddCustom(inputLastName,1,1,10,10,5,5,1);
         grid.GridAddCustom(labelPermission,1,2,10,10,5,5,1);
-        grid.GridAddCustom(SelecType,1,3,10,10,5,5,1);
+        grid.GridAddCustom(SelecType,1,3,10,10,5,15,1);
         // cột 3
         grid.GridAdd(labelBirthday,2,0,10,10,5);
         grid.GridAdd(inputBirthday,2,1,10,10,5);
         grid.GridAdd(labelPhone,2,2,10,10,5);
-        grid.GridAddCustom(inputPhone,2,3,10,10,5,5,1);
+        grid.GridAddCustom(inputPhone,2,3,10,10,5,15,1);
         // cột 4
         grid.GridAddCustom(labelfilterByPhone,3,0,10,10,5,5,2);
-        grid.GridAddCustom(inputfilterByPhone,3,1,10,10,5,5,1);
+        grid.GridAddCustom(inputfilterByPhone,3,1,10,10,5,15,1);
         // cột 3-5
         grid.GridAddCustom(buttonSearchPerson,4,1,10,10,5,5,1);
         grid.GridAddCustom(labelAdress,3,2,10,10,5,5,2);

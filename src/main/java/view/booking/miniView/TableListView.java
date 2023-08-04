@@ -123,7 +123,7 @@ public class TableListView extends JPanel {
         filterBySeatingCapacity.setPreferredSize(new Dimension(150, 30));
         filterByDate.setPreferredSize(new Dimension(150, 30));
         SelecType.setPreferredSize(new Dimension(150, 30));
-        buttonSelectTable.setPreferredSize(new Dimension(150, 30));
+        buttonSelectTable.setPreferredSize(new Dimension(150, 40));
         // Đặt màu cho nền của JButton
         buttonSelectTable.setBackground(Color.RED);
         // Đặt màu cho văn bản của JButton
