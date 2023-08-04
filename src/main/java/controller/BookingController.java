@@ -247,13 +247,20 @@ public class BookingController {
                         bookingsInfo.setInfo(commentString);
                         bookingsInfo.setFlag(1);
                         BookingsInfoDAO.getInstance().insert(bookingsInfo);
-                        // tạo giao dịch nợ (chỉ tạo được sau khi tạo bookingsInfo)
+                        System.out.println("khởi tạo id info: "+bookingsInfo.getId());
+                        getBookings().forEach(s->{
+                            s.setInfo(bookingsInfo);
+                            s.setFlag(1);
+                            BookingDAO.getInstance().insert(s);
+                        });
+                        // tạo giao dịch nợ (chỉ tạo được sau khi tạo xong booking )
                         Transaction tranReceivable = new Transaction();
                         tranReceivable.setType(TransactionsTypeDAO.getInstance().getByName("Nợ - Khách hàng còn thiếu"));
                         tranReceivable.setDateCreat(InstantDateTimeInfo.getNow());
                         tranReceivable.setComment(commentString);
                         // tổng tiền phải thanh toán
                         Double bill = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(bookingsInfo.getId());
+                        System.out.println("Khởi tạo bill: " + bill);
                         Double receivable = bill - getDeposit() ;
                         tranReceivable.setQuantity(receivable);
                         tranReceivable.setFlag(1);
@@ -261,13 +268,7 @@ public class BookingController {
                         TransactionDAO.getInstance().insert(tranReceivable);
                         System.out.println("id khách hàng là: "+personIdSelect);
                         System.out.println("id info là: "+bookingsInfo.getId());
-                        System.out.println("Tổng hóa đơn: " + bill);
                         System.out.println("khách hàng còn nợ: "+ receivable);
-                        getBookings().forEach(s->{
-                            s.setInfo(bookingsInfo);
-                            s.setFlag(1);
-                            BookingDAO.getInstance().insert(s);
-                        });
                     }
 
                 }

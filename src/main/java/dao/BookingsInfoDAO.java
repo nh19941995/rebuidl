@@ -119,7 +119,8 @@ public class BookingsInfoDAO implements DAOInterface<BookingsInfo,Integer>{
     }
 
     public static void main(String[] args) {
-        Double n = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(25);
+//        Double bill = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(bookingsInfo.getId());
+        Double n    = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(31);
         System.out.println(n);
     }
 }
