@@ -21,7 +21,7 @@ public class Menu {
     private Dish dish;
 
     @Column(name = "quantity", nullable = false)
-    private float quantity;
+    private Double quantity;
 
     @Column(name = "unit_price", nullable = false)
     private Integer unitPrice;
@@ -55,11 +55,11 @@ public class Menu {
         this.dish = dish;
     }
 
-    public float getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(float quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 

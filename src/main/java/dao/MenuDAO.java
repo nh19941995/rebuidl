@@ -106,12 +106,12 @@ public class MenuDAO implements DAOInterface<Menu,Integer>{
         }
     }
 
-    public Double getTotalPriceByMenuNameID(Integer id) {
+    public Double getTotalPriceByMenuNameID(Integer menuNameID) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             String queryStr = "SELECT SUM(m.quantity * m.unitPrice) FROM Menu m WHERE m.menuName.id = :id";
             TypedQuery<Double> query = entityManager.createQuery(queryStr, Double.class);
-            query.setParameter("id", id);
+            query.setParameter("id", menuNameID);
             Double totalPrice = query.getSingleResult();
             return totalPrice != null ? totalPrice : 0.0; // Trả về 0.0 thay vì 0 nếu không có kết quả
         } catch (NoResultException e) {

@@ -27,13 +27,6 @@ public class MenuView extends JPanel {
 
         add(menuBlock(),BorderLayout.WEST );
         add(dishListBlock(),BorderLayout.CENTER );
-
-
-
-
-
-
-
     }
 
     private JPanel menuBlock(){

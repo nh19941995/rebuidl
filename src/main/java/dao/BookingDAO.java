@@ -4,10 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import model.Booking;
+import model.BookingsInfo;
+import model.MenuName;
 import model.TableType;
 import utils.PersistenceManager;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class BookingDAO implements DAOInterface<Booking,Integer>{
     private EntityManagerFactory entityManagerFactory;
@@ -96,4 +99,6 @@ public class BookingDAO implements DAOInterface<Booking,Integer>{
             entityManager.close();
         }
     }
+
+
 }

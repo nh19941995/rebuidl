@@ -31,7 +31,7 @@ public class BookingsInfo {
     private Instant end;
 
     @Column(name = "deposit", nullable = true)
-    private Float deposit;
+    private Double deposit;
 
     @Column(name = "flag", nullable = true)
     private Integer flag;
@@ -87,11 +87,11 @@ public class BookingsInfo {
         this.end = end;
     }
 
-    public Float getDeposit() {
+    public Double getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(Float deposit) {
+    public void setDeposit(Double deposit) {
         this.deposit = deposit;
     }
 
@@ -114,7 +114,7 @@ public class BookingsInfo {
     public BookingsInfo() {
     }
 
-    public BookingsInfo(Person person, String info, Instant dateCreat, Instant start, Instant end, Float deposit, Integer flag, Set<Booking> bookings) {
+    public BookingsInfo(Person person, String info, Instant dateCreat, Instant start, Instant end, Double deposit, Integer flag, Set<Booking> bookings) {
         this.person = person;
         this.info = info;
         this.dateCreat = dateCreat;

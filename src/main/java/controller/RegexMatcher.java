@@ -16,7 +16,7 @@ public class RegexMatcher {
         Matcher matcher = pattern.matcher(time);
 
         if (matcher.matches()) {
-            // Nếu khớp, trả về 1
+            // Nếu khớp, trả về rỗng
             return "";
         } else {
             // Nếu không khớp, trả về chuỗi stringB

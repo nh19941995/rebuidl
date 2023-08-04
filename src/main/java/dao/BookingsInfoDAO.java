@@ -1,13 +1,12 @@
 package dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.*;
 import model.Booking;
 import model.BookingsInfo;
 import utils.PersistenceManager;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class BookingsInfoDAO implements DAOInterface<BookingsInfo,Integer>{
     private EntityManagerFactory entityManagerFactory;
@@ -93,5 +92,34 @@ public class BookingsInfoDAO implements DAOInterface<BookingsInfo,Integer>{
         } finally {
             entityManager.close();
         }
+    }
+
+    public Double getTotalPriceByInfoBookingID(int idInforBooking){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String queryStr = "SELECT SUM(n.quantity * n.unitPrice)\n" +
+                    "FROM BookingsInfo bi\n" +
+                    "JOIN bi.bookings b\n" +
+                    "JOIN b.menuName m\n" +
+                    "JOIN m.menus n\n" +
+
+                    "WHERE bi.id = :infoId\n";
+            TypedQuery<Double> query = entityManager.createQuery(queryStr, Double.class);
+            query.setParameter("infoId", idInforBooking);
+            Double totalPrice = query.getSingleResult();
+            return totalPrice != null ? totalPrice : 0.0; // Trả về 0.0 thay vì 0 nếu không có kết quả
+        } catch (NoResultException e) {
+            return 0.0; // Trả về 0.0 nếu không có kết quả
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0.0;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public static void main(String[] args) {
+        Double n = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(25);
+        System.out.println(n);
     }
 }

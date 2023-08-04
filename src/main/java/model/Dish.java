@@ -18,7 +18,7 @@ public class Dish {
     private String dishName;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Double price;
 
     @Column(name = "dish_comment", length = 1000)
     private String comment;
@@ -68,11 +68,11 @@ public class Dish {
         this.dishName = dishName;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -120,7 +120,7 @@ public class Dish {
     public Dish() {
     }
 
-    public Dish(String dishName, Integer price, String comment, Instant dateCreat, Instant dateUpdate, Integer flag, DishType type, Set<Menu> menus) {
+    public Dish(String dishName, Double price, String comment, Instant dateCreat, Instant dateUpdate, Integer flag, DishType type, Set<Menu> menus) {
         this.dishName = dishName;
         this.price = price;
         this.comment = comment;

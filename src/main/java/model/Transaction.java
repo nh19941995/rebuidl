@@ -21,7 +21,7 @@ public class Transaction {
     private TransactionsType type;
 
     @Column(name = "quantity", nullable = false)
-    private Float quantity;
+    private Double quantity;
 
     @Lob
     @Column(name = "comment", nullable = false)
@@ -30,7 +30,7 @@ public class Transaction {
     @Column(name = "date_creat", nullable = false)
     private Instant dateCreat;
 
-    @Column(name = "date_update", nullable = false)
+    @Column(name = "date_update", nullable = true)
     private Instant dateUpdate;
 
     @Column(name = "flag", nullable = false)
@@ -60,11 +60,11 @@ public class Transaction {
         this.type = type;
     }
 
-    public Float getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Float quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 
@@ -103,7 +103,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Person person, TransactionsType type, Float quantity, String comment, Instant dateCreat, Instant dateUpdate, Integer flag) {
+    public Transaction(Person person, TransactionsType type, Double quantity, String comment, Instant dateCreat, Instant dateUpdate, Integer flag) {
         this.person = person;
         this.type = type;
         this.quantity = quantity;

@@ -113,7 +113,7 @@ public class DishListView  extends JPanel {
                     System.out.println("đẩy dữ liệu qua menu ");
                     model.Menu menu = new model.Menu();
                     menu.setQuantity(
-                            Float.parseFloat(inputEnterNumber.getText())
+                            Double.parseDouble(inputEnterNumber.getText())
                     );
                     menu.setUnitPrice(
                             Integer.parseInt(inputEnterPrice.getText())
