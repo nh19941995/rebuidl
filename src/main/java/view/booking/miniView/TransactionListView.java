@@ -1,6 +1,7 @@
 package view.booking.miniView;
 
 import controller.BookingController;
+import controller.ExcelExporter;
 import controller.InstantDateTimeInfo;
 import dao.PersonDAO;
 import dao.TransactionDAO;
@@ -14,9 +15,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TransactionListView extends JPanel {
+
+    private static Object[][] data;
+    private static String[] columnName =  new String [] {"ID", "Content","Type","Value", "Date","Time","Person Name", "Phone number", "Status"};
+
     private static JTable table = new JTable();
     private static Person person = new Person();
     private JLabel labelType = new JLabel("Transaction type");
@@ -52,6 +60,16 @@ public class TransactionListView extends JPanel {
     private JButton buttonSelect = new JButton("Select person by list");
     private JButton buttonDelete = new JButton("Delete");
     private JButton buttonExportToExcel = new JButton("Export to Excel");
+    public static String[] getColumnName() {
+        return columnName;
+    }
+    public static Object[][] getData() {
+        return data;
+    }
+
+    public static void setData(Object[][] data) {
+        TransactionListView.data = data;
+    }
 
     public static JTextField getInputComment() {
         return inputComment;
@@ -98,6 +116,8 @@ public class TransactionListView extends JPanel {
         boderCenter.add(blockTable(),BorderLayout.CENTER);
         boderRight.add(blockTool(),BorderLayout.WEST);
 
+
+
         buttonSelect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,6 +125,26 @@ public class TransactionListView extends JPanel {
                 boderCenter.add(new ClientListView(),BorderLayout.CENTER);
                 revalidate();
                 repaint();
+            }
+        });
+
+        buttonExportToExcel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Lấy thời gian hiện tại
+                LocalDateTime currentTime = LocalDateTime.now();
+
+                // Định dạng theo "yyyy-MM-dd_HH-mm"
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+                String file = ".xlsx";
+                String formattedDateTime = currentTime.format(formatter)+file;
+
+                try {
+                    ExcelExporter.exportToExcel(table,columnName,formattedDateTime);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                System.out.println("Xuất ra file excel !");
             }
         });
 
@@ -120,10 +160,12 @@ public class TransactionListView extends JPanel {
     }
 
     private JScrollPane createTable() {
+
+
         DefaultTableModel model = new DefaultTableModel(
                 new Object [][] {
                 },
-                new String [] {"ID", "Content","Type","Value", "Date","Time","Person Name", "Phone number", "Status"}
+                columnName
         ){
             Class[] types = new Class [] {
                     String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class
@@ -155,7 +197,8 @@ public class TransactionListView extends JPanel {
                         s.getFlag(),
                 }
         ).toArray(Object[][]::new);
-//        setData(data);
+
+        setData(data);
         // thêm dữ liệu vào bảng
         for (Object[] rowData : data) {
             model.addRow(rowData);
@@ -214,6 +257,7 @@ public class TransactionListView extends JPanel {
                 }
         ).toArray(Object[][]::new);
         ClientListView.setData(data);
+        setData(data);
         // Thêm dữ liệu mới vào bảng
         for (Object[] rowData : data) {
             model.addRow(rowData);
@@ -371,4 +415,10 @@ public class TransactionListView extends JPanel {
         inputComment.setText("");
     }
 
+    public static void main(String[] args) {
+        // In mảng columnName
+        for (int i = 0; i < columnName.length; i++) {
+            System.out.println(columnName[i]);
+        }
+    }
 }
