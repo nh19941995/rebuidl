@@ -18,12 +18,14 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class TransactionListView extends JPanel {
 
     private static Object[][] data;
-    private static String[] columnName =  new String [] {"ID", "Content","Type","Value", "Date","Time","Person Name", "Phone number", "Status"};
+    private static String[] columnName =  new String [] {"ID", "Content","Type","Value","Time", "Date","Person Name", "Phone number", "Status"};
 
     private static JTable table = new JTable();
     private static Person person = new Person();
@@ -125,6 +127,13 @@ public class TransactionListView extends JPanel {
                 boderCenter.add(new ClientListView(),BorderLayout.CENTER);
                 revalidate();
                 repaint();
+            }
+        });
+
+        buttonFilter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchByPhone();
             }
         });
 
@@ -415,10 +424,28 @@ public class TransactionListView extends JPanel {
         inputComment.setText("");
     }
 
-    public static void main(String[] args) {
-        // In mảng columnName
-        for (int i = 0; i < columnName.length; i++) {
-            System.out.println(columnName[i]);
+    public void searchByPhone() {
+        String searchPhone = inputFilterPhone.getText();
+        System.out.println(searchPhone);
+        if (!searchPhone.isEmpty()) {
+            Object[][] originalData = getData();
+            // Tạo luồng dữ liệu từ mảng
+            Stream<Object[]> dataStream = Arrays.stream(originalData);
+            // Sử dụng filter để lọc dữ liệu theo số điện thoại
+            Object[][] filteredData = dataStream.filter(row -> row[3] != null && row[7].equals(searchPhone)).toArray(Object[][]::new);
+            setData(filteredData);
+            // Thêm dữ liệu mới vào bảng
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.setRowCount(0);
+            for (Object[] rowData : filteredData) {
+                model.addRow(rowData);
+            }
+        } else {
+            // Nếu không nhập số điện thoại, hiển thị lại toàn bộ dữ liệu
+            System.out.println("không có số nào phù hợp 1");
+            loadData();
         }
     }
+
+
 }
