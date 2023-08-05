@@ -185,6 +185,11 @@ public class BookingView extends JPanel {
         buttonSelectClient.setPreferredSize(new Dimension(150, 20));
         buttonSubmitBooking.setPreferredSize(new Dimension(150, 20));
         buttonShowAllBooking.setPreferredSize(new Dimension(150, 20));
+        buttonSubmitBooking.setPreferredSize(new Dimension(150, 35));
+        // Đặt màu cho nền của JButton
+        buttonSubmitBooking.setBackground(Color.RED);
+        // Đặt màu cho văn bản của JButton
+        buttonSubmitBooking.setForeground(Color.WHITE);
         jPanel.add(grid,BorderLayout.CENTER);
         return jPanel;
     }

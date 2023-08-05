@@ -156,21 +156,26 @@ public class DishListView  extends JPanel {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
         // đăt chiều cao cho jpanel
-        Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 70);
+        Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 75);
         jPanel.setPreferredSize(preferredSize);
         // đặt kích thước
         inputEnterPrice.setPreferredSize(new Dimension(150, 20));
         inputEnterNumber.setPreferredSize(new Dimension(150, 20));
         buttonAddToNewMenu.setPreferredSize(new Dimension(150, 35));
+
+        // Đặt màu cho nền của JButton
+        buttonAddToNewMenu.setBackground(Color.RED);
+        // Đặt màu cho văn bản của JButton
+        buttonAddToNewMenu.setForeground(Color.WHITE);
         Grid grid = new Grid();
-        grid.GridAddCustom(buttonAddToNewMenu,0,0,0,0,10,10,1);
+        grid.GridAddCustom(buttonAddToNewMenu,0,0,20,20,10,10,1);
         Grid grid1 = new Grid();
         grid1.GridAddCustom(labelEnterPrice,0,0,20,20,5,5,1);
         grid1.GridAddCustom(inputEnterPrice,0,1,20,20,5,15,1);
         grid1.GridAddCustom(labelEnterNumber,1,0,20,20,5,5,1);
         grid1.GridAddCustom(inputEnterNumber,1,1,20,20,5,15,1);
-        jPanel.add(grid,BorderLayout.CENTER);
-        jPanel.add(grid1,BorderLayout.WEST);
+        jPanel.add(grid,BorderLayout.EAST);
+        jPanel.add(grid1,BorderLayout.CENTER);
         return  jPanel;
     }
 

@@ -22,7 +22,7 @@ public class MenuListView  extends JPanel {
 
     private static int menuIdSelect;
 
-    private static JButton buttonSelectMenu = new JButton("Choose a Menu for Booking ");
+    private static JButton buttonSelectMenu = new JButton("Select a Menu");
 
     public static int getMenuIdSelect() {
         return menuIdSelect;
@@ -63,17 +63,13 @@ public class MenuListView  extends JPanel {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
         // đặt kích thước
-        buttonSelectMenu.setPreferredSize(new Dimension(200, 30));
+        buttonSelectMenu.setPreferredSize(new Dimension(150, 35));
         buttonSelectMenu.setBackground(Color.red);
         // Đặt màu cho văn bản của JButton
         buttonSelectMenu.setForeground(Color.WHITE);
         Grid grid = new Grid();
         grid.GridAddCustom(buttonSelectMenu,0,0,20,20,20,20,1);
-        // Create a LineBorder with a specified color and thickness
-        Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
-        // Set the border for the JPanel
-        jPanel.setBorder(border);
-        jPanel.add(grid);
+        jPanel.add(grid,BorderLayout.EAST);
         return jPanel;
     }
 

@@ -8,10 +8,12 @@ import dao.TableListDAO;
 import dao.TableTypeDAO;
 import model.Booking;
 import model.TableList;
+import view.Tool.Boder;
 import view.Tool.Grid;
 import view.booking.BookingView;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -123,12 +125,13 @@ public class TableListView extends JPanel {
         filterBySeatingCapacity.setPreferredSize(new Dimension(150, 30));
         filterByDate.setPreferredSize(new Dimension(150, 30));
         SelecType.setPreferredSize(new Dimension(150, 30));
-        buttonSelectTable.setPreferredSize(new Dimension(150, 40));
+        buttonSelectTable.setPreferredSize(new Dimension(150, 35));
         // Đặt màu cho nền của JButton
         buttonSelectTable.setBackground(Color.RED);
         // Đặt màu cho văn bản của JButton
         buttonSelectTable.setForeground(Color.WHITE);
         this.add(scrollPane,BorderLayout.CENTER);
+
         Grid gridAllbutton = new Grid();
         gridAllbutton.GridAdd(labelDate,0,0,10,10,10);
         gridAllbutton.GridAdd(filterByDate,1,0,10,10,10);
@@ -137,8 +140,14 @@ public class TableListView extends JPanel {
         gridAllbutton.GridAdd(labelType,4,0,10,10,10);
         gridAllbutton.GridAdd(SelecType,5,0,10,10,10);
         gridAllbutton.GridAdd(buttonSearch,6 ,0,10,10,10);
-        gridAllbutton.GridAdd(buttonSelectTable,7 ,0,10,10,10);
-        this.add(gridAllbutton,BorderLayout.SOUTH);
+        Grid grid2 = new Grid();
+        grid2.GridAddCustom(buttonSelectTable,0 ,0,20,20,10,10,1);
+
+        Boder boder = new Boder();
+        boder.setPreferredSize(new Dimension(150, 75));
+        boder.add(gridAllbutton,BorderLayout.CENTER);
+        boder.add(grid2,BorderLayout.EAST);
+        this.add(boder,BorderLayout.SOUTH);
         buttonSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

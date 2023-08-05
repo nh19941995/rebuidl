@@ -394,7 +394,7 @@ public class ClientListView extends JPanel {
         buttonAddPerson.setPreferredSize(new Dimension(150, 20));
         buttonDeletePerson.setPreferredSize(new Dimension(150, 20));
         buttonUpdatePerson.setPreferredSize(new Dimension(150, 20));
-        buttonSelectPerson.setPreferredSize(new Dimension(150, 30));
+        buttonSelectPerson.setPreferredSize(new Dimension(150, 35));
         // Đặt màu cho nền của JButton
         buttonSelectPerson.setBackground(Color.RED);
         // Đặt màu cho văn bản của JButton
@@ -418,7 +418,7 @@ public class ClientListView extends JPanel {
         grid.GridAddCustom(inputPhone,2,3,10,10,5,15,1);
         // cột 4
         grid.GridAddCustom(labelfilterByPhone,3,0,10,10,5,5,2);
-        grid.GridAddCustom(inputfilterByPhone,3,1,10,10,5,15,1);
+        grid.GridAddCustom(inputfilterByPhone,3,1,10,10,10,10,1);
         // cột 3-5
         grid.GridAddCustom(buttonSearchPerson,4,1,10,10,5,5,1);
         grid.GridAddCustom(labelAdress,3,2,10,10,5,5,2);
@@ -434,7 +434,7 @@ public class ClientListView extends JPanel {
         SelecType.setModel(new javax.swing.DefaultComboBoxModel<>(selectList));
         // nút select
         Grid gridAddPerson = new Grid();
-        gridAddPerson.GridAddCustom(buttonSelectPerson,0,1,10,10,5,5,2);
+        gridAddPerson.GridAddCustom(buttonSelectPerson,0,1,10,20,5,5,2);
 
         // thêm toàn bộ các phần tử vào layout chính
         jPanel.add(grid,BorderLayout.CENTER);

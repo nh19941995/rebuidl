@@ -210,7 +210,7 @@ public class BookingController {
                         tranDeposit.setDateCreat(InstantDateTimeInfo.getNow());
                         tranDeposit.setQuantity(doubleDeposit);
                         tranDeposit.setType(TransactionsTypeDAO.getInstance().getByName("Thu - Khách hàng thanh toán"));
-                        tranDeposit.setComment(commentString);
+                        tranDeposit.setComment("Deposit: "+ commentString);
                         tranDeposit.setFlag(1);
                         tranDeposit.setPerson(PersonDAO.getInstance().getById(personIdSelect));
                         TransactionDAO.getInstance().insert(tranDeposit);
@@ -260,7 +260,7 @@ public class BookingController {
                         Transaction tranReceivable = new Transaction();
                         tranReceivable.setType(TransactionsTypeDAO.getInstance().getByName("Nợ - Khách hàng còn thiếu"));
                         tranReceivable.setDateCreat(InstantDateTimeInfo.getNow());
-                        tranReceivable.setComment(commentString);
+                        tranReceivable.setComment("Debt: "+commentString);
                         // tổng tiền phải thanh toán
                         Double bill = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(bookingsInfo.getId());
                         System.out.println("Khởi tạo bill: " + bill);

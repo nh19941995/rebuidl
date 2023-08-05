@@ -23,12 +23,6 @@ public class TransactionController {
         buttonNewTransaction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-
-
-
-
                 Transaction newTransaction = new Transaction();
                 int id = BookingController.getPersonIdSelect();
                 String Stringvalue = TransactionListView.getInputValue().getText();
@@ -63,10 +57,6 @@ public class TransactionController {
                     }
                 }
 
-
-
-
-
                 if (check==1 ){
                     Person person = PersonDAO.getInstance().getById(id);
                     Double value = Double.parseDouble(Stringvalue);
@@ -78,6 +68,8 @@ public class TransactionController {
                     newTransaction.setDateCreat(instant);
                     newTransaction.setFlag(1);
                     TransactionDAO.getInstance().insert(newTransaction);
+                    TransactionListView.loadData();
+                    TransactionListView.setNullData();
                 }
 
             }

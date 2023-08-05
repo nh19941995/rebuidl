@@ -50,6 +50,8 @@ public class TransactionListView extends JPanel {
     private static JButton buttonCreatTransaction = new JButton("Creat transaction");
     private JButton buttonAllTransaction = new JButton("All transaction");
     private JButton buttonSelect = new JButton("Select person by list");
+    private JButton buttonDelete = new JButton("Delete");
+    private JButton buttonExportToExcel = new JButton("Export to Excel");
 
     public static JTextField getInputComment() {
         return inputComment;
@@ -191,7 +193,7 @@ public class TransactionListView extends JPanel {
         return scrollPane;
     }
 
-    private void loadData(){
+    public static void loadData(){
         // Lấy model của bảng
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         // Xóa hết dữ liệu hiện có trong bảng
@@ -322,6 +324,25 @@ public class TransactionListView extends JPanel {
         JScrollPane scrollPane = createTable();
         jPanel.add(blockFilter(),BorderLayout.NORTH);
         jPanel.add(scrollPane,BorderLayout.CENTER);
+        jPanel.add(blockBottomTransaction(),BorderLayout.SOUTH);
+        return jPanel;
+    }
+
+    private JPanel blockBottomTransaction(){
+        Boder jPanel = new Boder();
+        Grid grid = new Grid();
+        Grid grid2 = new Grid();
+        grid.GridAddCustom(buttonExportToExcel,0,0,20,20,20,20,1);
+        grid2.GridAddCustom(buttonDelete,0,0,20,20,20,20,1);
+//        buttonCreatTransaction.setPreferredSize(new Dimension(150, 35));
+        buttonExportToExcel.setPreferredSize(new Dimension(150, 35));
+        // Đặt màu cho nền của JButton
+        buttonExportToExcel.setBackground(Color.RED);
+        // Đặt màu cho văn bản của JButton
+        buttonExportToExcel.setForeground(Color.WHITE);
+
+        jPanel.add(grid,BorderLayout.EAST);
+        jPanel.add(grid2,BorderLayout.WEST);
         return jPanel;
     }
 
@@ -334,6 +355,20 @@ public class TransactionListView extends JPanel {
         FirstName.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
         LastName.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
         Phone.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
+    }
+
+    public static void setNullData(){
+        FirstName.setText(""); // Đặt giá trị cho JLabel
+        LastName.setText(""); // Đặt giá trị cho JLabel
+        Phone.setText(""); // Đặt giá trị cho JLabel
+        FirstName.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
+        LastName.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
+        Phone.repaint(); // Thông báo cho nhãn vẽ lại để hiển thị nội dung mới
+        inputValue.setText("");
+        inputTime.setText("");
+        inputDate.setText("");
+        inputFilterPhone.setText("");
+        inputComment.setText("");
     }
 
 }

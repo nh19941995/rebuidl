@@ -74,7 +74,14 @@ public class NewMenuListView extends JPanel {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
         Grid grid = new Grid();
-        grid.GridAdd(buttonCreatNewMenu,0,0,20,20,24);
+        grid.GridAdd(buttonCreatNewMenu,0,0,20,20,20);
+
+        buttonCreatNewMenu.setPreferredSize(new Dimension(150, 35));
+        // Đặt màu cho nền của JButton
+        buttonCreatNewMenu.setBackground(Color.RED);
+        // Đặt màu cho văn bản của JButton
+        buttonCreatNewMenu.setForeground(Color.WHITE);
+
         jPanel.add(grid, BorderLayout.CENTER);
         // Đặt kích thước chiều ngang cho jPanel
         int width = 550; // Đặt kích thước mong muốn tại đây

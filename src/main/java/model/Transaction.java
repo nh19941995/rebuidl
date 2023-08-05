@@ -24,7 +24,7 @@ public class Transaction {
     private Double quantity;
 
     @Lob
-    @Column(name = "comment", nullable = false)
+    @Column(name = "comment", nullable = false,unique = true)
     private String comment;
 
     @Column(name = "date_creat", nullable = false)
