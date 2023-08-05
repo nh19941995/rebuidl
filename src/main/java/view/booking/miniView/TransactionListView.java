@@ -26,7 +26,8 @@ public class TransactionListView extends JPanel {
 
     private static Object[][] data;
     private static String[] columnName =  new String [] {"ID", "Content","Type","Value","Time", "Date","Person Name", "Phone number", "Status"};
-
+    // Khởi tạo lockObject
+    private static final Object lockObject = new Object();
     private static JTable table = new JTable();
     private static Person person = new Person();
     private JLabel labelType = new JLabel("Transaction type");
@@ -35,6 +36,7 @@ public class TransactionListView extends JPanel {
     private JLabel labelTime = new JLabel("Time:");
     private JLabel labelFilerByType = new JLabel("Filer by type:");
     private JLabel labelFilerByPhone = new JLabel("Filer by phone number:");
+    private JLabel labelFilerByDate = new JLabel("Filer by date:");
     private JLabel labelComment = new JLabel("Transaction content:");
     private JButton buttonFilter = new JButton("Filter");
 
@@ -43,6 +45,7 @@ public class TransactionListView extends JPanel {
     private static JTextField inputTime = new JTextField();
     private static JTextField inputDate = new JTextField();
     private static JTextField inputFilterPhone = new JTextField();
+    private static JTextField inputFilterDate = new JTextField();
     private static JTextField inputComment = new JTextField();
     private static JComboBox<String> SelecFilterType = new JComboBox<String>();
     private static JComboBox<String> SelecType = new JComboBox<String>();
@@ -328,9 +331,14 @@ public class TransactionListView extends JPanel {
         grid.GridAddCustom(SelecFilterType, 1, 0, left, 0, top, bot, 1);
         grid.GridAddCustom(labelFilerByPhone, 2, 0, left, 0, top, bot, 1);
         grid.GridAddCustom(inputFilterPhone, 3, 0, left, 0, top, bot, 1);
-        grid.GridAddCustom(buttonFilter, 4, 0, left, 0, top, bot, 1);
-        SelecFilterType.setPreferredSize(new Dimension(200, 20));
-        inputFilterPhone.setPreferredSize(new Dimension(200, 20));
+
+        grid.GridAddCustom(labelFilerByDate, 4, 0, left, 0, top, bot, 1);
+        grid.GridAddCustom(inputFilterDate, 5, 0, left, 0, top, bot, 1);
+
+        grid.GridAddCustom(buttonFilter, 6, 0, left, 0, top, bot, 1);
+        SelecFilterType.setPreferredSize(new Dimension(150, 20));
+        inputFilterPhone.setPreferredSize(new Dimension(150, 20));
+        inputFilterDate.setPreferredSize(new Dimension(150, 20));
         boder.add(grid, BorderLayout.CENTER);
         return boder;
     }
@@ -425,26 +433,43 @@ public class TransactionListView extends JPanel {
     }
 
     public void searchByPhone() {
-        String searchPhone = inputFilterPhone.getText();
-        System.out.println(searchPhone);
-        if (!searchPhone.isEmpty()) {
-            Object[][] originalData = getData();
-            // Tạo luồng dữ liệu từ mảng
-            Stream<Object[]> dataStream = Arrays.stream(originalData);
-            // Sử dụng filter để lọc dữ liệu theo số điện thoại
-            Object[][] filteredData = dataStream.filter(row -> row[3] != null && row[7].equals(searchPhone)).toArray(Object[][]::new);
-            setData(filteredData);
-            // Thêm dữ liệu mới vào bảng
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            model.setRowCount(0);
-            for (Object[] rowData : filteredData) {
-                model.addRow(rowData);
+        String dateInput = inputFilterDate.getText();
+        String phoneInput = inputFilterPhone.getText();
+        String filterTypeInput = (String) SelecFilterType.getSelectedItem();
+        System.out.println(dateInput);
+        System.out.println(phoneInput);
+        System.out.println(filterTypeInput);
+        Object[][] arr = data;
+
+        synchronized (lockObject) {
+            Stream<Object[]> dataStream = Arrays.stream(data);
+
+            // Áp dụng tất cả các điều kiện lọc trong một Stream duy nhất
+            if (!filterTypeInput.equals("")) {
+                dataStream = dataStream.filter(row -> row[2].equals(filterTypeInput));
             }
-        } else {
-            // Nếu không nhập số điện thoại, hiển thị lại toàn bộ dữ liệu
-            System.out.println("không có số nào phù hợp 1");
-            loadData();
+            if (!phoneInput.equals("")) {
+                dataStream = dataStream.filter(row -> row[7].toString().equals(phoneInput));
+            }
+            if (!dateInput.equals("")) {
+                dataStream = dataStream.filter(row -> row[5].toString().contains(dateInput));
+            }
+
+            // Gán kết quả vào mảng arr
+            arr = dataStream.toArray(Object[][]::new);
         }
+//        setData(arr);
+        // Lấy model của bảng
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        // Xóa dữ liệu hiện có trong bảng
+        model.setRowCount(0);
+
+        // Thêm từng hàng dữ liệu vào bảng
+        for (Object[] row : arr) {
+            model.addRow(row);
+        }
+        // Cập nhật bảng để hiển thị dữ liệu mới
+        model.fireTableDataChanged();
     }
 
 
