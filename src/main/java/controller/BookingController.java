@@ -189,9 +189,9 @@ public class BookingController {
                     check = 0;
                 }
                 if (!depositString.equals("")){
-                    if (!RegexMatcher.floatCheck(depositString,"").equals("")){
+                    if (!RegexMatcher.numberCheck(depositString,"").equals("")){
                         if (check ==1){
-                            JOptionPane.showMessageDialog(null, RegexMatcher.floatCheck(depositString, "Deposit: "), "Notice", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(null, RegexMatcher.numberCheck(depositString, "Deposit: "), "Notice", JOptionPane.WARNING_MESSAGE);
                         }
                         check = 0;
                     }
@@ -215,7 +215,6 @@ public class BookingController {
                         tranDeposit.setPerson(PersonDAO.getInstance().getById(personIdSelect));
                         TransactionDAO.getInstance().insert(tranDeposit);
                         System.out.println("Khách hàng đã đặt cọc: " + doubleDeposit);
-
                     }
                     System.out.println(instantNow);
 

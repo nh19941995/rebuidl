@@ -33,7 +33,7 @@ public class RegexMatcher {
         }
 
     }
-    public static String floatCheck(String num, String prefix){
+    public static String numberCheck(String num, String prefix){
         String a = checkRegex(regexFloat,num,"You must enter a positive number format. \n");
         if (a.equals("")){
             return a;
