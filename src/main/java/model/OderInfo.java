@@ -19,7 +19,7 @@ public class OderInfo {
     @Column(name = "time")
     private Instant time;
 
-    @Column(name = "flag", nullable = false)
+    @Column(name = "flag", nullable = true)
     private Integer flag;
 
     public Integer getId() {
@@ -52,6 +52,9 @@ public class OderInfo {
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public OderInfo() {
     }
 
 }

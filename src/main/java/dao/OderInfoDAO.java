@@ -3,7 +3,6 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import model.Oder;
 import model.OderInfo;
 import utils.PersistenceManager;
 
@@ -42,7 +41,6 @@ public class OderInfoDAO implements DAOInterface<OderInfo, Integer>{
     public int update(OderInfo oderInfo) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
-
         try {
             transaction.begin();
             entityManager.merge(oderInfo);

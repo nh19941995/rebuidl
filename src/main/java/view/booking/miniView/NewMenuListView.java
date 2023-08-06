@@ -61,6 +61,8 @@ public class NewMenuListView extends JPanel {
 
     private JPanel nameBarBlock(){
         JPanel jPanel = new JPanel();
+        jPanel.setPreferredSize(new Dimension(150, 75));
+
         jPanel.setLayout(new BorderLayout());
         Grid grid = new Grid();
         // đặt kích thước

@@ -20,13 +20,13 @@ public class DishListView  extends JPanel {
     private JTable table = new JTable();
     private DefaultTableModel tableModel;
     private Object[][] data;
-    private JButton buttonAddToNewMenu = new JButton("Add to new menu ");
+    public JButton buttonAddToNewMenu = new JButton("Add to new menu ");
 
     private JLabel labelEnterNumber = new JLabel("Enter number: ");
-    private JTextField inputEnterNumber = new JTextField();
+    private static JTextField inputEnterNumber = new JTextField();
 
     private JLabel labelEnterPrice = new JLabel("Enter price: ");
-    private JTextField inputEnterPrice = new JTextField();
+    private static JTextField inputEnterPrice = new JTextField();
 
     private JLabel labelFilerByType = new JLabel("Select type: ");
     private JComboBox<String> SelecType = new JComboBox<>();
@@ -35,6 +35,17 @@ public class DishListView  extends JPanel {
     private JLabel labelFilerByPrice = new JLabel("Enter price: ");
     private JTextField inputFilerByPrice = new JTextField();
 
+    public static JTextField getInputEnterNumber() {
+        return inputEnterNumber;
+    }
+
+    public static JTextField getInputEnterPrice() {
+        return inputEnterPrice;
+    }
+
+//    public static JButton getButtonAddToNewMenu() {
+//        return buttonAddToNewMenu;
+//    }
 
     public Object getLockObject() {
         return lockObject;
@@ -52,13 +63,14 @@ public class DishListView  extends JPanel {
         this.data = data;
     }
 
-    private String DishIdSelect;
+    private static String DishIdSelect;
 
-    public String getDishIdSelect() {
+
+    public static String getDishIdSelect() {
         return DishIdSelect;
     }
 
-    public void setDishIdSelect(String dishIdSelect) {
+    public static void setDishIdSelect(String dishIdSelect) {
         DishIdSelect = dishIdSelect;
     }
 
@@ -91,6 +103,9 @@ public class DishListView  extends JPanel {
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
                         setDishIdSelect(id);
                         System.out.println("Bảng Dishlist đang chọn hàng có id là: "+ id);
+                        Dish dish = DishDAO.getInstance().getById(Integer.parseInt(id));
+//                        inputEnterNumber.setText("1");
+                        inputEnterPrice.setText(Double.toString(dish.getPrice()));
                     }
                 }
             }
@@ -134,7 +149,7 @@ public class DishListView  extends JPanel {
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
         // đăt chiều cao cho jpanel
-        Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 70);
+        Dimension preferredSize = new Dimension(jPanel.getPreferredSize().width, 75);
         jPanel.setPreferredSize(preferredSize);
         // đặt kích thước
         SelecType.setPreferredSize(new Dimension(150, 20));

@@ -325,6 +325,7 @@ public class TransactionListView extends JPanel {
 
         Boder boder = new Boder();
         boder.setPreferredSize(new Dimension(0, filterBarHeight)); // Đặt chiều cao cho boder
+        boder.setPreferredSize(new Dimension(200, 75));
 
         Grid grid = new Grid();
         grid.GridAddCustom(labelFilerByType, 0, 0, left, 0, top, bot, 1);

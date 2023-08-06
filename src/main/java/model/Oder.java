@@ -10,11 +10,11 @@ public class Oder {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "bill_id", nullable = false)
     private OderInfo bill;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "dish_id", nullable = false)
     private Dish dish;
 
@@ -75,4 +75,14 @@ public class Oder {
         this.flag = flag;
     }
 
+    public Oder() {
+    }
+
+    public Oder(OderInfo bill, Dish dish, Double price, Integer quantity, Integer flag) {
+        this.bill = bill;
+        this.dish = dish;
+        this.price = price;
+        this.quantity = quantity;
+        this.flag = flag;
+    }
 }
