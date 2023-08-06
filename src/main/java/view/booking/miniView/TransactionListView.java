@@ -30,6 +30,16 @@ public class TransactionListView extends JPanel {
     private static final Object lockObject = new Object();
     private static JTable table = new JTable();
     private static Person person = new Person();
+
+    public static JTable getTable() {
+        return table;
+    }
+
+    public static void setTable(JTable table) {
+        TransactionListView.table = table;
+    }
+
+    // label
     private JLabel labelType = new JLabel("Transaction type");
     private JLabel labelVale = new JLabel("Value:");
     private JLabel labelDate = new JLabel("Date:");
@@ -63,15 +73,19 @@ public class TransactionListView extends JPanel {
     private static JButton buttonCreatTransaction = new JButton("Creat transaction");
     private JButton buttonAllTransaction = new JButton("All transaction");
     private JButton buttonSelect = new JButton("Select person by list");
-    private JButton buttonDelete = new JButton("Delete");
+    private static JButton buttonDelete = new JButton("Delete");
     private JButton buttonExportToExcel = new JButton("Export to Excel");
+
+    public static JButton getButtonDelete() {
+        return buttonDelete;
+    }
+
     public static String[] getColumnName() {
         return columnName;
     }
     public static Object[][] getData() {
         return data;
     }
-
     public static void setData(Object[][] data) {
         TransactionListView.data = data;
     }
@@ -196,8 +210,9 @@ public class TransactionListView extends JPanel {
         table.setModel(model);
         // lấy dữ liệu từ sever
         List<model.Transaction> transactionList = TransactionDAO.getInstance().getAll();
-        Object[][] data = transactionList.stream().map(
-                s -> new Object[]{
+        Object[][] data = transactionList.stream()
+                .filter(s -> s.getFlag() > 0)
+                .map(s -> new Object[]{
                         s.getId(),
                         s.getComment(),
                         s.getType().getType(),
@@ -255,8 +270,9 @@ public class TransactionListView extends JPanel {
         model.setRowCount(0);
         // lấy dữ liệu từ sever
         List<model.Transaction> transactionList = TransactionDAO.getInstance().getAll();
-        Object[][] data = transactionList.stream().map(
-                s -> new Object[]{
+        Object[][] data = transactionList.stream()
+                .filter(s -> s.getFlag() > 0)
+                .map(s -> new Object[]{
                         s.getId(),
                         s.getComment(),
                         s.getType().getType(),

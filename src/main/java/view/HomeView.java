@@ -2,6 +2,7 @@ package view;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import controller.BookingController;
+import controller.DishController;
 import controller.TransactionController;
 import view.booking.BookingView;
 import view.booking.miniView.*;
@@ -13,7 +14,8 @@ import java.awt.*;
 
 
 public class HomeView extends JFrame {
-
+    private OderView oderView = new OderView();
+    private DishView dishView = new DishView();
 
 
 
@@ -27,26 +29,6 @@ public class HomeView extends JFrame {
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBackground(Color.decode("#293740"));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //        phần tab chuyển-----------------------------------------------------------------------------------------------
         //        tạo đối tượng tab
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -59,7 +41,7 @@ public class HomeView extends JFrame {
         tabbedPane.addTab("Employee", tab1);
         tabbedPane.addTab("Transaction", tab2);
         tabbedPane.addTab("Booking", tab3);
-        tabbedPane.addTab("Manage", tab4);
+        tabbedPane.addTab("Dish", tab4);
         tabbedPane.addTab("Menu", tab5);
         tabbedPane.addTab("Oder", tab6);
 
@@ -75,9 +57,10 @@ public class HomeView extends JFrame {
         tab1.add(new ClientListView(),BorderLayout.CENTER);
         tab2.add(new TransactionListView(),BorderLayout.CENTER);
         tab3.add(new BookingView(),BorderLayout.CENTER);
-        tab4.add(new MenuListView(),BorderLayout.CENTER);
+        tab4.add(dishView,BorderLayout.CENTER);
+
         tab5.add(new MenuView(),BorderLayout.CENTER);
-        tab6.add(new OderView(),BorderLayout.CENTER);
+        tab6.add(oderView,BorderLayout.CENTER);
 
 
 
@@ -93,7 +76,7 @@ public class HomeView extends JFrame {
         tabbedPane.setTabComponentAt(0, new JLabel("Employee"));
         tabbedPane.setTabComponentAt(1, new JLabel("Transaction"));
         tabbedPane.setTabComponentAt(2, new JLabel("Booking"));
-        tabbedPane.setTabComponentAt(3, new JLabel("Manage"));
+        tabbedPane.setTabComponentAt(3, new JLabel("Dish"));
         tabbedPane.setTabComponentAt(4, new JLabel("Menu"));
         tabbedPane.setTabComponentAt(5, new JLabel("Oder"));
         // Tạo mảng chứa kích thước mới cho các tab
@@ -171,7 +154,11 @@ public class HomeView extends JFrame {
                     case 3:
                         // Load lại nội dung cho tab 4 (Quản lý)
                         tab4.removeAll(); // Xóa các thành phần hiện tại
-                        tab4.add(new MenuListView(), BorderLayout.CENTER); // Thêm các thành phần mới
+
+//                        dishView.tabDish(dishView);
+
+                        tab4.add(dishView, BorderLayout.CENTER); // Thêm các thành phần mới
+
                         break;
                     case 4:
                         // Load lại nội dung cho tab 5 (Thực đơn)
@@ -181,7 +168,7 @@ public class HomeView extends JFrame {
                     case 5:
                         // Load lại nội dung cho tab 5 (Thực đơn)
                         tab6.removeAll(); // Xóa các thành phần hiện tại
-                        tab6.add(new OderView(), BorderLayout.CENTER); // Thêm các thành phần mới
+                        tab6.add(oderView, BorderLayout.CENTER); // Thêm các thành phần mới
                         break;
                 }
 

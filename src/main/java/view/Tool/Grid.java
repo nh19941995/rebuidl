@@ -34,5 +34,17 @@ public class Grid extends JPanel {
         // Đặt padding về giá trị mặc định
         gbc.insets = new Insets(0, 0, 0, 0);
     }
+    public void GridAddCustom2 (Component element, int x, int y,int left,int right,int top,int Bot,int width,int height){
+        Insets paddingInput = new Insets(top, left, Bot, right);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = paddingInput;
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.gridwidth = width;
+        gbc.gridheight = height;
+        add(element, gbc); // Thêm lớp trung gian vào JPanel
+        // Đặt padding về giá trị mặc định
+        gbc.insets = new Insets(0, 0, 0, 0);
+    }
 }
 

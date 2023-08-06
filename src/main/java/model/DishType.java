@@ -18,12 +18,7 @@ public class DishType {
     @Column(name = "flag", nullable = false)
     private Integer flag;
 
-    @OneToMany(mappedBy = "type", cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH,
-    })
+    @OneToMany(mappedBy = "type")
     private Set<Dish> dishes = new LinkedHashSet<>();
 
     public Integer getId() {

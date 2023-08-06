@@ -22,7 +22,7 @@ public class DishListView  extends JPanel {
     private Object[][] data;
     public JButton buttonAddToNewMenu = new JButton("Add to new menu ");
 
-    private JLabel labelEnterNumber = new JLabel("Enter number: ");
+    private static JLabel labelEnterNumber = new JLabel("Enter number: ");
     private static JTextField inputEnterNumber = new JTextField();
 
     private JLabel labelEnterPrice = new JLabel("Enter price: ");
@@ -35,6 +35,10 @@ public class DishListView  extends JPanel {
     private JLabel labelFilerByPrice = new JLabel("Enter price: ");
     private JTextField inputFilerByPrice = new JTextField();
 
+
+
+
+
     public static JTextField getInputEnterNumber() {
         return inputEnterNumber;
     }
@@ -43,9 +47,9 @@ public class DishListView  extends JPanel {
         return inputEnterPrice;
     }
 
-//    public static JButton getButtonAddToNewMenu() {
-//        return buttonAddToNewMenu;
-//    }
+    public JButton getButtonAddToNewMenu() {
+        return buttonAddToNewMenu;
+    }
 
     public Object getLockObject() {
         return lockObject;
@@ -118,7 +122,9 @@ public class DishListView  extends JPanel {
                 searchDish();
             }
         });
+    }
 
+    public void selectDish(){
         buttonAddToNewMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -141,7 +147,6 @@ public class DishListView  extends JPanel {
                 }
             }
         });
-
     }
 
 

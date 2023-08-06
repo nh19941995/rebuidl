@@ -209,7 +209,7 @@ public class BookingController {
                         Transaction tranDeposit = new Transaction();
                         tranDeposit.setDateCreat(InstantDateTimeInfo.getNow());
                         tranDeposit.setQuantity(doubleDeposit);
-                        tranDeposit.setType(TransactionsTypeDAO.getInstance().getByName("Thu - Khách hàng thanh toán"));
+                        tranDeposit.setType(TransactionsTypeDAO.getInstance().getByName("Thu - Khách hàng đặt cọc"));
                         tranDeposit.setComment("Deposit: "+ commentString);
                         tranDeposit.setFlag(1);
                         tranDeposit.setPerson(PersonDAO.getInstance().getById(personIdSelect));

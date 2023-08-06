@@ -50,12 +50,11 @@ public class MenuView extends JPanel {
     private JPanel dishListBlock(){
         JPanel a = new JPanel();
         a.setLayout(new BorderLayout());
-        JPanel dishList = new DishListView();
-
-
+        DishListView dishListView = new DishListView();
+        dishListView.selectDish();
         Grid grid = new Grid();
-        grid.GridAddCustom(dishList,0,0,0,0,0,0,1);
+        grid.GridAddCustom(dishListView,0,0,0,0,0,0,1);
         a.add(grid,BorderLayout.CENTER);
-        return dishList;
+        return dishListView;
     }
 }

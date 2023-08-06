@@ -11,15 +11,46 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.Instant;
 
 public class TransactionController {
     private static JButton buttonNewTransaction = TransactionListView.getButtonCreatTransaction();
-
+    private static JButton delete = TransactionListView.getButtonDelete();
+    private static JTable table = TransactionListView.getTable();
     public TransactionController() {
         creatTransaction();
     }
     public static void creatTransaction(){
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // click get id
+                table.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (e.getClickCount() == 1) { // Kiểm tra nếu chỉ là một lần click chuột (clickCount = 1)
+                            int row = table.getSelectedRow(); // Lấy chỉ số dòng đã được chọn
+                            if (row != -1) { // Kiểm tra xem có dòng nào được chọn không (-1 nghĩa là không có dòng nào được chọn)
+                                String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
+                                System.out.println("Transaction : "+ id);
+                                Transaction transaction = TransactionDAO.getInstance().getById(Integer.parseInt(id));
+                                transaction.setFlag(0);
+                                TransactionDAO.getInstance().update(transaction);
+                            }else {
+                                JOptionPane.showMessageDialog(null, "Please select the row you want to delete !", "Notice", JOptionPane.WARNING_MESSAGE);
+
+                            }
+                        }
+                    }
+
+
+                });
+                TransactionListView.loadData();
+            }
+        });
+
         buttonNewTransaction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,6 +105,9 @@ public class TransactionController {
 
             }
         });
+
+
+
     }
 
 }

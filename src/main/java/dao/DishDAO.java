@@ -12,6 +12,13 @@ import java.util.ArrayList;
 public class DishDAO implements DAOInterface<Dish,Integer>{
     private EntityManagerFactory entityManagerFactory;
 
+    public EntityManagerFactory getEntityManagerFactory() {
+        return entityManagerFactory;
+    }
+
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
     public static DishDAO getInstance(){
         return new DishDAO();

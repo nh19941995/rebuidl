@@ -2,8 +2,10 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import model.Dish;
 import model.DishType;
+import model.TransactionsType;
 import utils.PersistenceManager;
 
 import java.time.Instant;
@@ -95,4 +97,27 @@ public class DishTypeDAO implements DAOInterface<DishType,Integer>{
             entityManager.close();
         }
     }
+
+    public DishType getByString(String type) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            // Sử dụng JPQL (Java Persistence Query Language) để truy vấn danh sách DishType
+            Query query = entityManager.createQuery("SELECT d FROM DishType d WHERE d.type = :type");
+            query.setParameter("type", type);
+            DishType typex = (DishType) query.getSingleResult();
+
+            // Merge the entity back into the session
+            DishType mergedTypex = entityManager.merge(typex);
+
+            return mergedTypex;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+
 }

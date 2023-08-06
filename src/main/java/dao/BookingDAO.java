@@ -15,6 +15,13 @@ import java.util.Set;
 public class BookingDAO implements DAOInterface<Booking,Integer>{
     private EntityManagerFactory entityManagerFactory;
 
+    public EntityManagerFactory getEntityManagerFactory() {
+        return entityManagerFactory;
+    }
+
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
     public static BookingDAO getInstance(){
         return new BookingDAO();
