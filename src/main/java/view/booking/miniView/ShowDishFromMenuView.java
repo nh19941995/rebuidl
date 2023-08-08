@@ -14,9 +14,19 @@ import java.util.List;
 
 public class ShowDishFromMenuView extends JPanel {
     private JTable table = new JTable();
+    private JLabel title = new JLabel("List of dishes");
     private DefaultTableModel tableModel;
     private Object[][] data;
     private int menuNameID;
+    private double sum;
+
+    public double getSum() {
+        return sum;
+    }
+
+    public void setSum(double sum) {
+        this.sum = sum;
+    }
 
     public Object[][] getData() {
         return data;
@@ -28,6 +38,10 @@ public class ShowDishFromMenuView extends JPanel {
 
     public ShowDishFromMenuView() {
         setLayout(new BorderLayout());
+        title.setPreferredSize(new Dimension(150, 30));
+//        title.setFont(new Font("Arial", Font.BOLD, 15));
+
+        add(title,BorderLayout.NORTH);
         add(blockTable(),BorderLayout.CENTER);
     }
     private JScrollPane blockTable() {
@@ -90,6 +104,12 @@ public class ShowDishFromMenuView extends JPanel {
         for (Object[] s : xxx) {
             s[0] = count++;
         }
+        Double sum = 0d;
+        for (Object[] s : xxx) {
+            Double value = (Double) s[4]; // Ép kiểu về Double
+            sum += value;
+        }
+        setSum(sum);
 //        Arrays.stream(xxx).forEach(s-> System.out.println(s[1]));
 //        setData(data);
 //        // thêm dữ liệu vào bảng

@@ -23,6 +23,9 @@ public class MenuListView  extends JPanel {
     private static int menuIdSelect;
     private static JButton buttonSelectMenu = new JButton("Select a Menu");
     private ShowDishFromMenuView showDishFromMenuView = new ShowDishFromMenuView();
+    private JLabel labelSumOutput = new JLabel();
+    private JLabel title = new JLabel("List of menus");
+    private JLabel labelSum = new JLabel("Total amount of the menu: ");
 
     public ShowDishFromMenuView getShowDishFromMenuView() {
         return showDishFromMenuView;
@@ -69,9 +72,20 @@ public class MenuListView  extends JPanel {
         Boder boder = new Boder();
         ShowDishFromMenuView showDishFromMenuView = new ShowDishFromMenuView();
         setShowDishFromMenuView(showDishFromMenuView);
+
         JScrollPane scrollPane = createTable();
+
+
+        Boder boderTableMenus = new Boder();
+        boderTableMenus.add(title,BorderLayout.NORTH);
+        boderTableMenus.add(scrollPane,BorderLayout.CENTER);
+        title.setPreferredSize(new Dimension(150, 30));
+//        title.setFont(new Font("Arial", Font.BOLD, 15));
+
+
+
         boder.add(showDishFromMenuView,BorderLayout.SOUTH);
-        boder.add(scrollPane,BorderLayout.CENTER);
+        boder.add(boderTableMenus,BorderLayout.CENTER);
         return boder;
     }
 
@@ -85,7 +99,11 @@ public class MenuListView  extends JPanel {
         buttonSelectMenu.setForeground(Color.WHITE);
         Grid grid = new Grid();
         grid.GridAddCustom(buttonSelectMenu,0,0,20,20,20,20,1);
+        Grid grid1 = new Grid();
+        grid1.GridAddCustom(labelSum,0,0,20,20,20,20,1);
+        grid1.GridAddCustom(labelSumOutput,1,0,20,20,20,20,1);
         jPanel.add(grid,BorderLayout.EAST);
+        jPanel.add(grid1,BorderLayout.WEST);
         return jPanel;
     }
 
@@ -194,8 +212,11 @@ public class MenuListView  extends JPanel {
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
                         menuIdSelect = Integer.parseInt(id);
                         System.out.println("Menu x: "+ id);
+                        // load món của menu
                         getShowDishFromMenuView().loadData(Integer.parseInt(id));
-//                        getShowDishFromMenuView().loadData(id);
+                        // load giá menu
+                        Double totalMenu = getShowDishFromMenuView().getSum();
+                        labelSumOutput.setText(String.valueOf(totalMenu));
                         getShowDishFromMenuView().repaint();
                     }
 
