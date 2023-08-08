@@ -7,9 +7,6 @@
         <class>model.Dish</class>
         <class>model.Booking</class>
         <class>model.BookingsInfo</class>
-        <class>model.FoodInventory</class>
-        <class>model.FoodType</class>
-        <class>model.FoodUnitType</class>
         <class>model.Menu</class>
         <class>model.MenuName</class>
         <class>model.Permission</class>

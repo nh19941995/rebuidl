@@ -24,8 +24,10 @@ public class InstantDateTimeInfo {
 //        ZonedDateTime localDateTime = ZonedDateTime.now();
 //        System.out.println(localDateTime);
 
-        System.out.println(getByDayAndHour("2023-08-04","16:39"));
-        System.out.println(getNow());
+//        System.out.println(getByDayAndHour("2023-08-04","16:39"));
+//        System.out.println(getNow());
+
+        System.out.println(getByDayAndHour("2023-05-06","22:30"));
     }
 
     public static String getTimeStringToInstance(Instant instant, int infoType) {
@@ -74,6 +76,8 @@ public class InstantDateTimeInfo {
             return null;
         }
     }
+
+
 
 
 

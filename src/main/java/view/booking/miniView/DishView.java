@@ -132,7 +132,8 @@ public class DishView extends JPanel {
 
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(blockSearchBar(),BorderLayout.NORTH);
-        this.add(blockAddNewDish(),BorderLayout.SOUTH);
+        JPanel bot = blockAddNewDish();
+        this.add(bot,BorderLayout.SOUTH);
 //        DishController.selectEven(this);
         DishController.creatNewDish(this);
 

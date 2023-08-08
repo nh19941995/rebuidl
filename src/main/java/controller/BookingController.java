@@ -12,7 +12,9 @@ import java.awt.event.MouseEvent;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BookingController {
     // các bảng dữ liệu
@@ -42,15 +44,6 @@ public class BookingController {
         BookingController.deposit = deposit;
     }
 
-    //    private static BookingsInfo bookingsInfo = new BookingsInfo();
-
-//    public static BookingsInfo getBookingsInfo() {
-//        return bookingsInfo;
-//    }
-//
-//    public static void setBookingsInfo(BookingsInfo bookingsInfo) {
-//        BookingController.bookingsInfo = bookingsInfo;
-//    }
 
     public static int getPersonIdSelect() {
         return personIdSelect;
@@ -198,8 +191,29 @@ public class BookingController {
                 }
                 BookingsInfo bookingsInfo = new BookingsInfo();
                 if (check==1){
+
+
                     Instant instantStartTime = InstantDateTimeInfo.getByDayAndHour(dateString,startTimeString);
+                    Instant test             = InstantDateTimeInfo.getByDayAndHour(dateString,startTimeString);
+
+
+
+                    Instant test2  = InstantDateTimeInfo.getByDayAndHour("2023-05-09","19:40");
+                    System.out.println("test: " + test);
+                    System.out.println("test: " + test2);
+                    System.out.println("startTimeString: " + startTimeString);
+                    System.out.println("endTimeString: " + endTimeString);
+                    System.out.println("dateString: " + dateString);
+                    System.out.println("instantStartTime: "+instantStartTime);
+
+
+
                     Instant instantEndTime = InstantDateTimeInfo.getByDayAndHour(dateString,startTimeString);
+
+
+
+                    System.out.println("instantEndTime: "+instantEndTime);
+
                     Instant instantNow = InstantDateTimeInfo.getNow();
                     if (!depositString.isEmpty()){
                         Double doubleDeposit = Double.parseDouble(depositString);
@@ -213,7 +227,13 @@ public class BookingController {
                         tranDeposit.setComment("Deposit: "+ commentString);
                         tranDeposit.setFlag(1);
                         tranDeposit.setPerson(PersonDAO.getInstance().getById(personIdSelect));
+
+
+
                         TransactionDAO.getInstance().insert(tranDeposit);
+
+
+
                         System.out.println("Khách hàng đã đặt cọc: " + doubleDeposit);
                     }
                     System.out.println(instantNow);
@@ -238,40 +258,44 @@ public class BookingController {
                     }
 
                     if(checkInfoTableAndMenu()){
-                        Person person = PersonDAO.getInstance().getById(personIdSelect);
-                        bookingsInfo.setEnd(instantEndTime);
-                        bookingsInfo.setStart(instantStartTime);
-                        bookingsInfo.setDateCreat(instantNow);
-                        bookingsInfo.setPerson(person);
-                        bookingsInfo.setInfo(commentString);
-                        bookingsInfo.setFlag(1);
-                        BookingsInfoDAO.getInstance().insert(bookingsInfo);
-                        System.out.println("khởi tạo id info: "+bookingsInfo.getId());
-
+                        ArrayList<Integer> table = checkHourTable(instantStartTime,instantEndTime);
+                        if (table.isEmpty()){
+                            Person person = PersonDAO.getInstance().getById(personIdSelect);
+                            bookingsInfo.setEnd(instantEndTime);
+                            bookingsInfo.setStart(instantStartTime);
+                            bookingsInfo.setDateCreat(instantNow);
+                            bookingsInfo.setPerson(person);
+                            bookingsInfo.setInfo(commentString);
+                            bookingsInfo.setFlag(1);
+                            BookingsInfoDAO.getInstance().insert(bookingsInfo);
+                            System.out.println("khởi tạo id info: "+bookingsInfo.getId());
 //                        check
+                            getBookings().forEach(s->{
+                                s.setInfo(bookingsInfo);
+                                s.setFlag(1);
+                                BookingDAO.getInstance().insert(s);
+                            });
+                            // tạo giao dịch nợ (chỉ tạo được sau khi tạo xong booking )
+                            Transaction tranReceivable = new Transaction();
+                            tranReceivable.setType(TransactionsTypeDAO.getInstance().getByName("Nợ - Khách hàng còn thiếu"));
+                            tranReceivable.setDateCreat(InstantDateTimeInfo.getNow());
+                            tranReceivable.setComment("Debt: "+commentString);
+                            // tổng tiền phải thanh toán
+                            Double bill = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(bookingsInfo.getId());
+                            System.out.println("Khởi tạo bill: " + bill);
+                            Double receivable = bill - getDeposit() ;
+                            tranReceivable.setQuantity(receivable);
+                            tranReceivable.setFlag(1);
+                            tranReceivable.setPerson(PersonDAO.getInstance().getById(personIdSelect));
+                            TransactionDAO.getInstance().insert(tranReceivable);
+                            System.out.println("id khách hàng là: "+personIdSelect);
+                            System.out.println("id info là: "+bookingsInfo.getId());
+                            System.out.println("khách hàng còn nợ: "+ receivable);
+                        }else {
 
-                        getBookings().forEach(s->{
-                            s.setInfo(bookingsInfo);
-                            s.setFlag(1);
-                            BookingDAO.getInstance().insert(s);
-                        });
+                        }
 
-                        // tạo giao dịch nợ (chỉ tạo được sau khi tạo xong booking )
-                        Transaction tranReceivable = new Transaction();
-                        tranReceivable.setType(TransactionsTypeDAO.getInstance().getByName("Nợ - Khách hàng còn thiếu"));
-                        tranReceivable.setDateCreat(InstantDateTimeInfo.getNow());
-                        tranReceivable.setComment("Debt: "+commentString);
-                        // tổng tiền phải thanh toán
-                        Double bill = BookingsInfoDAO.getInstance().getTotalPriceByInfoBookingID(bookingsInfo.getId());
-                        System.out.println("Khởi tạo bill: " + bill);
-                        Double receivable = bill - getDeposit() ;
-                        tranReceivable.setQuantity(receivable);
-                        tranReceivable.setFlag(1);
-                        tranReceivable.setPerson(PersonDAO.getInstance().getById(personIdSelect));
-                        TransactionDAO.getInstance().insert(tranReceivable);
-                        System.out.println("id khách hàng là: "+personIdSelect);
-                        System.out.println("id info là: "+bookingsInfo.getId());
-                        System.out.println("khách hàng còn nợ: "+ receivable);
+
                     }
 
                 }
@@ -310,6 +334,53 @@ public class BookingController {
 
         }
         return true;
+    }
+
+    public static ArrayList<Integer> checkHourTable(Instant start,Instant end ){
+        List<Booking> bookingList = BookingDAO.getInstance().getAll();
+
+        List<Object[]> bookingListData = bookingList.stream().map(
+                s -> new Object[]{
+                        s.getTable().getId(),             // id bàn
+                        s.getTable().getType().getName(), // loại bàn
+                        s.getTable().getSeatingCapacity(),// số ghế
+                        s.getInfo().getStart(),           // giờ bắt đầu
+                        s.getInfo().getEnd(),             // giờ kết thúc
+                        s.getInfo().getStart(),           // ngày
+                        s.getTable().getFlag()            // trạng thái của bàn
+                }
+        ).collect(Collectors.toList());
+
+        ArrayList<Integer> tableId = new ArrayList<>();
+        for (Object[] data : bookingListData) {
+            Instant startTime = (Instant) data[3];
+            Instant endTime = (Instant) data[4];
+            boolean check= startTime.isAfter(end)||endTime.isBefore(start);
+            if (!check) {
+                tableId.add((Integer) data[0]);
+            }
+        }
+
+
+        if (!tableId.isEmpty()){
+            // Chuyển danh sách thành chuỗi bằng cách sử dụng StringBuilder
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Integer number : tableId) {
+                stringBuilder.append(number).append(", "); // Thêm mỗi số và dấu phẩy vào chuỗi
+            }
+            // Xóa dấu phẩy cuối cùng và khoảng trắng
+            if (stringBuilder.length() > 0) {
+                stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
+            }
+            // Lấy chuỗi kết quả
+            String resultString = stringBuilder.toString();
+            JOptionPane.showMessageDialog(null,
+                    "The reservation time is already taken, please choose another table or a different time slot.\n Id table:"+resultString,
+                    "Notice",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+        tableId.stream().forEach(s-> System.out.println("bàn trùng: "+s));
+        return tableId;
     }
 
     public boolean checkTimeBookingTable(){

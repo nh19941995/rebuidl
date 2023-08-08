@@ -6,14 +6,22 @@ import javax.swing.*;
 import java.awt.*;
 
 public class OderView extends JPanel {
-    DishListView dishListView = new DishListView();
+    DishView dishView = new DishView();
     BillView billView = new BillView();
 
     public OderView() {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        dishListView.selectDish();
-        add(billView);
-        add(dishListView);
+        setLayout(new BorderLayout());
+
+
+        // Xóa childPane khỏi parentPanel
+//        dishView.remove(blockAddNewDish());
+
+        // Cập nhật giao diện người dùng
+        dishView.revalidate();
+        dishView.repaint();
+        add(billView,BorderLayout.WEST);
+        add(dishView,BorderLayout.CENTER);
+
         OderController oderController = new OderController();
 
     }

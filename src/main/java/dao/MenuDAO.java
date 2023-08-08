@@ -91,12 +91,12 @@ public class MenuDAO implements DAOInterface<Menu,Integer>{
         }
     }
 
-    public List<Menu> getMenuByMenuNameID(int id) {
+    public List<Menu> getMenuByMenuNameID(int menuNameId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String queryStr = "SELECT m FROM Menu m WHERE m.menuName = :id";
+            String queryStr = "SELECT m FROM Menu m WHERE m.menuName.id = :menuNameId";
             TypedQuery<Menu> query = entityManager.createQuery(queryStr, Menu.class);
-            query.setParameter("id", id);
+            query.setParameter("menuNameId", menuNameId);
             return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,6 +123,13 @@ public class MenuDAO implements DAOInterface<Menu,Integer>{
             entityManager.close();
         }
     }
+
+    public static void main(String[] args) {
+        List<Menu> ddd = MenuDAO.getInstance().getMenuByMenuNameID(37);
+        ddd.stream().forEach(s-> System.out.println(s));
+    }
+
+
 
 
 

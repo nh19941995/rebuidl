@@ -4,6 +4,7 @@ import controller.InstantDateTimeInfo;
 import dao.MenuDAO;
 import dao.MenuNameDAO;
 import model.*;
+import view.Tool.Boder;
 import view.Tool.Grid;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,22 +20,27 @@ public class MenuListView  extends JPanel {
     private static JTable table = new JTable();
     private DefaultTableModel tableModel;
     private Object[][] data;
-
     private static int menuIdSelect;
-
     private static JButton buttonSelectMenu = new JButton("Select a Menu");
+    private ShowDishFromMenuView showDishFromMenuView = new ShowDishFromMenuView();
+
+    public ShowDishFromMenuView getShowDishFromMenuView() {
+        return showDishFromMenuView;
+    }
+
+    public void setShowDishFromMenuView(ShowDishFromMenuView showDishFromMenuView) {
+        this.showDishFromMenuView = showDishFromMenuView;
+    }
 
     public static int getMenuIdSelect() {
         return menuIdSelect;
     }
-
     public static JButton getButtonSelectMenu() {
         return buttonSelectMenu;
     }
     public static void setButtonSelectMenu(JButton buttonSelectMenu) {
         MenuListView.buttonSelectMenu = buttonSelectMenu;
     }
-
     public Object[][] getData() {
         return data;
     }
@@ -52,11 +58,21 @@ public class MenuListView  extends JPanel {
         // Khởi tạo bảng với mô hình dữ liệu trống
         table.setModel(new DefaultTableModel());
         // Tạo JScrollPane chứa bảng và thêm nó vào JPanel
-        JScrollPane scrollPane = createTable();
+
+        add(blockTable(),BorderLayout.CENTER);
         loadData();
-        this.add(scrollPane, BorderLayout.CENTER);
         add(gridControlMenuList(),BorderLayout.SOUTH);
         getMenuFromList();
+    }
+
+    private JPanel blockTable(){
+        Boder boder = new Boder();
+        ShowDishFromMenuView showDishFromMenuView = new ShowDishFromMenuView();
+        setShowDishFromMenuView(showDishFromMenuView);
+        JScrollPane scrollPane = createTable();
+        boder.add(showDishFromMenuView,BorderLayout.SOUTH);
+        boder.add(scrollPane,BorderLayout.CENTER);
+        return boder;
     }
 
     private JPanel gridControlMenuList(){
@@ -167,7 +183,7 @@ public class MenuListView  extends JPanel {
         model.fireTableDataChanged();
     }
 
-    public static void getMenuFromList(){
+    public void getMenuFromList(){
         // sự kiện click vào bảng menu
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -178,11 +194,14 @@ public class MenuListView  extends JPanel {
                         String id = table.getValueAt(row, 0).toString(); // Lấy giá trị từ ô ở cột đầu tiên (cột ID) của dòng đã chọn
                         menuIdSelect = Integer.parseInt(id);
                         System.out.println("Menu x: "+ id);
+                        getShowDishFromMenuView().loadData(Integer.parseInt(id));
+//                        getShowDishFromMenuView().loadData(id);
+                        getShowDishFromMenuView().repaint();
                     }
+
                 }
             }
         });
+
     }
-
-
 }
